@@ -1,0 +1,74 @@
+{
+  "name": "colorpunk",
+  "tree": {
+    "$className": "DataModel",
+
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$path": "src/client",
+        "Library": {
+          "$className": "Library",
+          "$path": "src/client/Library"
+        }
+      }
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$path": "src/server",
+      "Library": {
+        "$className": "Library",
+        "$path": "src/server/Library",
+        "Services": {
+          "$className": "Services",
+          "$path": "src/server/Library/Services"
+        },
+        "Templates": {
+          "$className": "Templates",
+          "$path": "src/server/Library/Templates"
+        }
+      },
+
+      "Project": {
+        "$className": "Project",
+        "$path": "src/server/Project"
+      }
+    },
+
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "$path": "src/shared",
+      "Library": {
+        "$className": "Library",
+        "$path": "src/shared/Library",
+
+        "Interface": {  
+          "$className": "Interface",
+          "$path": "src/shared/Library/Interface",
+
+          "Addons": {
+            "$className": "Addons",
+            "$path": "src/shared/Library/Interface/Addons"
+          }
+        },
+
+        "Services": {  
+          "$className": "Services",
+          "$path": "src/shared/Library/Services"
+        },
+
+        "Templates": {
+          "$className": "Templates",
+          "$path": "src/shared/Library/Templates"
+        }
+      },
+
+      "Project": {
+        "$className": "Project",
+        "$path": "src/shared/Project"
+      }
+    }
+  }
+}
