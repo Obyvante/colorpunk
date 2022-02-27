@@ -69,7 +69,7 @@ function class:setActive(_active : boolean)
     return self
 end
 
--- Converts player trail to table.
+-- Converts player trail to a table.
 -- @return Player trail table.
 function class:toTable()
    return {

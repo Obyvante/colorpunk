@@ -4,8 +4,8 @@ local class = {}
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
 local Endpoints = require(game.ServerScriptService.Project.Endpoints)
-local HTTPService = Library.getService("HTTPService")
 local Pet = require(game.ServerScriptService.Project.Cosmetics.Pet.Pet)
+local HTTPService = Library.getService("HTTPService")
 -- STARTS
 
 

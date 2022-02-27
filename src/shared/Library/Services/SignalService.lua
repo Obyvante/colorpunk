@@ -32,7 +32,7 @@ function class.create(_id : string)
         ["id"] = _id,
         ["event"] = Instance.new("BindableEvent"),
         ["dictionary"] = {},
-        ["exsist"] = true
+        ["exist"] = true
     }
 
     -- Binds event to remove bounded event from the dictionary.
@@ -67,7 +67,7 @@ end
 -- @param ... Arguments.
 function class:fire(...)
     -- If signal service is destroyed, no need to continue.
-    if not self.exsist then error("Tried to use signal service even it is destroyed") end
+    if not self.exist then error("Tried to use signal service even it is destroyed") end
 
     local _key = HttpService:GenerateGUID(false)
     local arguments = table.pack(...)
@@ -83,7 +83,7 @@ end
 -- @return Bindable Event connection.
 function class:connect(_consumer)
     -- If signal service is destroyed, no need to continue.
-    if not self.exsist then error("Tried to use signal service even it is destroyed") end
+    if not self.exist then error("Tried to use signal service even it is destroyed") end
 
     -- If consumer(function) type is not function, no need to continue.
     if typeof(_consumer) ~="function" then error("Connection consumer(function) must be a function type") end
@@ -103,7 +103,7 @@ end
 -- @return Consumer(function) arguments.
 function class:wait()
     -- If signal service is destroyed, no need to continue.
-    if not self.exsist then error("Tried to use signal service even it is destroyed") end
+    if not self.exist then error("Tried to use signal service even it is destroyed") end
 
     -- Waits for the key of the event.
     local _key = self.event:Wait()
@@ -117,7 +117,7 @@ end
 
 -- Destroys signal service.
 function class:destroy()
-    self.exsist = false
+    self.exist = false
     if self.metadata then self.metadata:reset() end
     self.event:Destroy()
 

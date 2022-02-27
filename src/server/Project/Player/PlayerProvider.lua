@@ -1,12 +1,9 @@
-local ServerScriptService = game:GetService("ServerScriptService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local class = {}
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
-local HTTPService = Library.getService("HTTPService")
-local SignalService = Library.getService("SignalService")
-local Endpoints = require(game.ServerScriptService.Project.Endpoints)
 local Player = require(game.ServerScriptService.Project.Player.Player)
+local PlayerHTTP = require(game.ServerScriptService.Project.Player.HTTP.PlayerHTTP)
+local SignalService = Library.getService("SignalService")
 local PlayersService = game:GetService("Players")
 local RunService = game:GetService("RunService")
 -- STARTS
@@ -62,7 +59,11 @@ local signal_player_join = SignalService.create("PlayerJoin")
 
 -- Connects actual event.
 signal_player_join:connect(function(player)
-    print(player.Name, "joined!")
+    local _table = PlayerHTTP.handle(player.UserId, player.Name)
+    local _player = Player.new(_table)
+    content[_table.id] = _player
+
+    print(_player:toTable())
 end)
 
 -- Fires player join signal when player join.

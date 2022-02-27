@@ -69,7 +69,7 @@ function class:setActive(_active : boolean)
     return self
 end
 
--- Converts player pet to table.
+-- Converts player pet to a table.
 -- @return Player pet table.
 function class:toTable()
     return {

@@ -2,9 +2,10 @@ local class = {}
 class.__index = class
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
+local PlayerInventory = require(game.ServerScriptService.Project.Player.Inventory.PlayerInventory)
+local PlayerCurrencies = require(game.ServerScriptService.Project.Player.Currencies.PlayerCurrencies)
 local Metadata = Library.getTemplate("Metadata")
 local EventBinder = Library.getTemplate("EventBinder")
-local PlayerInventory = require(game.ServerScriptService.Project.Player.Inventory.PlayerInventory)
 -- STARTS
 
 
@@ -20,6 +21,7 @@ function class.new(_table : table)
         name = _table.name
     }, class)
     _player.inventory = PlayerInventory.new(_player, _table.inventory)
+    _player.currencies = PlayerCurrencies.new(_player, _table.currencies)
 
     return _player
 end
@@ -38,6 +40,30 @@ function class:getEventBinder()
     return self.event_binder
 end
 
+-- Gets player roblox id.
+-- @return Player roblox id.
+function class:getId()
+    return self.id
+end
+
+-- Gets player roblox name.
+-- @return Player roblox name.
+function class:getName()
+    return self.name
+end
+
+-- Gets player inventory.
+-- @return Player inventory.
+function class:getInventory()
+    return self.inventory
+end
+
+-- Gets player currencies.
+-- @return Player currencies.
+function class:getCurrencies()
+    return self.currencies
+end
+
 -- Destroys player.
 function class:destroy()
     if self.metadata then self.metadata:reset() end
@@ -46,13 +72,14 @@ function class:destroy()
     setmetatable(self, nil)
 end
 
--- Converts player to table.
+-- Converts player to a table.
 -- @return Player table.
 function class:toTable()
     return {
         id = self.id,
         name = self.name,
-        inventory = self.inventory:toTable()
+        inventory = self.inventory:toTable(),
+        currencies = self.currencies:toTable()
     }
 end
 

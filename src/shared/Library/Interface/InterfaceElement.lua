@@ -73,7 +73,7 @@ function class.new(_interface : ModuleScript, _data : table, _parent : Folder)
                     }
                 })
             else
-                warn(_element:getLogPrefix() .. " build with(" .. _build .. ") is not exsist")
+                warn(_element:getLogPrefix() .. " build with(" .. _build .. ") is not exist")
             end
         end
     end

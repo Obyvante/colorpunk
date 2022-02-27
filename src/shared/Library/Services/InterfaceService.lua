@@ -73,7 +73,7 @@ function class.create(_id : string, _viewport : Vector2)
     -- Object nil check.
     assert(_id ~= nil, "Interface id cannot be null")
     assert(_viewport ~= nil, "Interface(" .. _id .. ") viewport cannot be null")
-    assert(_interfaces[_id] == nil, "Interface(" .. _id .. ") is already exsist")
+    assert(_interfaces[_id] == nil, "Interface(" .. _id .. ") is already exist")
 
     -- Creates an interface.
     local interface = Interface.create(_id, _viewport)
@@ -88,7 +88,7 @@ end
 function class.delete(_id : string)
     -- Object nil check.
     assert(_id ~= nil, "Interface id cannot be null")
-    assert(_interfaces[_id] ~= nil, "Interface(" .. _id .. ") is not exsist")
+    assert(_interfaces[_id] ~= nil, "Interface(" .. _id .. ") is not exist")
 
     _interfaces[_id]:destroy()
     _interfaces[_id] = nil

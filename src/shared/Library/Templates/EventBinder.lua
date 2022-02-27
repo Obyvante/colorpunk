@@ -45,7 +45,7 @@ function class:bind(_instance : Instance, _event : table)
     -- Object nil checks.
     assert(_instance ~= nil, "Custom event cannot be null")
     assert(_event ~= nil, "Custom event data cannot be null")
-    assert(self.events[_event.Name] == nil, "Custom event(" .. _event.Name .. ") is already exsist[bind]")
+    assert(self.events[_event.Name] == nil, "Custom event(" .. _event.Name .. ") is already exist[bind]")
 
     -- Connects an event to the given instance.
     self.events[_event.Name] = _instance:Connect(function(...)
@@ -65,7 +65,7 @@ end
 function class:unbind(_id : string)
     -- Object nil checks.
     assert(_id ~= nil, "Custom event id cannot be null")
-    assert(self.events[_id] ~= nil, "Custom event(" .. _id .. ") is not exsist[unbind]")
+    assert(self.events[_id] ~= nil, "Custom event(" .. _id .. ") is not exist[unbind]")
 
     self.events[_id]:Disconnect()
     self.events[_id] = nil
