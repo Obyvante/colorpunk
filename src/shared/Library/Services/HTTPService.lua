@@ -79,6 +79,12 @@ function class.encodeJson(_table : table)
     return HttpService:JSONEncode(_table)
 end
 
+-- Generates random uuid.
+-- @return UUID. (STRING)
+function class.randomUUID()
+    return HttpService:GenerateGUID(false)
+end
+
 
 -- ENDS
 return class

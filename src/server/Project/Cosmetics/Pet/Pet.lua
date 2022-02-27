@@ -13,14 +13,12 @@ function class.new(_id : number, _name : string, _assetId : string)
     assert(_id ~= nil, "Pet id cannot be null")
     assert(_name ~= nil, "Pet(" .. _id .. ") name cannot be null")
     assert(_assetId ~= nil, "Pet(" .. _id .. ") asset id cannot be null")
-
-    local _pet = setmetatable({
+    
+    return setmetatable({
         id = _id,
         name = _name,
         asset_id = _assetId
     }, class)
-
-    return _pet
 end
 
 -- Gets pet id.

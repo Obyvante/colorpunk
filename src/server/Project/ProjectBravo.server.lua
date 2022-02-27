@@ -1,9 +1,10 @@
 -- PATHS
 local PATHS = {
     [1] = game.ServerScriptService.Project.Cosmetics.Pet.PetProvider,
-    [2] = game.ServerScriptService.Project.Cosmetics.Trail.TrailProvider
+    [2] = game.ServerScriptService.Project.Cosmetics.Trail.TrailProvider,
+    [3] = game.ServerScriptService.Project.Player.PlayerProvider
 }
-local PATH_SIZE = 2
+local PATH_SIZE = 3
 
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
