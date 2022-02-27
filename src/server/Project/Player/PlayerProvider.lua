@@ -59,18 +59,24 @@ end
 -- Player cache updater.
 -- Every 90 seconds.
 TaskService.createRepeating(90, function(_task)
-    local success, message = pcall(PlayerHTTP.updates, content)
+    -- Async task.
+    task.spawn(function()
+        -- Safe http request.
+        local success, message = pcall(PlayerHTTP.updates, content)
 
-    if not success then
-        warn("PLAYERS UPDATE ERROR [IMPORTANT ISSUE!]")
-        warn(message)
-    end
+        -- If it is no successfully, warns server about that.
+        if not success then
+            warn(" ")
+            warn("PLAYERS UPDATES ERROR [IMPORTANT ISSUE!]")
+            warn(message)
+            warn(" ")
+        end
+    end)
 end):run()
 
 ------------------------
 -- TASKS (ENDS)
 -----------------------
-
 
 
 ------------------------
@@ -91,6 +97,29 @@ end)
 -- Fires player join signal when player join.
 PlayersService.PlayerAdded:Connect(function(player)
     signal_player_join:fire(player)
+end)
+
+-- Handles player leave.
+PlayersService.PlayerRemoving:Connect(function(player)
+    -- Async task.
+    task.spawn(function()
+        local _player = class.find(player.UserId)
+        if _player == nil then return end
+
+        -- Safe http request.
+        local success, message = pcall(PlayerHTTP.update, _player)
+
+        -- Removes player from the cache.
+        class.remove(player.UserId)
+
+        -- If it is no successfully, warns server about that.
+        if not success then
+            warn(" ")
+            warn("PLAYERS UPDATE(" .. player.UserId .. ") ERROR [IMPORTANT ISSUE!]")
+            warn(message)
+            warn(" ")
+        end
+    end)
 end)
 
 -- If it is studio, call player join signal manually.

@@ -36,7 +36,7 @@ function class.update(_player : ModuleScript)
     -- Object nil checks.
     assert(_player ~= nil, "Player cannot be null")
 
-    local response = HTTPService.POST(Endpoints.PLAYER_UPDATE_ENDPOINT, { ["BARDEN-API-KEY"] = Endpoints.API_KEY }, _player:toJson())
+    local response = HTTPService.POST(Endpoints.PLAYER_UPDATE_ENDPOINT, _player:toJson(), { ["BARDEN-API-KEY"] = Endpoints.API_KEY })
     -- If fetching data was not successfully, no need to continue.
     if not response.Success then
         error("Couldn't send player(" .. _player:getId() .. ") update request to the backend! [1]")
