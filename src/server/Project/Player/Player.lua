@@ -4,6 +4,9 @@ class.__index = class
 local Library = require(game.ReplicatedStorage.Library.Library)
 local PlayerInventory = require(game.ServerScriptService.Project.Player.Inventory.PlayerInventory)
 local PlayerCurrencies = require(game.ServerScriptService.Project.Player.Currencies.PlayerCurrencies)
+local PlayerStats = require(game.ServerScriptService.Project.Player.Stats.PlayerStats)
+local PlayerSettings = require(game.ServerScriptService.Project.Player.Settings.PlayerSettings)
+local PlayerStatistics = require(game.ServerScriptService.Project.Player.Statistics.PlayerStatistics)
 local Metadata = Library.getTemplate("Metadata")
 local EventBinder = Library.getTemplate("EventBinder")
 -- STARTS
@@ -22,6 +25,9 @@ function class.new(_table : table)
     }, class)
     _player.inventory = PlayerInventory.new(_player, _table.inventory)
     _player.currencies = PlayerCurrencies.new(_player, _table.currencies)
+    _player.settings = PlayerSettings.new(_player, _table.settings)
+    _player.stats = PlayerStats.new(_player, _table.stats)
+    _player.statistics = PlayerStatistics.new(_player, _table.statistics)
 
     return _player
 end
@@ -64,6 +70,24 @@ function class:getCurrencies()
     return self.currencies
 end
 
+-- Gets player stats.
+-- @return Player stats.
+function class:getStats()
+    return self.currencies
+end
+
+-- Gets player settings.
+-- @return Player settings.
+function class:getSettings()
+    return self.settings
+end
+
+-- Gets player statistics.
+-- @return Player statistics.
+function class:getStatistics()
+    return self.currencies
+end
+
 -- Destroys player.
 function class:destroy()
     if self.metadata then self.metadata:reset() end
@@ -79,7 +103,10 @@ function class:toTable()
         id = self.id,
         name = self.name,
         inventory = self.inventory:toTable(),
-        currencies = self.currencies:toTable()
+        currencies = self.currencies:toTable(),
+        stats = self.stats:toTable(),
+        settings = self.settings:toTable(),
+        statistics = self.statistics:toTable()
     }
 end
 
