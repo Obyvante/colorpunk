@@ -4,6 +4,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local Player = require(game.ServerScriptService.Project.Player.Player)
 local PlayerHTTP = require(game.ServerScriptService.Project.Player.HTTP.PlayerHTTP)
 local SignalService = Library.getService("SignalService")
+local TaskService = Library.getService("TaskService")
 local PlayersService = game:GetService("Players")
 local RunService = game:GetService("RunService")
 -- STARTS
@@ -46,13 +47,35 @@ function class.remove(_id : number)
 end
 
 
-----------
--- INITIALIZATION
-----------
+------------------------
+-- INITIALIZATION (STARTS)
+------------------------
+
 
 ------------------------
--- SIGNAL HANDLERS (PLAYER JOIN)
--------- (STARTS) --------
+-- TASKS (STARTS)
+-----------------------
+
+-- Player cache updater.
+-- Every 90 seconds.
+TaskService.createRepeating(90, function(_task)
+    local success, message = pcall(PlayerHTTP.updates, content)
+
+    if not success then
+        warn("PLAYERS UPDATE ERROR [IMPORTANT ISSUE!]")
+        warn(message)
+    end
+end):run()
+
+------------------------
+-- TASKS (ENDS)
+-----------------------
+
+
+
+------------------------
+-- SIGNAL HANDLERS (PLAYER JOIN) (STARTS)
+------------------------
 
 -- Creates player join signal.
 local signal_player_join = SignalService.create("PlayerJoin")
@@ -61,9 +84,8 @@ local signal_player_join = SignalService.create("PlayerJoin")
 signal_player_join:connect(function(player)
     local _table = PlayerHTTP.handle(player.UserId, player.Name)
     local _player = Player.new(_table)
-    content[_table.id] = _player
 
-    print(_player:toTable())
+    content[_table.id] = _player
 end)
 
 -- Fires player join signal when player join.
@@ -79,8 +101,13 @@ if RunService:IsStudio() then
 end
 
 ------------------------
--- SIGNAL HANDLERS (PLAYER JOIN)
--------- (ENDS) --------
+-- SIGNAL HANDLERS (PLAYER JOIN) (ENDS)
+------------------------
+
+
+------------------------
+-- INITIALIZATION (ENDS)
+------------------------
 
 
 

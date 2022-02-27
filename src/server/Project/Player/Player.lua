@@ -7,6 +7,7 @@ local PlayerCurrencies = require(game.ServerScriptService.Project.Player.Currenc
 local PlayerStats = require(game.ServerScriptService.Project.Player.Stats.PlayerStats)
 local PlayerSettings = require(game.ServerScriptService.Project.Player.Settings.PlayerSettings)
 local PlayerStatistics = require(game.ServerScriptService.Project.Player.Statistics.PlayerStatistics)
+local HTTPService = Library.getService("HTTPService")
 local Metadata = Library.getTemplate("Metadata")
 local EventBinder = Library.getTemplate("EventBinder")
 -- STARTS
@@ -108,6 +109,18 @@ function class:toTable()
         settings = self.settings:toTable(),
         statistics = self.statistics:toTable()
     }
+end
+
+-- Converts player as a json string.
+-- @return Player json string.
+function class:toJson()
+    return HTTPService.encodeJson(self:toTable())
+    :gsub('"pets":%[%]', '"pets":{}')
+    :gsub('"trails":%[%]', '"trails":{}')
+	:gsub('"currencies":%[%]', '"currencies":{}')
+	:gsub('"settings":%[%]', '"settings":{}')
+	:gsub('"stats":%[%]', '"stats":{}')
+	:gsub('"statistics":%[%]', '"statistics":{}')
 end
 
 
