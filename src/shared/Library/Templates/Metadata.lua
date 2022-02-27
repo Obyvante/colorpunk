@@ -97,10 +97,18 @@ end
 
 -- Adds metadata value.
 -- @param _key Metadata key.
--- @param _overwrite Should overwrite or not. (DEFAULT = TRUE)
 -- @return Metadata. (BUILDER)
-function class:add(_key : ObjectValue, _overwrite : boolean)
-    return self:set(_key, 0, _overwrite)
+function class:add(_key : ObjectValue)
+    return self:set(_key, 0)
+end
+
+-- Adds metadata value with expire feature.
+-- @param _key Metadata key.
+-- @param _delay Delay to expire metadata key.
+-- @param _consumer Consumer(function) to run when metadata key expires.
+-- @return Metadata. (BUILDER)
+function class:addExpirable(_key : ObjectValue, _delay : number, _consumer : ObjectValue)
+    return self:setExpirable(_key, 0, _delay, _consumer)
 end
 
 -- Removes metadata value by its key.
