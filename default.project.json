@@ -65,6 +65,11 @@
         }
       },
 
+      "Events": {
+        "$className": "Folder",
+        "$path": "src/events"
+      },
+
       "Project": {
         "$className": "Project",
         "$path": "src/shared/Project"
