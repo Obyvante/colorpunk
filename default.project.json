@@ -73,6 +73,11 @@
       "Project": {
         "$className": "Project",
         "$path": "src/shared/Project"
+      },
+
+      "Pists" : {
+        "$className": "Folder",
+        "$path": "src/pists"
       }
     }
   }
