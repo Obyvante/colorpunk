@@ -67,17 +67,17 @@
 
       "Events": {
         "$className": "Folder",
-        "$path": "src/events"
+        "$path": "events"
+      },
+
+      "Pists" : {
+        "$className": "Folder",
+        "$path": "pists"
       },
 
       "Project": {
         "$className": "Project",
         "$path": "src/shared/Project"
-      },
-
-      "Pists" : {
-        "$className": "Folder",
-        "$path": "src/pists"
       }
     }
   }
