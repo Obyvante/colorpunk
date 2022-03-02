@@ -58,7 +58,7 @@ end
 
 -- Player cache updater.
 -- Every 90 seconds.
-TaskService.createRepeating(90, function(_task)
+TaskService.create(90, 90, function(_task)
     -- Async task.
     task.spawn(function()
         -- Safe http request.

@@ -184,6 +184,7 @@ function class:run()
     if self.completed then error("Tried running task(" .. self.id .. ") even it is completed") end
 
     self.running = true
+    self.timer = self.every and self.every or 0
 
     -- Handles task heartbeat.
     self.heartbeat = RunService.Heartbeat:Connect(function(delta)

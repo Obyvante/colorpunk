@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local class = {}
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
-local Endpoints = require(game.ServerScriptService.Project.Endpoints)
+local Endpoints = require(game.ServerScriptService.Project.Utils.Endpoints)
 local HTTPService = Library.getService("HTTPService")
 local Trail = require(game.ServerScriptService.Project.Cosmetics.Trail.Trail)
 -- STARTS
