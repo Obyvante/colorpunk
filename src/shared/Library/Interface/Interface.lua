@@ -98,14 +98,29 @@ end
 function class:bind(instance : Instance)
     -- Object nil checks.
     assert(instance ~= nil, "Interface(" .. self.id .. ") instance cannot be null")
-
     self.parent = instance
+
+    if instance.ClassName ~= "PlayerGui" then
+        if instance.ClassName == "BillboardGui" then
+            for _, element in pairs(self.elements) do element:getInstance().Parent = instance end
+        end
+
+        return
+    end
+
     self.screen.Parent = instance
 end
 
 -- Unbinds interface.
 function class:unbind()
     if self.parent == nil then return end
+
+    if self.parent.ClassName ~= "PlayerGui" then
+        if self.parent.ClassName == "BillboardGui" then
+            for _, element in pairs(self.elements) do element:getInstance().Parent = nil end
+        end
+    end
+
     self.parent = nil
     self.screen.Parent = nil
 end

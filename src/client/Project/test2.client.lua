@@ -1,17 +1,172 @@
 -- IMPORTS
-local Lighting = game:GetService("Lighting")
 local TweenService = game:GetService("TweenService")
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
+local SignalService = Library.getService("SignalService")
 local TaskService = Library.getService("TaskService")
+local InterfaceService = Library.getService("InterfaceService")
 local Metadata = Library.getTemplate("Metadata")
 local Player = game:GetService("Players").LocalPlayer
 local UserInputService = game:GetService("UserInputService")
+
+require(script.Parent.egg)
 
 local screenGui
 local Blur
 
 UserInputService.InputBegan:Connect(function(input)
-	if input.KeyCode == Enum.KeyCode.E then
+    
+	if input.KeyCode == Enum.KeyCode.Q then
+        
+
+        return
+    end
+
+	if input.KeyCode == Enum.KeyCode.T then
+        local interface = InterfaceService.create("box_open", Vector2.new(3840, 2160))
+
+        local body = interface:addElement({
+            Name = "body",
+            Type = "ImageLabel",
+            Properties = {
+                Custom = {
+                    Size = Vector2.new(1854, 1323),
+                    Position = Vector2.new(992, 417)
+                },
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+
+                Image = "rbxassetid://8992906693"
+            },
+
+            BuildWith = {
+                "AspectRatio"
+            }
+        })
+
+        body:addElement({
+            Name = "title",
+            Type = "TextLabel",
+            Properties = {
+                Custom = {
+                    Size = Vector2.new(1536, 132),
+                    Position = Vector2.new(159, 132),
+                    FontSize = 120
+                },
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+                
+                RichText = true,
+                Font = "DenkOne",
+                TextColor3 = Color3.fromRGB(30, 255, 218),
+                Text = "<b>Are you sure?</b>"
+            }
+        })
+
+        body:addElement({
+            Name = "body_text",
+            Type = "TextLabel",
+            Properties = {
+                Custom = {
+                    Size = Vector2.new(1536, 559),
+                    Position = Vector2.new(159, 380),
+                    FontSize = 100
+                },
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+                
+                Text =
+[[
+Buy and open a <font color="rgb(40, 246, 243)">Premium Egg</font> for 
+<font color="rgb(250, 206, 68)">1,000 Golds</font>?
+]],
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                LineHeight = 1,
+                RichText = true,
+                Font = "DenkOne"
+            }
+        })
+        
+        body:addElement({
+            Name = "decline",
+            Type = "ImageLabel",
+            Properties = {
+                Custom = {
+                    Size = Vector2.new(593, 204),
+                    Position = Vector2.new(320, 875)
+                },
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+
+                Image = "rbxassetid://8992907433"
+            }
+        }):addElement({
+            Name = "text",
+            Type = "TextLabel",
+            Properties = {
+                Custom = {
+                    Size = Vector2.new(300, 82),
+                    Position = Vector2.new(146, 47),
+                    FontSize = 75
+                },
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+                
+                Text = "DECLINE",
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Font = "DenkOne"
+            }
+        })
+        
+        body:addElement({
+            Name = "accept",
+            Type = "ImageLabel",
+            Properties = {
+                Custom = {
+                    Size = Vector2.new(593, 204),
+                    Position = Vector2.new(942, 875)
+                },
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+
+                Image = "rbxassetid://8992907836"
+            }
+        }):addElement({
+            Name = "text",
+            Type = "TextLabel",
+            Properties = {
+                Custom = {
+                    Size = Vector2.new(300, 82),
+                    Position = Vector2.new(146, 47),
+                    FontSize = 75
+                },
+
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                BorderSizePixel = 0,
+                BackgroundTransparency = 1,
+                
+                Text = "ACCEPT",
+                TextColor3 = Color3.fromRGB(255, 255, 255),
+                Font = "DenkOne"
+            }
+        })
+
+        interface:bind(Player.PlayerGui)
+        return
+    end
+
+	if input.KeyCode == Enum.KeyCode.R then
         if screenGui ~= nil then
             screenGui:Destroy()
             Blur:Destroy()
@@ -93,10 +248,10 @@ UserInputService.InputBegan:Connect(function(input)
             BackgroundTransparency = 1
         }):Play()
 
-        Mesh.MeshId = "rbxassetid://3177751801"
-        Mesh.TextureId = "rbxassetid://6540864142"
-        Mesh.Scale *= 0.6
-        Mesh.Offset = Vector3.new(0, 0, 2)
+        Mesh.MeshId = "rbxassetid://8995098350"
+        Mesh.TextureId = "rbxassetid://8995102969"
+        Mesh.Scale = Vector3.new(0.2, 0.2, 0.2)
+        Mesh.Offset = Vector3.new(0, 0, 0)
         part.Transparency = 0
 
         local text = Instance.new("TextLabel")
@@ -109,7 +264,7 @@ UserInputService.InputBegan:Connect(function(input)
         text.Font = "DenkOne"
         text.Parent = viewportFrame
         
-        local q = 180
+        local q = 45
         TaskService.createRepeating(0.01, function(_task)
             q += 1
             if q >= 180 then
@@ -119,3 +274,6 @@ UserInputService.InputBegan:Connect(function(input)
         end):run()
 	end
 end)
+
+SignalService.create("Premium Egg Interact")
+print("created 1")
