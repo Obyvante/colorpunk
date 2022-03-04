@@ -65,11 +65,11 @@ function class.get(_id : string)
     return _interfaces[_id]
 end
 
--- Creates an interface.
+-- Creates an interface for screen gui.
 -- @param _id Interface id.
 -- @param _viewport Interface viewport. (BASED ON)
 -- @return Created interface.
-function class.create(_id : string, _viewport : Vector2)
+function class.createScreen(_id : string, _viewport : Vector2)
     -- Object nil check.
     assert(_id ~= nil, "Interface id cannot be null")
     assert(_viewport ~= nil, "Interface(" .. _id .. ") viewport cannot be null")
@@ -77,6 +77,24 @@ function class.create(_id : string, _viewport : Vector2)
 
     -- Creates an interface.
     local interface = Interface.create(_id, _viewport)
+    -- Adds created interface to the list.
+    _interfaces[_id] = interface
+
+    return interface
+end
+
+-- Creates an interface for billboard gui.
+-- @param _id Interface id.
+-- @param _viewport Interface viewport. (BASED ON)
+-- @return Created interface.
+function class.createBillboard(_id : string, _viewport : Vector2, _properties : table)
+    -- Object nil check.
+    assert(_id ~= nil, "Interface id cannot be null")
+    assert(_viewport ~= nil, "Interface(" .. _id .. ") viewport cannot be null")
+    assert(_interfaces[_id] == nil, "Interface(" .. _id .. ") is already exist")
+
+    -- Creates an interface.
+    local interface = Interface.createBillboard(_id, _viewport, _properties)
     -- Adds created interface to the list.
     _interfaces[_id] = interface
 
