@@ -9,7 +9,6 @@ module.WHITELIST = {
 	light_blue = true,
 	yellow = true,
 	dark_blue = true,
-	red = true,
 	white = true
 }
 

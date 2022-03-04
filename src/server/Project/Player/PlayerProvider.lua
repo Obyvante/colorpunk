@@ -96,7 +96,7 @@ end)
 
 -- Fires player join signal when player join.
 PlayersService.PlayerAdded:Connect(function(player)
-    signal_player_join:fire(player)
+    task.spawn(function() signal_player_join:fire(player) end)
 end)
 
 -- Handles player leave.
@@ -125,7 +125,7 @@ end)
 -- If it is studio, call player join signal manually.
 if RunService:IsStudio() then
     for _, value in pairs(PlayersService:GetPlayers()) do
-        signal_player_join:fire(value)
+        task.spawn(function() signal_player_join:fire(value) end)
     end
 end
 

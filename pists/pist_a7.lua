@@ -2,10 +2,9 @@ local module = {}
 
 module.WHITELIST = {
 	light_gray = true,
-	lime = true,
+	black = true,
 	cyan = true,
 	dark_gray = true,
-	black = true,
 	orange = true,
 	red = true
 }

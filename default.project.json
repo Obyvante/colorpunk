@@ -37,6 +37,11 @@
       }
     },
 
+    "ReplicatedFirst": {
+      "$className": "ReplicatedFirst",
+      "$path": "src/preload"
+    },
+
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
       "$path": "src/shared",

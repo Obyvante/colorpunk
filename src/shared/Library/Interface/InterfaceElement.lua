@@ -237,7 +237,23 @@ function class:updateProperties(_properties : table)
 
             -- Sets text size to 1 since we are going to use tricky "UIScale" to scale our font size.
             self.instance.TextSize = 1
-            self:addElement({
+
+            -- Creates UI scale consumer.
+            local _consumer = function(_binder)
+                -- Waits heartbeat to update viewport size.
+                game:GetService("RunService").Heartbeat:Wait()
+
+                -- Calculates font size ratio.
+                local font_size_ratio = self.parent:getInstance().AbsoluteSize.X / parent_properties_custom.Size.X
+
+                -- Updates font size with using "UISize" object. (HACKY SOLUTION)
+                _binder:getParent():updateProperties({
+                    Scale = font_size * font_size_ratio
+                })
+            end
+
+            -- Adds text scale element.
+            local text_scale = self:addElement({
                 Name = "TextScale",
                 Type = "UIScale",
                 Properties = {
@@ -247,21 +263,16 @@ function class:updateProperties(_properties : table)
                     {
                         Name = "Font Size Calculation",
                         BindTo = workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"),
-                        Consumer = function(_binder)
-                            -- Waits heartbeat to update viewport size.
-                            game:GetService("RunService").Heartbeat:Wait()
-        
-                            -- Calculates font size ratio.
-                            local font_size_ratio = self.parent:getInstance().AbsoluteSize.X / parent_properties_custom.Size.X
-        
-                            -- Updates font size with using "UISize" object. (HACKY SOLUTION)
-                            _binder:getParent():updateProperties({
-                                Scale = font_size * font_size_ratio
-                            })
-                        end
+                        Consumer = _consumer
                     }
                 }
             })
+            
+            -- Waits heartbeat to update font size.
+            task.spawn(function()
+                game:GetService("RunService").Heartbeat:Wait()
+                _consumer(text_scale:getEventBinder())
+            end)
         end
     end
 
@@ -304,10 +315,15 @@ end
 function class:destroy()
     if self.metadata then self.metadata:reset() end
     if self.event_binder then self.event_binder:destroy() end
+    for _, value in pairs(self.elements) do value:destroy() end
     self.instance:Destroy()
 
     -- Removes interface element from the parent elements list.
-    self:getParent():getElements()[self.id] = nil
+    if self.parent ~= nil then
+        self.parent:getElements()[self.id] = nil
+    else
+        self.interface:getElements()[self.id] = nil
+    end
 
     setmetatable(self, nil)
 end

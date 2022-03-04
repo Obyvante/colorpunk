@@ -7,6 +7,18 @@ local Interface = require(game:GetService("ReplicatedStorage"):WaitForChild("Lib
 -- VARIABLES
 local _addons = {}
 local _interfaces = {}
+-- STATICS
+class.VIEWPORTS = {
+    PC = Vector2.new(3840, 2160),
+    MOBILE = Vector2.new(1366, 1024)
+}
+
+-- Gets default viewport by its type.
+-- @param _type Device type.
+-- @return Viewport. (Vector2)
+function class.getViewport(_type : string)
+    
+end
 
 
 -- Gets addon by its name.
@@ -76,7 +88,7 @@ function class.createScreen(_id : string, _viewport : Vector2)
     assert(_interfaces[_id] == nil, "Interface(" .. _id .. ") is already exist")
 
     -- Creates an interface.
-    local interface = Interface.create(_id, _viewport)
+    local interface = Interface.createScreen(_id, _viewport)
     -- Adds created interface to the list.
     _interfaces[_id] = interface
 

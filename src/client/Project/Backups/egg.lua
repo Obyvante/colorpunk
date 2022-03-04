@@ -1,11 +1,36 @@
-local class = {}
-
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 local EventService = Library.getService("EventService")
+local TaskService = Library.getService("TaskService")
 local ProximityPromptService = game:GetService("ProximityPromptService")
 local InterfaceService = Library.getService("InterfaceService")
 local Location = game.Workspace.World.Lobby.Pedestal.Left["1"].Chest.Action
 
+--[[
+local parts = {}
+local time = os.time()
+for _, descendant in ipairs(game.Workspace.World:GetDescendants()) do
+    if (not descendant:IsA("Part") and not descendant:IsA("MeshPart")) or descendant.Material ~= Enum.Material.Neon then continue end
+    print()
+    table.insert(parts, descendant)
+end
+print("takes(1) -> ", (os.time() - time))
+
+local red = 0
+local inverse = false
+TaskService.createRepeating(0.02, function(_task)
+    if red >= 255 then
+        inverse = true
+    elseif red <= 0 then
+        inverse = false
+    end
+
+    red += inverse and -1 or 1
+    local c = Color3.fromRGB(red, 0, 0)
+    for _, part in pairs(parts) do
+        part.Color = c
+    end
+end):run()
+]]
 
 function create()
     local interface = InterfaceService.get("prompt")
@@ -91,5 +116,3 @@ end)
 ProximityPromptService.PromptShown:Connect(function(prompt, input)
 	create()
 end)
-
-return class
