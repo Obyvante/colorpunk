@@ -31,11 +31,11 @@ end
 
 -- Starts warning screen.
 function class.startWarning()
-    TweenService:Create(class.spritesheet:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    TweenService:Create(class.spritesheet:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
         ImageTransparency = 1
     }):Play()
 
-    TweenService:Create(class.text:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    TweenService:Create(class.text:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
         TextTransparency = 1
     }):Play()
 
@@ -110,15 +110,31 @@ and seek medical attention immediately.
         }
     })
 
-
-    TweenService:Create(class.warning_title:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    TweenService:Create(class.warning_title:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
         TextTransparency = 0
     }):Play()
-    TweenService:Create(class.warning_text:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+    TweenService:Create(class.warning_text:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
         TextTransparency = 0
     }):Play()
 
-    task.wait(9999)
+    task.wait(4)
+    
+    TweenService:Create(class.warning_title:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+        TextTransparency = 1
+    }):Play()
+    TweenService:Create(class.warning_text:getInstance(), TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+        TextTransparency = 1
+    }):Play()
+
+    task.wait(0.2)
+
+    TweenService:Create(class.frame:getInstance(), TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+        BackgroundTransparency = 1
+    }):Play()
+
+    task.wait(2)
+
+    class.destroy()
 
     print("yey!")
 end
@@ -226,8 +242,6 @@ class.schduled_task = TaskService.createRepeating(0.5, function(_task)
         Text = "Loading" .. string.rep(".", stage)
     })
 end):run()
-
-task.wait(5)
 
 ------------------------
 -- INITIALIZATION (ENDS)

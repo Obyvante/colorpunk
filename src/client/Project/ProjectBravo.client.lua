@@ -29,10 +29,6 @@ interface_load.startWarning()
 -- DESTROY AND BE READY (STARTS)
 ------------------------
 
-interface_load.destroy()
-
---interface_load.destroy()
-
 print("READY!")
 
 ------------------------

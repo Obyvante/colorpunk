@@ -8,7 +8,6 @@ local Metadata = Library.getTemplate("Metadata")
 local Player = game:GetService("Players").LocalPlayer
 local UserInputService = game:GetService("UserInputService")
 
-require(script.Parent.egg)
 
 local screenGui
 local Blur
@@ -16,13 +15,17 @@ local Blur
 UserInputService.InputBegan:Connect(function(input)
     
 	if input.KeyCode == Enum.KeyCode.Q then
-        
-
         return
     end
 
 	if input.KeyCode == Enum.KeyCode.T then
-        local interface = InterfaceService.create("box_open", Vector2.new(3840, 2160))
+        local interface = InterfaceService.get("box_open")
+        if interface ~= nil then
+            InterfaceService.delete("box_open")
+            return
+        end
+
+        interface = InterfaceService.createScreen("box_open", Vector2.new(3840, 2160))
 
         local body = interface:addElement({
             Name = "body",
@@ -163,6 +166,12 @@ Buy and open a <font color="rgb(40, 246, 243)">Premium Egg</font> for
         })
 
         interface:bind(Player.PlayerGui)
+
+        
+
+        --TweenService:Create(part, TweenInfo.new(0.75, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        --    Position = Vector3.new(0, 0, -10)
+        --}):Play()
         return
     end
 
@@ -248,9 +257,9 @@ Buy and open a <font color="rgb(40, 246, 243)">Premium Egg</font> for
             BackgroundTransparency = 1
         }):Play()
 
-        Mesh.MeshId = "rbxassetid://8995098350"
-        Mesh.TextureId = "rbxassetid://8995102969"
-        Mesh.Scale = Vector3.new(0.2, 0.2, 0.2)
+        Mesh.MeshId = "rbxassetid://8995275932"
+        Mesh.TextureId = "rbxassetid://8995276153"
+        Mesh.Scale *= 0.75
         Mesh.Offset = Vector3.new(0, 0, 0)
         part.Transparency = 0
 

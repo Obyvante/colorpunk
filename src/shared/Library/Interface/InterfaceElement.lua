@@ -27,7 +27,6 @@ function class.new(_interface : ModuleScript, _data : table, _parent : Folder)
 
     -- Creates an instance based on interface element type.
     local instance = Instance.new(_data.Type)
-    instance.Parent = if not _parent then _interface:getScreen() else _parent:getInstance()
     instance.Name = _data.Name
     _element["instance"] = instance
 
@@ -35,6 +34,8 @@ function class.new(_interface : ModuleScript, _data : table, _parent : Folder)
     if _data.Properties then
         _element:updateProperties(_data.Properties)
     end
+    
+    instance.Parent = if not _parent then _interface:getScreen() else _parent:getInstance()
 
     -- Adds events to the created instance.
     if _data.Events then
@@ -234,6 +235,7 @@ function class:updateProperties(_properties : table)
             assert(parent_properties_custom ~= nil and parent_properties_custom.Size ~= nil, "To set custom font size, there must be also a custom sized parent")
 
             local font_size = _properties.Custom.FontSize
+            self.instance.TextTransparency = 1
 
             -- Sets text size to 1 since we are going to use tricky "UIScale" to scale our font size.
             self.instance.TextSize = 1
@@ -257,7 +259,7 @@ function class:updateProperties(_properties : table)
                 Name = "TextScale",
                 Type = "UIScale",
                 Properties = {
-                    Scale = font_size * (workspace.CurrentCamera.ViewportSize.X / viewport.X)
+                    Scale = font_size * self.parent:getInstance().AbsoluteSize.X / parent_properties_custom.Size.X,
                 },
                 Events = {
                     {
@@ -267,11 +269,11 @@ function class:updateProperties(_properties : table)
                     }
                 }
             })
-            
-            -- Waits heartbeat to update font size.
+
+            -- Handles text rescale.
             task.spawn(function()
-                game:GetService("RunService").Heartbeat:Wait()
                 _consumer(text_scale:getEventBinder())
+                self.instance.TextTransparency = 0
             end)
         end
     end
