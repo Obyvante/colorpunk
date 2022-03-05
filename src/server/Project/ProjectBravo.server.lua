@@ -13,6 +13,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 ----------
 -- INITIALIZATION
 ----------
+local time = os.time()
 
 -- Saves custom services.
 for i = 1, PATH_SIZE, 1 do Library.saveService(PATHS[i]) end
@@ -21,3 +22,5 @@ for i = 1, PATH_SIZE, 1 do Library.saveService(PATHS[i]) end
 -- It is after saving services since we are not sure which one
 -- can throw error.
 for i = 1, PATH_SIZE, 1 do require(PATHS[i]) end
+
+print("✔️ Colorpunk server has been initialized in", os.time() - time, "ms!")

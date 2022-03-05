@@ -39,6 +39,7 @@ end
 ----------
 -- INITIALIZATION
 ----------
+local time = os.time()
 
 local response = HTTPService.GET(Endpoints.TRAIL_ENDPOINT, { ["BARDEN-API-KEY"] = Endpoints.API_KEY })
 -- If fetching data was not successfully, no need to continue.
@@ -58,7 +59,7 @@ for _id, _data in pairs(json.results) do
 end
 
 -- Informing successful initialization.
-print(Library.getService("TableService").size(content), "trails are initialized successfully!")
+print("✔️", Library.getService("TableService").size(content), "trails have been initialized in", os.time() - time, "ms!")
 
 
 -- ENDS

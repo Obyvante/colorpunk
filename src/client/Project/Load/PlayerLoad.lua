@@ -1,17 +1,32 @@
 local class = {}
 -- IMPORTS
-local player = game:GetService("Players").LocalPlayer
+local client = game:GetService("Players").LocalPlayer
+local Library = require(game:GetService("ReplicatedStorage").Library.Library)
+--local Player = require(game.ReplicatedStorage.Project.Player.Player)
+local ClientCallbackService = Library.getService("ClientCallbackService")
 -- STARTS
 
 
--- Loading player's character and humanoid parts.
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid", 999)
-local humanoid_root = character:WaitForChild("HumanoidRootPart", 999)
+-- Handles exceptions.
+local success, message = pcall(function()
+    local _data = ClientCallbackService.handle("PlayerLoad", 10)
+    print(_data)
+end)
 
--- Configures client's default characters.
-humanoid:SetStateEnabled(Enum.HumanoidStateType.Climbing, false)
-humanoid:SetStateEnabled(Enum.HumanoidStateType.Dead, false)
+-- If it is not successfully, kicks player.
+if not success then
+    client:Kick([[
+
+
+(ERROR: DATABASE)
+
+We couldn't load your information from our system. 
+Please try again after a while.
+
+If you think it is a bug/an issue, please contact our staff or Roblox staff.
+]])
+    task.wait(5)
+end
 
 
 -- ENDS

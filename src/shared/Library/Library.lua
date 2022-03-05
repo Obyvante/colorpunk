@@ -95,7 +95,7 @@ elseif RunService:IsServer() then
 end
 
 -- Informs console that library has been loaded.
-print("Barden Roblox Library(" .. (RunService:IsClient() and "client" or "server") .. ") has been initialized!")
+print("✔️ Barden Roblox Library(" .. (RunService:IsClient() and "client" or "server") .. ") has been initialized!")
 
 
 -- ENDS

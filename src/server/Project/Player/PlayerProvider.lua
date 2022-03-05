@@ -5,6 +5,8 @@ local Player = require(game.ServerScriptService.Project.Player.Player)
 local PlayerHTTP = require(game.ServerScriptService.Project.Player.HTTP.PlayerHTTP)
 local SignalService = Library.getService("SignalService")
 local TaskService = Library.getService("TaskService")
+local EventService = Library.getService("EventService")
+local TableService = Library.getService("TableService")
 local PlayersService = game:GetService("Players")
 local RunService = game:GetService("RunService")
 -- STARTS
@@ -59,6 +61,9 @@ end
 -- Player cache updater.
 -- Every 90 seconds.
 TaskService.create(90, 90, function(_task)
+    -- If table 
+    if TableService.size(content) == 0 then return end
+
     -- Async task.
     task.spawn(function()
         -- Safe http request.
@@ -77,6 +82,30 @@ end):run()
 ------------------------
 -- TASKS (ENDS)
 -----------------------
+
+
+------------------------
+-- REMOTE EVENTS (STARTS)
+------------------------
+
+-- Gets remote events about player.
+local player_load = EventService.get("PlayerLoad")
+
+-- [PLAYER LOAD]
+player_load.OnServerEvent:Connect(function(player)
+    local timer = 0
+    task.spawn(function()
+        while content[player.UserId] == nil do
+            timer += task.wait()
+            if timer >= 10 then return end
+        end
+        player_load:FireClient(player, content[player.UserId]:toTable())
+    end)
+end)
+
+------------------------
+-- REMOTE EVENTS (ENDS)
+------------------------
 
 
 ------------------------

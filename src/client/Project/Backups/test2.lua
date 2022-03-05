@@ -283,6 +283,3 @@ Buy and open a <font color="rgb(40, 246, 243)">Premium Egg</font> for
         end):run()
 	end
 end)
-
-SignalService.create("Premium Egg Interact")
-print("created 1")

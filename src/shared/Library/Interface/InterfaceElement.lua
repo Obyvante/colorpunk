@@ -273,7 +273,7 @@ function class:updateProperties(_properties : table)
             -- Handles text rescale.
             task.spawn(function()
                 _consumer(text_scale:getEventBinder())
-                self.instance.TextTransparency = 0
+                self.instance.TextTransparency = _properties.TextTransparency or 0
             end)
         end
     end

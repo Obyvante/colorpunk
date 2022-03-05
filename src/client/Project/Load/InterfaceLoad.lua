@@ -135,8 +135,6 @@ and seek medical attention immediately.
     task.wait(2)
 
     class.destroy()
-
-    print("yey!")
 end
 
 ------------------------
@@ -235,7 +233,7 @@ local stage = -1
 -- Creates task to handle dot animation.
 class.schduled_task = TaskService.createRepeating(0.5, function(_task)
     -- Increases or resets dot size.
-    stage = stage > 3 and 0 or stage + 1
+    stage = stage > 2 and 0 or stage + 1
 
     -- Updates dot text.
     class.text:updateProperties({
