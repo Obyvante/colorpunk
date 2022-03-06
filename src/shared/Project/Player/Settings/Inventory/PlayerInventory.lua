@@ -1,8 +1,10 @@
 local class = {}
 class.__index = class
+-- PATHS
+local PlayerFolder = game.ReplicatedStorage.Project.Player
 -- IMPORTS
-local PlayerPetInventory = require(game.ServerScriptService.Project.Player.Inventory.Pet.PlayerPetInventory)
-local PlayerTrailInventory = require(game.ServerScriptService.Project.Player.Inventory.Trail.PlayerTrailInventory)
+local PlayerPetInventory = require(PlayerFolder.Inventory.Pet.PlayerPetInventory)
+local PlayerTrailInventory = require(PlayerFolder.Inventory.Trail.PlayerTrailInventory)
 -- STARTS
 
 

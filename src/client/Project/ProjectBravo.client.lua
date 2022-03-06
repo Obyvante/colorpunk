@@ -7,6 +7,13 @@ local time = os.time()
 -- API CALLS AND IMPORTS (STARTS)
 ------------------------
 
+task.spawn(function()
+    for i = 1, 10, 1 do
+        print(game.Workspace.CurrentCamera.ViewportSize)
+        task.wait(0.1)
+    end
+end)
+
 -- Loads interface first.
 local interface_load = require(script.Parent.Load.InterfaceLoad)
 -- Loads player.
@@ -21,7 +28,9 @@ if not game.Loaded then game.Loaded:Wait() end
 local character_load = require(script.Parent.Load.CharacterLoad)
 
 -- Starts warning screen.
-interface_load.startWarning()
+-- TODO: it is for skipipping warning more faster.
+--interface_load.startWarning()
+interface_load.destroy()
 
 ------------------------
 -- API CALLS AND IMPORTS (ENDS)
@@ -34,9 +43,19 @@ interface_load.startWarning()
 
 print("✔️ DONE!")
 
-local inventory = require(script.Parent.Interfaces.inventory)
-inventory.equip()
-
 ------------------------
 -- DESTROY AND BE READY (ENDS)
+------------------------
+
+
+------------------------
+-- TEST (STARTS)
+------------------------
+
+require(game.ReplicatedStorage.Project.Player.Settings.Interface.Interface)
+local InterfaceService = Library.getService("InterfaceService")
+InterfaceService.get("settings"):bind(game.Players.LocalPlayer.PlayerGui)
+
+------------------------
+-- TEST (ENDS)
 ------------------------

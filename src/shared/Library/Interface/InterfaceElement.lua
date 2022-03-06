@@ -140,6 +140,7 @@ end
 function class:updateProperties(_properties : table)
     -- Object nil checks.
     assert(_properties ~= nil, self:getLogPrefix() .. " properties cannot be null[update properties]")
+    local first_time = self.properties
     self.properties = TableService.deepCopy(_properties)
 
     -- Saves properties to the instance.
@@ -163,6 +164,7 @@ function class:updateProperties(_properties : table)
             parent_properties = self.parent:getProperties()
             parent_properties_custom = parent_properties.Custom
         end
+        local canvas = _properties.Custom.CanvasSize
 
         -- Handles custom size.
         if _properties.Custom.Size then
@@ -275,161 +277,6 @@ function class:updateProperties(_properties : table)
                 _consumer(text_scale:getEventBinder())
                 self.instance.TextTransparency = _properties.TextTransparency or 0
             end)
-        end
-
-        -- Handles custom size.
-        if _properties.Custom.Scroll then
-            -- Declares required fields.
-            local _data = _properties.Custom.Scroll
-            local _metadata = self:getMetadata()
-
-            local seen_height = _properties.Custom.Size.Y
-            local content_size = _data.Height
-            local scroll_factory = _data.Factory
-            local bar_size = _data.Bar.Size.Y
-
-            local scroll_button_size = (if seen_height >= content_size
-                then bar_size - (bar_size * (content_size / seen_height))
-                else bar_size * (seen_height / content_size))
-            scroll_button_size += _data.Button.Position.Y
-
-            local scroll_button_tab = (bar_size - scroll_button_size) * (scroll_factory / content_size)
-
-           local scroll_button = self.parent:addElement({
-                Name = "scroll",
-                Type = "ImageLabel",
-                Properties = {
-                    Custom = {
-                        Position = _data.Bar.Position,
-                        Size = _data.Bar.Size
-                    },
-
-                    AnchorPoint = Vector2.new(0.5, 0.5),
-                    BorderSizePixel = 0,
-                    BackgroundTransparency = 1,
-                    Image = _data.Bar.Image
-                }
-            }):addElement({
-                Name = "button",
-                Type = "Frame",
-                Properties = {
-                    Custom = {
-                        Position = _data.Button.Position,
-                        Size = Vector2.new(_data.Button.Size.X, scroll_button_size)
-                    },
-    
-                    AnchorPoint = Vector2.new(0.5, 0.5),
-                    BorderSizePixel = 0,
-                    BackgroundTransparency = 0,
-                    BackgroundColor3 = Color3.fromHex("C0F2FF")
-                }
-            }):addElement({
-                Name = "corner",
-                Type = "UICorner",
-                Properties = {
-                    CornerRadius = UDim.new(1, 0)
-                }
-            }):getParent()
-
-            -- Scroll listener.
-            self:getEventBinder():bind(self.instance.InputChanged, {
-                Name = "scroll",
-                Consumer = function(_binder, _event)
-                    -- Only listens mouse wheel movement.
-                    if _event.UserInputType ~= Enum.UserInputType.MouseWheel then return end
-
-                    -- Declares required fields.
-                    local is_up = _event.Position.Z > 0
-                    local is_down = not is_up
-                    local current_position = _metadata:get("position", 0)
-                    local current_scroll_position = _metadata:get("scroll_position", 0)
-
-                    -- [UPWARDS]
-                    if is_up then
-                        -- If it is at top, no need to continue.
-                        if current_position == 0 then return end
-
-                        -- Declares required fields.
-                        local planning_position = current_position - _data.Factory
-                        local planning_factory = if planning_position >= 0 then _data.Factory else current_position
-
-                        -- Configures all elements inside the scroll body.
-                        for _, element in pairs(self:getElements()) do
-                            -- Declares required fields for current element.
-                            local element_properties = element:getProperties().Custom
-                            local element_position = element_properties.Position
-                            local element_size = element_properties.Size
-
-                            -- Updates current element properties. (UP/DOWN)
-                            element:updateProperties({
-                                Custom = {
-                                    Position = Vector2.new(element_position.X, element_position.Y + planning_factory),
-                                    Size = element_size
-                                },
-                                AnchorPoint = Vector2.new(0.5, 0.5)
-                            })
-                        end
-
-                        -- Declares required scroll fields.
-                        local scroll_properties = scroll_button:getProperties().Custom
-
-                        -- Updates scroll button position.
-                        scroll_button:updateProperties({
-                            Custom = {
-                                Position = Vector2.new(scroll_properties.Position.X, scroll_properties.Position.Y - scroll_button_tab),
-                                Size = scroll_properties.Size
-                            },
-                            AnchorPoint = Vector2.new(0.5, 0.5)
-                        })
-
-                        -- Updates current position.
-                        _metadata:set("position", math.max(planning_position, 0))
-                        return
-                    end
-                    
-                    -- [DOWNWARDS]
-                    if is_down then
-                        if current_position >= _data.Height then return end
-
-                        -- Declares required fields.
-                        local planning_position = current_position + _data.Factory
-                        local planning_factory = if _data.Height >= planning_position then _data.Factory else _data.Height - current_position
-
-                        -- Configures all elements inside the scroll body.
-                        for _, element in pairs(self:getElements()) do
-                            -- Declares required fields for current element.
-                            local element_properties = element:getProperties().Custom
-                            local element_position = element_properties.Position
-                            local element_size = element_properties.Size
-
-                            -- Updates current element properties. (UP/DOWN)
-                            element:updateProperties({
-                                Custom = {
-                                    Position = Vector2.new(element_position.X, element_position.Y - planning_factory),
-                                    Size = element_size
-                                },
-                                AnchorPoint = Vector2.new(0.5, 0.5)
-                            })
-                        end
-
-                        -- Declares required scroll fields.
-                        local scroll_properties = scroll_button:getProperties().Custom
-
-                        -- Updates scroll button position.
-                        scroll_button:updateProperties({
-                            Custom = {
-                                Position = Vector2.new(scroll_properties.Position.X, scroll_properties.Position.Y + scroll_button_tab),
-                                Size = scroll_properties.Size
-                            },
-                            AnchorPoint = Vector2.new(0.5, 0.5)
-                        })
-
-                        -- Updates current position.
-                        _metadata:set("position", math.min(planning_position, _data.Height))
-                        return
-                    end
-                end
-            })
         end
     end
 

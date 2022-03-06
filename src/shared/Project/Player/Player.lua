@@ -1,10 +1,10 @@
 local class = {}
 -- PATHS
-local PlayerFolder = game.StarterPlayer.StarterPlayerScripts.Project.Player
+local PlayerFolder = game.ReplicatedStorage.Project.Player
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
-local PlayerInventory = require(PlayerFolder.Inventory.PlayerInventory)
-local PlayerCurrencies = require(PlayerFolder.Currencies.PlayerCurrencies)
+--local PlayerInventory = require(PlayerFolder.Inventory.PlayerInventory)
+--local PlayerCurrencies = require(PlayerFolder.Currencies.PlayerCurrencies)
 local PlayerStats = require(PlayerFolder.Stats.PlayerStats)
 local PlayerSettings = require(PlayerFolder.Settings.PlayerSettings)
 local PlayerStatistics = require(PlayerFolder.Statistics.PlayerStatistics)

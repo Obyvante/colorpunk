@@ -43,7 +43,7 @@ local background = interface:addElement({
         AnchorPoint = Vector2.new(0.5, 0.5),
         BorderSizePixel = 0,
         BackgroundTransparency = 1,
-        ImageTransparency = 0.1,
+        ImageTransparency = 0,
 
         Image = "rbxassetid://" .. asset_ids.BACKGROUND
     },
@@ -110,30 +110,12 @@ local body = background:addElement({
     Properties = {
         Custom = {
             Position = Vector2.new(0, 256),
-            Size = Vector2.new(2528, 872),
-
-            Scroll = {
-                Height = 248 * (4 - 3),
-                Factory = 70,
-                
-                Bar = {
-                    Position = Vector2.new(2487, 275),
-                    Size = Vector2.new(33, 832),
-                    Image = "rbxassetid://9024031274"
-                },
-
-                Button = {
-                    Position = Vector2.new(8, 9),
-                    Size = Vector2.new(16, 0),
-                }
-            }
+            Size = Vector2.new(2528, 872)
         },
 
         AnchorPoint = Vector2.new(0.5, 0.5),
         BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ClipsDescendants = true,
-        Active = true
+        BackgroundTransparency = 1
     }
 })
 
@@ -143,7 +125,7 @@ function createButton(_slot : number, _position : Vector2)
         Type = "ImageLabel",
         Properties = {
             Custom = {
-                Position = _position,
+                Position = Vector2.new(_position.X, _position.Y),
                 Size = Vector2.new(250, 251)
             },
     
@@ -176,10 +158,10 @@ function createFooterButton(_slot : number, _position : Vector2)
 end
 
 local total = 0
-for row = 1, 5, 1 do
+for row = 1, 3, 1 do
     local height = (row - 1) * 248
     for slot = 1, 9, 1 do
-        createButton(total, Vector2.new(90 + ((slot - 1) * 260), 62 + height))
+        createButton(total, Vector2.new(106 + ((slot - 1) * 260), 62 + height))
         total += 1
     end
 end
