@@ -43,6 +43,7 @@ local background = interface:addElement({
         AnchorPoint = Vector2.new(0.5, 0.5),
         BorderSizePixel = 0,
         BackgroundTransparency = 1,
+        ImageTransparency = 0.1,
 
         Image = "rbxassetid://" .. asset_ids.BACKGROUND
     },
@@ -109,7 +110,23 @@ local body = background:addElement({
     Properties = {
         Custom = {
             Position = Vector2.new(0, 256),
-            Size = Vector2.new(2528, 872)
+            Size = Vector2.new(2528, 872),
+
+            Scroll = {
+                Height = 248 * (4 - 3),
+                Factory = 70,
+                
+                Bar = {
+                    Position = Vector2.new(2487, 275),
+                    Size = Vector2.new(33, 832),
+                    Image = "rbxassetid://9024031274"
+                },
+
+                Button = {
+                    Position = Vector2.new(8, 9),
+                    Size = Vector2.new(16, 0),
+                }
+            }
         },
 
         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -117,73 +134,6 @@ local body = background:addElement({
         BackgroundTransparency = 1,
         ClipsDescendants = true,
         Active = true
-    },
-
-    Events = {
-        {
-            Name = "click",
-            Event = "InputChanged",
-            Consumer = function(_binder, _event)
-                if _event.UserInputType ~= Enum.UserInputType.MouseWheel then
-                    return
-                end
-
-                local metadata = _binder:getParent():getMetadata()
-                metadata:set("", 0)
-
-                if _event.Position.Z > 0 then
-                    local _body = _binder:getParent()
-                    local max = 5
-                    local current = 0
-                    local factory = 20
-
-                    TaskService.createRepeating(0.01, function(_task)
-                        if current > max then
-                            _task:cancel()
-                            return
-                        end
-                        current += 1
-
-                        for _, value in pairs(_body:getElements()) do
-                            local value_properties = value:getProperties()
-    
-                            value:updateProperties({
-                                Custom = {
-                                    Position = Vector2.new(value_properties.Custom.Position.X, value_properties.Custom.Position.Y + factory),
-                                    Size = value_properties.Custom.Size
-                                },
-                                AnchorPoint = Vector2.new(0.5, 0.5)
-                            })
-                        end
-                    end):run()
-                else
-                    local _body = _binder:getParent()
-                    local max = 5
-                    local current = 0
-                    local factory = 20
-
-                    TaskService.createRepeating(0.01, function(_task)
-                        if current > max then
-                            _task:cancel()
-                            return
-                        end
-                        current += 1
-
-                        for _, value in pairs(_body:getElements()) do
-                            local value_properties = value:getProperties()
-    
-                            value:updateProperties({
-                                Custom = {
-                                    Position = Vector2.new(value_properties.Custom.Position.X, value_properties.Custom.Position.Y - factory),
-                                    Size = value_properties.Custom.Size
-                                },
-                                AnchorPoint = Vector2.new(0.5, 0.5)
-                            })
-                        end
-                    end):run()
-                end
-            end
-        }
     }
 })
 
@@ -202,49 +152,6 @@ function createButton(_slot : number, _position : Vector2)
             BackgroundTransparency = 1,
     
             Image = "rbxassetid://" .. asset_ids.BUTTON.BODY.NORMAL
-        },
-
-        Events = {
-            {
-                Name = "began",
-                Event = "InputBegan",
-                Consumer = function(_binder, _event)
-                    if _event.UserInputType ~= Enum.UserInputType.MouseMovement then
-                        return
-                    end
-
-                    local _parent = _binder:getParent()
-                    local _properties = _parent:getProperties()
-
-                    _parent:updateProperties({
-                        Custom = {
-                            Position = _properties.Custom.Position - (_properties.Custom.Size - (_properties.Custom.Size * 1.02)),
-                            Size = _properties.Custom.Size * 1.02
-                        },
-                        AnchorPoint = Vector2.new(0.5, 0.5)
-                    })
-                end
-            },
-            {
-                Name = "end",
-                Event = "InputEnded",
-                Consumer = function(_binder, _event)
-                    if _event.UserInputType ~= Enum.UserInputType.MouseMovement then
-                        return
-                    end
-
-                    local _parent = _binder:getParent()
-                    local _properties = _parent:getProperties()
-
-                    _parent:updateProperties({
-                        Custom = {
-                            Position = _properties.Custom.Position + (_properties.Custom.Size - (_properties.Custom.Size / 1.02)),
-                            Size = _properties.Custom.Size / 1.02
-                        },
-                        AnchorPoint = Vector2.new(0.5, 0.5)
-                    })
-                end
-            }
         }
     })
 end
@@ -269,7 +176,7 @@ function createFooterButton(_slot : number, _position : Vector2)
 end
 
 local total = 0
-for row = 1, 3, 1 do
+for row = 1, 5, 1 do
     local height = (row - 1) * 248
     for slot = 1, 9, 1 do
         createButton(total, Vector2.new(90 + ((slot - 1) * 260), 62 + height))

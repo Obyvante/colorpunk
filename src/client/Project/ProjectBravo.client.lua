@@ -1,8 +1,6 @@
 -- IMPORTS
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 
-print("a")
-
 -- TIMER
 local time = os.time()
 ------------------------
