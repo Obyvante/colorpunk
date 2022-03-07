@@ -4,10 +4,10 @@ local PlayerFolder = game.ReplicatedStorage.Project.Player
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
 --local PlayerInventory = require(PlayerFolder.Inventory.PlayerInventory)
---local PlayerCurrencies = require(PlayerFolder.Currencies.PlayerCurrencies)
-local PlayerStats = require(PlayerFolder.Stats.PlayerStats)
-local PlayerSettings = require(PlayerFolder.Settings.PlayerSettings)
-local PlayerStatistics = require(PlayerFolder.Statistics.PlayerStatistics)
+local ClientPlayerCurrencies = require(PlayerFolder.Currencies.ClientPlayerCurrencies)
+local ClientPlayerStats = require(PlayerFolder.Stats.ClientPlayerStats)
+local ClientPlayerSettings = require(PlayerFolder.Settings.ClientPlayerSettings)
+local ClientPlayerStatistics = require(PlayerFolder.Statistics.ClientPlayerStatistics)
 local Metadata = Library.getTemplate("Metadata")
 local EventBinder = Library.getTemplate("EventBinder")
 -- STARTS
@@ -33,17 +33,17 @@ function class.update(_table : table)
         class.id = _table.id
         class.name = _table.name
         --class.inventory = PlayerInventory.update(class, _table.inventory)
-        --class.currencies = PlayerCurrencies.update(class, _table.currencies)
-        class.settings = PlayerSettings.update(class, _table.settings)
-        class.stats = PlayerStats.update(class, _table.stats)
-        class.statistics = PlayerStatistics.update(class, _table.statistics)
+        class.currencies = ClientPlayerCurrencies.update(class, _table.currencies)
+        class.settings = ClientPlayerSettings.update(class, _table.settings)
+        class.stats = ClientPlayerStats.update(class, _table.stats)
+        class.statistics = ClientPlayerStatistics.update(class, _table.statistics)
         class.initialized = true
         return class
     end
 
     -- Handles updates.
     --class.inventory.update(_table.inventory)
-    --class.currencies.update(class, _table.currencies)
+    class.currencies.update(class, _table.currencies)
     class.settings.update(class, _table.settings)
     class.stats.update(class, _table.stats)
     class.statistics.update(class, _table.statistics)

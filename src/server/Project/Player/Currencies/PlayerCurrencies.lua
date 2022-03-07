@@ -3,6 +3,22 @@ class.__index = class
 -- STARTS
 
 
+------------------------
+-- VARIABLES (STARTS)
+------------------------
+
+-- Types (ENUM)
+class.Types = {
+    GOLD = {
+        NAME = "Money"
+    }
+}
+
+------------------------
+-- VARIABLES (ENDS)
+------------------------
+
+
 -- Creates a player currencies.
 -- @param _player Player.
 -- @param _table Player currencies table.
@@ -30,6 +46,7 @@ end
 function class:get(_type : string)
     -- Object nil checks.
     assert(_type ~= nil, "Player currency type cannot be null")
+    assert(class.Types[_type] ~= nil, "Player currency type is not exist")
     local _result = self.content[_type]
     return _result and _result or 0
 end
@@ -44,6 +61,7 @@ end
 function class:set(_type : string, _value : number)
     -- Object nil checks.
     assert(_type ~= nil, "Player currency type cannot be null")
+    assert(class.Types[_type] ~= nil, "Player currency type is not exist")
     assert(_value ~= nil, "Player currency value cannot be null")
     assert(_value >= 0, "Player currency value must be positive")
     self.content[_type] = _value
@@ -59,6 +77,7 @@ end
 function class:add(_type : string, _value : number)
     -- Object nil checks.
     assert(_type ~= nil, "Player currency type cannot be null")
+    assert(class.Types[_type] ~= nil, "Player currency type is not exist")
     assert(_value ~= nil, "Player currency value cannot be null")
     assert(_value >= 0, "Player currency value must be positive")
     self.content[_type] = math.max(self:get(_type) + _value, 0)
@@ -74,10 +93,13 @@ end
 function class:remove(_type : string, _value : number)
     -- Object nil checks.
     assert(_type ~= nil, "Player currency type cannot be null")
+    assert(class.Types[_type] ~= nil, "Player currency type is not exist")
     assert(_value ~= nil, "Player currency value cannot be null")
     assert(_value >= 0, "Player currency value must be positive")
     self.content[_type] = math.max(self:get(_type) - _value, 0)
 end
+
+-- TODO: will add packet system.
 
 -- Converts player currencies to a table.
 -- @return Player currencies table.

@@ -116,6 +116,12 @@ function class:addElement(_data : string)
     return element
 end
 
+-- Gets if interface is bound or not.
+-- @return If interface is bound or not.
+function class:isBound()
+    return self.parent ~= nil
+end
+
 -- Binds interface to target instance.
 -- @param instance Instance to bind to.
 function class:bind(instance : Instance)
@@ -124,11 +130,13 @@ function class:bind(instance : Instance)
 
     self.parent = instance
     self.screen.Parent = instance
+    for _, value in pairs(self.elements) do value:onBind() end
 end
 
 -- Unbinds interface.
 function class:unbind()
     if self.parent == nil then return end
+    for _, value in pairs(self.elements) do value:onUnbind() end
     self.parent = nil
     self.screen.Parent = nil
 end

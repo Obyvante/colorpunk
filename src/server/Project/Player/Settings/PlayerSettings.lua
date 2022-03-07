@@ -1,6 +1,47 @@
 local class = {}
 class.__index = class
+-- IMPORTS
+local Library = require(game.ReplicatedStorage.Library.Library)
+local EventService = Library.getService("EventService")
+-- EVENTS
+local PlayerSettingsEvent = EventService.get("PlayerSettings")
 -- STARTS
+
+
+------------------------
+-- VARIABLES (STARTS)
+------------------------
+
+-- Enum functions.
+local _types_boolean_checker = function(_value : number) return _value == 0 or _value == 1 end
+
+-- Types (ENUM)
+class.Types = {
+    VFX = {
+        DEFAULT = 1,
+        TYPE = "BOOLEAN",
+        CheckType = _types_boolean_checker
+    },
+    MUSIC = {
+        DEFAULT = 1,
+        TYPE = "BOOLEAN",
+        CheckType = _types_boolean_checker
+    },
+    SKIP_WARNING_SCREEN = {
+        DEFAULT = 0,
+        TYPE = "BOOLEAN",
+        CheckType = _types_boolean_checker
+    },
+    AUTO_ACCEPT_MATCH = {
+        DEFAULT = 0,
+        TYPE = "BOOLEAN",
+        CheckType = _types_boolean_checker
+    }
+}
+
+------------------------
+-- VARIABLES (ENDS)
+------------------------
 
 
 -- Creates a player settings.
@@ -30,8 +71,9 @@ end
 function class:get(_type : string)
     -- Object nil checks.
     assert(_type ~= nil, "Player setting type cannot be null")
+    assert(class.Types[_type] ~= nil, "Player setting type is not exist")
     local _result = self.content[_type]
-    return _result and _result or 0
+    return _result == nil and class.Types[_type].DEFAULT or _result
 end
 
 -- Gets player setting value as a boolean.
@@ -51,9 +93,30 @@ end
 function class:set(_type : string, _value : number)
     -- Object nil checks.
     assert(_type ~= nil, "Player setting type cannot be null")
+    assert(class.Types[_type] ~= nil, "Player setting type is not exist")
     assert(_value ~= nil, "Player setting value cannot be null")
     assert(_value >= 0, "Player setting value must be positive")
     self.content[_type] = math.floor(_value)
+
+    -- Sends update packet.
+    PlayerSettingsEvent:FireClient({
+        Type = _type,
+        Value = _value
+    })
+end
+
+-- Handles player settings packet.
+-- @param _packet Player settings packet.
+-- @return Player settings. (BUILDER)
+function class:handlePacket(_packet : table)
+    -- Safety check. (NIL)
+    if _packet == nil or type(_packet) ~= "table" or _packet.Type == nil or _packet.Value == nil then return end
+    -- Safety check. (INSIDE [A])
+    if class.Types[_packet.Type] == nil or not class.Types[_packet.Type].CheckType(_packet.Value) then return end
+
+    -- Updates setting value.
+    self.content[_packet.Type] = math.floor(_packet.Value)
+    return self
 end
 
 -- Converts player settings to a table.

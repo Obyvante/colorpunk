@@ -1,7 +1,6 @@
 local class = {}
 class.__index = class
 -- IMPORTS
-local TableService = require(script.Parent.Parent:WaitForChild("Services"):WaitForChild("TableService"))
 local EventBinder = require(script.Parent.Parent:WaitForChild("Templates"):WaitForChild("EventBinder"))
 local Metadata = require(script.Parent.Parent:WaitForChild("Templates"):WaitForChild("Metadata"))
 -- STARTS
@@ -58,9 +57,9 @@ function class.new(_interface : ModuleScript, _data : table, _parent : Folder)
                 local Y = _element.instance.AbsoluteSize.Y
 
                 -- If there are custom sizes, declares it.
-                if _element.properties.Custom then
-                    X = _element.properties.Custom.Size.X
-                    Y = _element.properties.Custom.Size.Y
+                if _element.Size then
+                    X = _element.Size.X
+                    Y = _element.Size.Y
                 end
 
                 -- Adds an element to the list with calculated properties.
@@ -128,160 +127,209 @@ function class:getInstance()
     return self.instance
 end
 
--- Gets interface element properties.
--- @return Interface element properties.
-function class:getProperties()
-    return self.properties
+
+------------------------
+-- PIXEL BASED (STARTS)
+------------------------
+
+-- Gets interface element size. (Pixel based)
+-- @return Interface element size. (Vector2)
+function class:getSize()
+    return self.Size
 end
 
--- Updates interface element instance.
--- @param _properties Interface element instance properties.
--- @return Interface element. (BUILDER)
-function class:updateProperties(_properties : table)
+-- Calculates interface element size. (Pixel based)
+-- @param _x X-axis.
+-- @param _y Y-axis.
+-- @return Calculation result. (Vector2)
+function class:getSizeCalculation(_x : number, _y : number)
     -- Object nil checks.
-    assert(_properties ~= nil, self:getLogPrefix() .. " properties cannot be null[update properties]")
-    local first_time = self.properties
-    self.properties = TableService.deepCopy(_properties)
+    assert(_x ~= nil, self:getLogPrefix() .. " X-axis size cannot be null")
+    assert(_y ~= nil, self:getLogPrefix() .. " Y-axis size cannot be null")
 
-    -- Saves properties to the instance.
-    for key, value in pairs(_properties) do
-        -- If it is custom property, no need to continue.
-        if key == "Custom" then continue end
+    -- Declares required fields.
+    local X, Y
+    local viewport = self.interface:getViewport()
+    local has_parent = self.parent ~= nil
 
-        self.instance[key] = value
+    -- Handles parent and child.
+    if has_parent then
+        -- Early check to handle safety.
+        assert(self.parent:getSize() ~= nil, "To set custom size with parent, there must be also a custom sized parent")
+
+        local parent_size = self.parent:getSize()
+
+        X = _x / parent_size.X
+        Y = _y / parent_size.Y
+    else
+        X = _x / viewport.X
+        Y = _y / viewport.Y
     end
 
-    -- Handls custom properties.
-    if _properties.Custom then
-        -- Declares required fields.
-        local viewport = self.interface:getViewport()
-        local ratio = viewport.X / viewport.Y
-        local anchor_point = _properties.AnchorPoint
-        local should_calculate_anchor = anchor_point ~= nil and (anchor_point.X ~= 0 or anchor_point.Y ~= 0)
-        local has_parent = self.parent ~= nil
-        local parent_properties, parent_properties_custom
-        if has_parent then
-            parent_properties = self.parent:getProperties()
-            parent_properties_custom = parent_properties.Custom
+    return Vector2.new(X, Y)
+end
+
+-- Sets interface element size. (Pixel based)
+-- @param _x X-axis.
+-- @param _y Y-axis.
+-- @return Interface element. (BUILDER)
+function class:setSize(_x : number, _y : number)
+    local result = self:getSizeCalculation(_x, _y)
+    -- Updates instance with calculated size.
+    self.instance.Size = UDim2.fromScale(result.X, result.Y)
+    -- Saves size information.
+    self.Size = Vector2.new(_x, _y)
+    return self
+end
+
+-- Gets interface element position. (Pixel based)
+-- @return Interface element position. (table: X, Y)
+function class:getPosition()
+    return self.Position
+end
+
+-- Calculates interface element position. (Pixel based)
+-- @param _x X-axis.
+-- @param _y Y-axis.
+-- @return Calculation result. (Vector2)
+function class:getPositionCalculation(_x : number, _y : number)
+    -- Object nil checks.
+    assert(_x ~= nil, self:getLogPrefix() .. " X-axis size cannot be null")
+    assert(_y ~= nil, self:getLogPrefix() .. " Y-axis size cannot be null")
+    -- Safety check.
+    assert(self.Size ~= nil, self:getLogPrefix() .. ", to set position(pixel-based), interface element must has pixel-based size!")
+
+    -- Declares required fields.
+    local X, Y
+    local viewport = self.interface:getViewport()
+    local anchor_point = self.instance.AnchorPoint
+    local should_calculate_anchor = anchor_point ~= nil and (anchor_point.X ~= 0 or anchor_point.Y ~= 0)
+
+    -- Handles parent and child.
+    if self.parent ~= nil then
+        -- Early check to handle safety.
+        assert(self.parent ~= nil and self.parent:getSize() ~= nil, self:getLogPrefix() .. ", to set position(pixel-based) with parent, interface element parent must has pixel-based size!")
+
+        local parent_size = self.parent:getSize()
+
+        if should_calculate_anchor then
+            X = _x + (self.Size.X * anchor_point.X)
+            Y = _y + (self.Size.Y * anchor_point.Y)
+
+            X = X / parent_size.X
+            Y = Y / parent_size.Y
+        else
+            X = _x / parent_size.X
+            Y = _y / parent_size.Y
         end
-        local canvas = _properties.Custom.CanvasSize
+    else
+        if should_calculate_anchor then
+            X = _x + (self.Size.X * anchor_point.X)
+            Y = _y + (self.Size.Y * anchor_point.Y)
 
-        -- Handles custom size.
-        if _properties.Custom.Size then
-            -- Early check to handle safety.
-            assert(_properties.Custom.Position ~= nil, "To set custom size, there must be also a custom position")
-
-            local _data = _properties.Custom.Size
-            local X, Y
-
-            if has_parent then
-                -- Early check to handle safety.
-                assert(parent_properties_custom ~= nil and parent_properties_custom.Size ~= nil, "To set custom size with parent, there must be also a custom sized parent")
-
-                local parent_size = parent_properties_custom.Size
-
-                X = _data.X / parent_size.X
-                Y = _data.Y / parent_size.Y
-            else
-                X = _data.X / viewport.X
-                Y = _data.Y / viewport.Y
-            end
-
-            self.instance.Size = UDim2.fromScale(X, Y)
+            X = X / viewport.X
+            Y = Y / viewport.Y
+        else
+            X = _x / viewport.X
+            Y = _y / viewport.Y
         end
+    end
 
-        -- Handles custom size.
-        if _properties.Custom.Position then
-            -- Early check to handle safety.
-            assert(_properties.Custom.Size ~= nil, "To set custom position, there must be also a custom size")
+    return Vector2.new(X, Y)
+end
 
-            local _data = _properties.Custom.Position
-            local X, Y
-                
-            if has_parent then
-                -- Early check to handle safety.
-                assert(parent_properties_custom ~= nil and parent_properties_custom.Size ~= nil, "To set custom position with parent, there must be also a custom sized parent")
+-- Sets interface element position. (Pixel based)
+-- @param _x X-axis.
+-- @param _y Y-axis.
+-- @return Interface element. (BUILDER)
+function class:setPosition(_x : number, _y : number)
+    local result = self:getPositionCalculation(_x, _y)
+    -- Updates instance with calculated position.
+    self.instance.Position = UDim2.fromScale(result.X, result.Y)
+    -- Saves position information.
+    self.Position = Vector2.new(_x, _y)
+    return self
+end
 
-                local parent_size = parent_properties_custom.Size
+-- Gets interface element font size. (Pixel based)
+-- @return Interface element font size.
+function class:getFontSize()
+    return self.FontSize
+end
 
-                if should_calculate_anchor then
-                    X = _data.X + (_properties.Custom.Size.X * anchor_point.X)
-                    Y = _data.Y + (_properties.Custom.Size.Y * anchor_point.Y)
+-- Sets interface element font size. (Pixel based)
+-- @param _x X-axis.
+-- @param _y Y-axis.
+-- @return Interface element. (BUILDER)
+function class:setFontSize(_size : number)
+    -- Object nil checks.
+    assert(_size ~= nil, self:getLogPrefix() .. " font size cannot be null")
+    -- Safety check.
+    assert(self.parent ~= nil and self.parent:getSize() ~= nil, self:getLogPrefix() .. ", to set font size(pixel-based), interface element parent must has pixel-based size!")
 
-                    X = X / parent_size.X
-                    Y = Y / parent_size.Y
-                else
-                    X = _data.X / parent_size.X
-                    Y = _data.Y / parent_size.Y
-                end
-            else
-                if should_calculate_anchor then
-                    X = _data.X + (_properties.Custom.Size.X * anchor_point.X)
-                    Y = _data.Y + (_properties.Custom.Size.Y * anchor_point.Y)
+    -- Declares required fields.
+    local parent_size = self.parent:getSize()
 
-                    X = X / viewport.X
-                    Y = Y / viewport.Y
-                else
-                    X = _data.X / viewport.X
-                    Y = _data.Y / viewport.Y
-                end
-            end
+    -- Creates UI scale consumer.
+    local _consumer = function(_binder)
+        -- Waits heartbeat to update viewport size.
+        game:GetService("RunService").Heartbeat:Wait()
 
-            self.instance.Position = UDim2.fromScale(X, Y)
-        end
+        -- Calculates font size ratio.
+         local font_size_ratio = self.parent:getInstance().AbsoluteSize.X / parent_size.X
 
-        -- Handles custom font size.
-        -- TODO: will add custom font size.
-        if _properties.Custom.FontSize then
-            -- Early check to handle safety.
-            assert(parent_properties_custom ~= nil and parent_properties_custom.Size ~= nil, "To set custom font size, there must be also a custom sized parent")
+        -- Updates font size with using "UISize" object. (HACKY SOLUTION)
+        _binder:getParent():updateProperties({
+              Scale = _size * font_size_ratio
+        })
+    end
 
-            local font_size = _properties.Custom.FontSize
-            self.instance.TextTransparency = 1
-
-            -- Sets text size to 1 since we are going to use tricky "UIScale" to scale our font size.
-            self.instance.TextSize = 1
-
-            -- Creates UI scale consumer.
-            local _consumer = function(_binder)
-                -- Waits heartbeat to update viewport size.
-                game:GetService("RunService").Heartbeat:Wait()
-
-                -- Calculates font size ratio.
-                local font_size_ratio = self.parent:getInstance().AbsoluteSize.X / parent_properties_custom.Size.X
-
-                -- Updates font size with using "UISize" object. (HACKY SOLUTION)
-                _binder:getParent():updateProperties({
-                    Scale = font_size * font_size_ratio
-                })
-            end
-
-            -- Adds text scale element.
-            local text_scale = self:addElement({
-                Name = "TextScale",
-                Type = "UIScale",
-                Properties = {
-                    Scale = font_size * self.parent:getInstance().AbsoluteSize.X / parent_properties_custom.Size.X,
-                },
-                Events = {
-                    {
-                        Name = "Font Size Calculation",
-                        BindTo = workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"),
-                        Consumer = _consumer
-                    }
+    -- Handles previous font size.
+    if self:getFontSize() == nil then
+        -- Configures default text size and transparency to wait process to be done.
+        self.instance.TextSize = 1
+    
+        -- Adds text scale element.
+        local text_scale = self:addElement({
+            Name = "scale",
+            Type = "UIScale",
+            Properties = {
+                Scale = _size * self.parent:getInstance().AbsoluteSize.X / parent_size.X,
+            },
+            Events = {
+                {
+                    Name = "Font Size Calculation",
+                    BindTo = workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"),
+                    Consumer = _consumer
                 }
-            })
-
-            -- Handles text rescale.
-            task.spawn(function()
-                _consumer(text_scale:getEventBinder())
-                self.instance.TextTransparency = _properties.TextTransparency or 0
-            end)
-        end
+            }
+        })
+    
+        -- Handles text rescale.
+        task.spawn(function()
+            _consumer(text_scale:getEventBinder())
+        end)
+    else
+        -- Handles text rescale.
+        task.spawn(function()
+            _consumer(self:getElement("scale"):getEventBinder())
+        end)
     end
+
+    -- Saves size information.
+    self.FontSize = _size
 
     return self
 end
+
+------------------------
+-- PIXEL BASED (ENDS)
+------------------------
+
+
+------------------------
+-- ELEMENTS (STARTS)
+------------------------
 
 -- Gets interface elements.
 -- @return Interface elements.
@@ -315,6 +363,42 @@ function class:addElement(_data : string)
     return element
 end
 
+------------------------
+-- ELEMENTS (ENDS)
+------------------------
+
+
+------------------------
+-- ACTIONS (STARTS)
+------------------------
+
+-- Updates interface element instance.
+-- @param _properties Interface element instance properties.
+-- @return Interface element. (BUILDER)
+function class:updateProperties(_properties : table)
+    -- Object nil checks.
+    assert(_properties ~= nil, self:getLogPrefix() .. " properties cannot be null[update properties]")
+
+    -- Saves properties to the instance.
+    for key, value in pairs(_properties) do
+        -- If it is custom property, no need to continue.
+        if key == "Custom" then continue end
+        self.instance[key] = value
+    end
+
+    -- Handls custom properties.
+    if _properties.Custom then
+        -- Handles custom size.
+        if _properties.Custom.Size then self:setSize(_properties.Custom.Size.X, _properties.Custom.Size.Y) end
+        -- Handles custom position.
+        if _properties.Custom.Position then self:setPosition(_properties.Custom.Position.X, _properties.Custom.Position.Y) end
+        -- Handles custom position.
+        if _properties.Custom.FontSize then self:setFontSize(_properties.Custom.FontSize) end
+    end
+
+    return self
+end
+
 -- Destroys interface element.
 function class:destroy()
     if self.metadata then self.metadata:reset() end
@@ -331,6 +415,33 @@ function class:destroy()
 
     setmetatable(self, nil)
 end
+
+------------------------
+-- ACTIONS (ENDS)
+------------------------
+
+
+------------------------
+-- ACTION HANDLERS (STARTS)
+------------------------
+
+-- Be triggered on bind action.
+function class:onBind()
+    -- Updating font size since it doesn't support changes.
+    if self:getFontSize() then self:setFontSize(self:getFontSize()) end
+    -- Triggers bind action for all sub elements.
+    for _, value in pairs(self.elements) do value:onBind() end
+end
+
+-- Be triggered on unbind action.
+function class:onUnbind()
+    -- Triggers unbind action for all sub elements.
+    for _, value in pairs(self.elements) do value:onUnbind() end
+end
+
+------------------------
+-- ACTION HANDLERS (ENDS)
+------------------------
 
 
 -- ENDS

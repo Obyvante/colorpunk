@@ -2,7 +2,7 @@ local class = {}
 -- IMPORTS
 local client = game:GetService("Players").LocalPlayer
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
-local Player = require(game.ReplicatedStorage.Project.Player.Player)
+local Player = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
 local ClientCallbackService = Library.getService("ClientCallbackService")
 -- STARTS
 
@@ -16,7 +16,8 @@ end)
 
 -- If it is not successfully, kicks player.
 if not success then
-    client:Kick([[
+    client:Kick(
+[[
 
 
 (ERROR: DATABASE)
@@ -25,7 +26,8 @@ We couldn't load your information from our system.
 Please try again after a while.
 
 If you think it is a bug/an issue, please contact our staff or Roblox staff.
-]])
+]]
+    )
     task.wait(5)
 end
 

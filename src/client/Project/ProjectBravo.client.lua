@@ -7,13 +7,6 @@ local time = os.time()
 -- API CALLS AND IMPORTS (STARTS)
 ------------------------
 
-task.spawn(function()
-    for i = 1, 10, 1 do
-        print(game.Workspace.CurrentCamera.ViewportSize)
-        task.wait(0.1)
-    end
-end)
-
 -- Loads interface first.
 local interface_load = require(script.Parent.Load.InterfaceLoad)
 -- Loads player.
@@ -52,9 +45,35 @@ print("✔️ DONE!")
 -- TEST (STARTS)
 ------------------------
 
-require(game.ReplicatedStorage.Project.Player.Settings.Interface.Interface)
+require(game.ReplicatedStorage.Project.Player.Settings.Interface.PlayerSettingsInterface)
+require(game.ReplicatedStorage.Project.Player.Interfaces.PlayerGameInterface)
 local InterfaceService = Library.getService("InterfaceService")
-InterfaceService.get("settings"):bind(game.Players.LocalPlayer.PlayerGui)
+
+local PlayerSettingsInterface = InterfaceService.get("settings")
+local PlayerGameInterface = InterfaceService.get("game")
+
+PlayerSettingsInterface:bind(game.Players.LocalPlayer.PlayerGui)
+PlayerGameInterface:bind(game.Players.LocalPlayer.PlayerGui)
+
+game:GetService("UserInputService").InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.Q then
+        if PlayerSettingsInterface:isBound() then
+            PlayerSettingsInterface:unbind()
+        else
+            PlayerSettingsInterface:bind(game.Players.LocalPlayer.PlayerGui)
+        end
+        return
+    else
+        if input.KeyCode == Enum.KeyCode.R then
+            if PlayerGameInterface:isBound() then
+                PlayerGameInterface:unbind()
+            else
+                PlayerGameInterface:bind(game.Players.LocalPlayer.PlayerGui)
+            end
+            return
+        end
+    end
+end)
 
 ------------------------
 -- TEST (ENDS)

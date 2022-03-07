@@ -162,6 +162,16 @@ end
 -- SIGNAL HANDLERS (PLAYER JOIN) (ENDS)
 ------------------------
 
+------------------------
+-- IMPORTS (STARTS)
+------------------------
+
+require(script.Parent.PlayerListener)
+
+------------------------
+-- IMPORTS (ENDS)
+------------------------
+
 
 ------------------------
 -- INITIALIZATION (ENDS)

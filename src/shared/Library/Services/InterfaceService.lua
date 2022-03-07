@@ -13,14 +13,6 @@ class.VIEWPORTS = {
     MOBILE = Vector2.new(1366, 1024)
 }
 
--- Gets default viewport by its type.
--- @param _type Device type.
--- @return Viewport. (Vector2)
-function class.getViewport(_type : string)
-    
-end
-
-
 -- Gets addon by its name.
 -- @param _name Addon name.
 -- @return Addon. [CLASS]
@@ -122,6 +114,21 @@ function class.delete(_id : string)
 
     _interfaces[_id]:destroy()
     _interfaces[_id] = nil
+end
+
+
+----------
+-- UTILS
+----------
+
+-- Checks if it is clicked or not.
+-- @param _enum Enum input type.
+-- @return If it is clicked or not.
+function class.isClicked(_enum : Enum)
+    return _enum == Enum.UserInputType.MouseButton1
+    or _enum == Enum.UserInputType.MouseButton2
+    or _enum == Enum.UserInputType.MouseButton3
+    or _enum == Enum.UserInputType.Touch
 end
 
 
