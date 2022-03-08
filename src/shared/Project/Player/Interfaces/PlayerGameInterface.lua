@@ -421,10 +421,10 @@ createLeftPanel(left_body, "backpack", Vector2.new(-6, -6), asset_ids.LEFT.BACKP
 left_body:getElement("body_backpack"):updateEvents({
     {
         Name = "click",
-        Event = "InputBegan",
+        Event = "InputEnded",
         Consumer = function(_binder, _event)
             -- If it is not clicked, no need to continue.
-            if not InterfaceService.isClicked(_event.UserInputType) then return end
+            if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 
             print("backpack!")
 
@@ -441,10 +441,10 @@ createLeftPanel(left_body, "settings", Vector2.new(-6, 255), asset_ids.LEFT.SETT
 left_body:getElement("body_settings"):updateEvents({
     {
         Name = "click",
-        Event = "InputBegan",
+        Event = "InputEnded",
         Consumer = function(_binder, _event)
             -- If it is not clicked, no need to continue.
-            if not InterfaceService.isClicked(_event.UserInputType) then return end
+            if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 
             local ui = InterfaceService.get("settings")
             if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end

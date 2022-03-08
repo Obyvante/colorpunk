@@ -73,14 +73,14 @@ end
 -- @param _id Interface id.
 -- @param _viewport Interface viewport. (BASED ON)
 -- @return Created interface.
-function class.createScreen(_id : string, _viewport : Vector2)
+function class.createScreen(_id : string, _viewport : Vector2, _proirty : number)
     -- Object nil check.
     assert(_id ~= nil, "Interface id cannot be null")
     assert(_viewport ~= nil, "Interface(" .. _id .. ") viewport cannot be null")
     assert(_interfaces[_id] == nil, "Interface(" .. _id .. ") is already exist")
 
     -- Creates an interface.
-    local interface = Interface.createScreen(_id, _viewport)
+    local interface = Interface.createScreen(_id, _viewport, _proirty)
     -- Adds created interface to the list.
     _interfaces[_id] = interface
 
@@ -122,13 +122,12 @@ end
 ----------
 
 -- Checks if it is clicked or not.
--- @param _enum Enum input type.
+-- @param _type Enum input type.
+-- @param _state Input state
 -- @return If it is clicked or not.
-function class.isClicked(_enum : Enum)
-    return _enum == Enum.UserInputType.MouseButton1
-    or _enum == Enum.UserInputType.MouseButton2
-    or _enum == Enum.UserInputType.MouseButton3
-    or _enum == Enum.UserInputType.Touch
+function class.isClicked(_type : Enum, _state : Enum)
+    if _state ~= Enum.UserInputState.End then return false end
+    return _type == Enum.UserInputType.MouseButton1 or _type == Enum.UserInputType.Touch
 end
 
 

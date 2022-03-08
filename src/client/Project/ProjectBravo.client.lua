@@ -1,5 +1,6 @@
 -- IMPORTS
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
+local InterfaceService = Library.getService("InterfaceService")
 
 -- TIMER
 local time = os.time()
@@ -33,6 +34,18 @@ ClientPlayerProvider.loadDefaultInterfaces()
 
 ------------------------
 -- API CALLS AND IMPORTS (ENDS)
+------------------------
+
+
+------------------------
+-- GAME (STARTS)
+------------------------
+
+-- Loads client game provider.
+require(game.ReplicatedStorage.Project.Game.ClientGameProvider)
+
+------------------------
+-- GAME (ENDS)
 ------------------------
 
 

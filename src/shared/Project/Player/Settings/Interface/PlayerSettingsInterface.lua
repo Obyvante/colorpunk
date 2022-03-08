@@ -143,7 +143,7 @@ end
 -- @param _event Event information.
 function switchClick(_element, _type, _binder, _event)
     -- If it is not mouse event, no need to continue.
-    if not InterfaceService.isClicked(_event.UserInputType) then return end
+    if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 
     -- Prevents client spam.
     if spamCheck() then return end
@@ -239,15 +239,15 @@ local button_exit = background:addElement({
     Events = {
         {
             Name = "click",
-            Event = "InputBegan",
+            Event = "InputEnded",
             Consumer = function(_binder, _event)
-                if not InterfaceService.isClicked(_event.UserInputType) then return end
+                if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
                 interface:unbind()
             end
         },
         {
             Name = "begin",
-            Event = "InputBegan",
+            Event = "InputEnded",
             Consumer = function(_binder, _event)
                 if _event.UserInputType ~= Enum.UserInputType.MouseMovement then return end
 
@@ -338,7 +338,7 @@ VFX
 -- Switch.
 local vfx_switch = background:addElement(createSwitch("VFX", Vector2.new(395, 357), ClientPlayer.getSettings().asBoolean("VFX")))
 -- Handles switch click event.
-vfx_switch:getEventBinder():bind(vfx_switch:getInstance().InputBegan, {
+vfx_switch:getEventBinder():bind(vfx_switch:getInstance().InputEnded, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(vfx_switch, "VFX", _binder, _event) end
 })
@@ -399,7 +399,7 @@ SOUND
 -- Switch.
 local music_switch = background:addElement(createSwitch("MUSIC", Vector2.new(1342, 356), ClientPlayer.getSettings().asBoolean("MUSIC")))
 -- Handles switch click event.
-music_switch:getEventBinder():bind(music_switch:getInstance().InputBegan, {
+music_switch:getEventBinder():bind(music_switch:getInstance().InputEnded, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(music_switch, "MUSIC", _binder, _event) end
 })
@@ -460,7 +460,7 @@ SCREEN
 -- Switch.
 local warning_switch = background:addElement(createSwitch("WARNING", Vector2.new(395, 765), ClientPlayer.getSettings().asBoolean("SKIP_WARNING_SCREEN")))
 -- Handles switch click event.
-warning_switch:getEventBinder():bind(warning_switch:getInstance().InputBegan, {
+warning_switch:getEventBinder():bind(warning_switch:getInstance().InputEnded, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(warning_switch, "SKIP_WARNING_SCREEN", _binder, _event) end
 })
@@ -521,7 +521,7 @@ ACCEPT
 -- Switch.
 local auto_accept_switch = background:addElement(createSwitch("AUTO_ACCEPT", Vector2.new(1342, 764), ClientPlayer.getSettings().asBoolean("AUTO_ACCEPT_MATCH")))
 -- Handles switch click event.
-auto_accept_switch:getEventBinder():bind(auto_accept_switch:getInstance().InputBegan, {
+auto_accept_switch:getEventBinder():bind(auto_accept_switch:getInstance().InputEnded, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(auto_accept_switch, "AUTO_ACCEPT_MATCH", _binder, _event) end
 })

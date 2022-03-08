@@ -67,7 +67,7 @@ function class.loadDefaultInterfaces()
         interface_game:getElementByPath("right_body.body_money.text"):updateProperties({
             Text = NumberService.format(math.random(0, 999999999))
         })
-    end):run()
+    end)--:run()
 end
 
 ------------------------

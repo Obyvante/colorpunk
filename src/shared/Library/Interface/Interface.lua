@@ -37,8 +37,9 @@ end
 -- Creates an interface for screen gui.
 -- @param _id Interface id.
 -- @param _viewport Interface viewport. (BASED ON)
+-- @param _priority Interface priority. (HIGHER)
 -- @return Created interface.
-function class.createScreen(_id : string, _viewport : Vector2)
+function class.createScreen(_id : string, _viewport : Vector2, _proirity : number)
     -- Object nil checks.
     assert(_id ~= nil, "Interface id cannot be null")
     assert(_viewport ~= nil, "Interface(" .. _id .. ") viewport cannot be null")
@@ -47,6 +48,7 @@ function class.createScreen(_id : string, _viewport : Vector2)
     _screen.Name = _id
     _screen.IgnoreGuiInset = true
     _screen.ResetOnSpawn = false
+    _screen.DisplayOrder = _proirity == nil and 0 or _proirity
 
     -- Sets metatable then returns it.
     return setmetatable({
