@@ -1,5 +1,10 @@
 local class = {}
 class.__index = class
+-- IMPORTS
+local Library = require(game.ReplicatedStorage.Library.Library)
+local EventService = Library.getService("EventService")
+-- EVENTS
+local PlayerStatsEvent = EventService.get("PlayerStats")
 -- STARTS
 
 
@@ -47,6 +52,9 @@ function class:set(_type : string, _value : number)
     assert(_value ~= nil, "Player stat value cannot be null")
     assert(_value >= 0, "Player stat value must be positive")
     self.content[_type] = _value
+
+    -- Sends update packet.
+    self:_sendUpdatePacket(_type)
 end
 
 -- Adds value to player stat.
@@ -62,6 +70,9 @@ function class:add(_type : string, _value : number)
     assert(_value ~= nil, "Player stat value cannot be null")
     assert(_value >= 0, "Player stat value must be positive")
     self.content[_type] = math.max(self:get(_type) + _value, 0)
+
+    -- Sends update packet.
+    self:_sendUpdatePacket(_type)
 end
 
 -- Removes value from player stat.
@@ -77,6 +88,22 @@ function class:remove(_type : string, _value : number)
     assert(_value ~= nil, "Player stat value cannot be null")
     assert(_value >= 0, "Player stat value must be positive")
     self.content[_type] = math.max(self:get(_type) - _value, 0)
+
+    -- Sends update packet.
+    self:_sendUpdatePacket(_type)
+end
+
+-- Sends update packet for target type to client.
+-- @param _type Stat type.
+-- @return Player stats. (BUILDER)
+function class:_sendUpdatePacket(_type : string)
+    -- Object nil checks.
+    assert(_type ~= nil, "Player stat type cannot be null")
+    PlayerStatsEvent:FireClient(self.player:getRobloxPlayer(), {
+        Type = _type,
+        Value = self.content[_type]
+    })
+    return self
 end
 
 -- Converts player stats to a table.

@@ -99,7 +99,7 @@ function class:set(_type : string, _value : number)
     self.content[_type] = math.floor(_value)
 
     -- Sends update packet.
-    PlayerSettingsEvent:FireClient({
+    PlayerSettingsEvent:FireClient(self.player:getRobloxPlayer(), {
         Type = _type,
         Value = _value
     })

@@ -133,8 +133,6 @@ and seek medical attention immediately.
     }):Play()
 
     task.wait(2)
-
-    class.destroy()
 end
 
 ------------------------

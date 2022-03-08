@@ -2,17 +2,13 @@ local class = {}
 -- IMPORTS
 local client = game:GetService("Players").LocalPlayer
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
-local Player = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
+local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
 local ClientCallbackService = Library.getService("ClientCallbackService")
 -- STARTS
 
 
 -- Handles exceptions.
-local success, message = pcall(function()
-    local _data = ClientCallbackService.handle("PlayerLoad", 10)
-    local player = Player.update(_data)
-    print(player)
-end)
+local success, message = pcall(function() ClientPlayer.update(ClientCallbackService.handle("PlayerLoad", 10)) end)
 
 -- If it is not successfully, kicks player.
 if not success then
@@ -29,7 +25,19 @@ If you think it is a bug/an issue, please contact our staff or Roblox staff.
 ]]
     )
     task.wait(5)
+    return nil
 end
+
+
+------------------------
+-- INITIALIZATION (STARTS)
+------------------------
+
+require(game.ReplicatedStorage.Project.Player.ClientPlayerProvider)
+
+------------------------
+-- INITIALIZATION (ENDS)
+------------------------
 
 
 -- ENDS

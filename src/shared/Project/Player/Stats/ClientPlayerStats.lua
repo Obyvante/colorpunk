@@ -42,6 +42,15 @@ function class.get(_type : string)
     return _result and _result or 0
 end
 
+-- Handles player stats packet.
+-- @param _packet Player stats packet.
+-- @return Player stats. (BUILDER)
+function class.handlePacket(_packet : table)
+    -- Updates setting value.
+    class.content[_packet.Type] = _packet.Value
+    return class
+end
+
 
 -- ENDS
 return class

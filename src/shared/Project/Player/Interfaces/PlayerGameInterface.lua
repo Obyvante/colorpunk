@@ -21,12 +21,19 @@ local asset_ids = {
         BACKPACK = 9039056588,
         SETTINGS = 9039056256
     },
+    RIGHT = {
+        ICON_PANEL = 9042912452,
+        PANEL = 9042912328,
+        RANK = 9042912582,
+        WIN = 9042912152,
+        MONEY = 9042912701
+    },
     BOTTOM = {
         ICON_PANEL = 9039522875,
         PANEL = 9039522723,
         JUMP = 9039522532,
         SPEED = 9039522298
-    },
+    }
 }
 
 ------------------------
@@ -37,6 +44,230 @@ local asset_ids = {
 ------------------------
 -- BUNDLES (STARTS)
 ------------------------
+
+function createLeftPanel(_parent, _name : string, _position : Vector2, _icon : number)
+    -- Base left panel backpack.
+    local panel = _parent:addElement({
+        Name = "body_" .. _name,
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = _position,
+                Size = Vector2.new(223, 223)
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. asset_ids.LEFT.PANEL
+        }
+    })
+    -- Base left panel icon.
+    panel:addElement({
+        Name = "icon",
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(55, 49),
+                Size = Vector2.new(129, 129)
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. _icon
+        }
+    })
+end
+
+function createRightPanel(_parent, _name : string, _position : Vector2, _iconProperties : Vector2)
+    -- Base body.
+    local bottom = _parent:addElement({
+        Name = "body_" .. _name,
+        Type = "Frame",
+        Properties = {
+            Custom = {
+                Position = _position,
+                Size = Vector2.new(578, 171)
+            },
+
+            AnchorPoint = Vector2.new(1, 1),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1
+        }
+    })
+    -- Icon panel.
+    bottom:addElement({
+        Name = "icon_panel",
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(-6, -6),
+                Size = Vector2.new(227, 229)
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. asset_ids.RIGHT.ICON_PANEL
+        }
+    })
+    -- Icon.
+    bottom:addElement({
+        Name = "icon",
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = _iconProperties.Position,
+                Size = _iconProperties.Size
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. _iconProperties.AssetId
+        }
+    })
+    -- Panel.
+    bottom:addElement({
+        Name = "panel",
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(263, -8),
+                Size = Vector2.new(573, 233)
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. asset_ids.RIGHT.PANEL
+        }
+    })
+    -- Panel text.
+    bottom:addElement({
+        Name = "text",
+        Type = "TextLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(407, 60),
+                Size = Vector2.new(283, 100),
+                FontSize = 120
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            
+            TextColor3 = Color3.fromRGB(255, 255, 255),
+            Font = "DenkOne",
+            Text = "999M",
+        }
+    })
+end
+
+function createBottomPanel(_parent, _name : string, _position : Vector2, _iconProperties : Vector2)
+    -- Base body.
+    local bottom = _parent:addElement({
+        Name = "body_" .. _name,
+        Type = "Frame",
+        Properties = {
+            Custom = {
+                Position = _position,
+                Size = Vector2.new(578, 171)
+            },
+
+            AnchorPoint = Vector2.new(1, 1),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1
+        }
+    })
+    -- Icon panel.
+    bottom:addElement({
+        Name = "icon_panel",
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(-5, -5),
+                Size = Vector2.new(209, 180)
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. asset_ids.BOTTOM.ICON_PANEL
+        }
+    })
+    -- Icon.
+    bottom:addElement({
+        Name = "icon",
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = _iconProperties.Position,
+                Size = _iconProperties.Size
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. _iconProperties.AssetId
+        }
+    })
+    -- Panel.
+    bottom:addElement({
+        Name = "panel",
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(200, 0),
+                Size = Vector2.new(386, 179)
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0,
+
+            Image = "rbxassetid://" .. asset_ids.BOTTOM.PANEL
+        }
+    })
+    -- Panel text.
+    bottom:addElement({
+        Name = "text",
+        Type = "TextLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(281, 55),
+                Size = Vector2.new(226, 68),
+                FontSize = 120
+            },
+
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            
+            TextColor3 = Color3.fromRGB(255, 255, 255),
+            Font = "DenkOne",
+            Text = "x1.00",
+        }
+    })
+end
+
 ------------------------
 -- BUNDLES (ENDS)
 ------------------------
@@ -92,9 +323,8 @@ local top_background = interface:addElement({
         "AspectRatio"
     }
 })
-
 -- Top left text.
-local top_left_text = top_background:addElement({
+top_background:addElement({
     Name = "left_text",
     Type = "TextLabel",
     Properties = {
@@ -113,9 +343,8 @@ local top_left_text = top_background:addElement({
         Text = "00",
     }
 })
-
 -- Top center text.
-local top_center_text = top_background:addElement({
+top_background:addElement({
     Name = "center_text",
     Type = "TextLabel",
     Properties = {
@@ -134,9 +363,8 @@ local top_center_text = top_background:addElement({
         Text = "White",
     }
 })
-
 -- Top right text.
-local top_right_text = top_background:addElement({
+top_background:addElement({
     Name = "right_text",
     Type = "TextLabel",
     Properties = {
@@ -186,106 +414,44 @@ local left_body = interface:addElement({
     }
 })
 
--- Base left panel backpack.
-local left_panel_backpack = left_body:addElement({
-    Name = "left_panel_backpack",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(-6, -6),
-            Size = Vector2.new(223, 223)
-        },
+--
+-- BACKPACK
+--
+createLeftPanel(left_body, "backpack", Vector2.new(-6, -6), asset_ids.LEFT.BACKPACK)
+left_body:getElement("body_backpack"):updateEvents({
+    {
+        Name = "click",
+        Event = "InputBegan",
+        Consumer = function(_binder, _event)
+            -- If it is not clicked, no need to continue.
+            if not InterfaceService.isClicked(_event.UserInputType) then return end
 
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
+            print("backpack!")
 
-        Image = "rbxassetid://" .. asset_ids.LEFT.PANEL
-    },
-
-    Events = {
-        {
-            Name = "click",
-            Event = "InputBegan",
-            Consumer = function(_binder, _event)
-                if not InterfaceService.isClicked(_event.UserInputType) then return end
-
-                print("backpack")
-            end
-        },
+            --local ui = InterfaceService.get("settings")
+            --if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
+        end
     }
 })
 
--- Base left backpack icon.
-local left_backpack_icon = left_panel_backpack:addElement({
-    Name = "icon",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(55, 49),
-            Size = Vector2.new(129, 129)
-        },
+--
+-- SETTINGS
+--
+createLeftPanel(left_body, "settings", Vector2.new(-6, 255), asset_ids.LEFT.SETTINGS)
+left_body:getElement("body_settings"):updateEvents({
+    {
+        Name = "click",
+        Event = "InputBegan",
+        Consumer = function(_binder, _event)
+            -- If it is not clicked, no need to continue.
+            if not InterfaceService.isClicked(_event.UserInputType) then return end
 
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.LEFT.BACKPACK
+            local ui = InterfaceService.get("settings")
+            if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
+        end
     }
 })
 
--- Base left panel settings.
-local left_panel_settings = left_body:addElement({
-    Name = "left_panel_settings",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(-6, 255),
-            Size = Vector2.new(223, 225)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.LEFT.PANEL
-    },
-
-    Events = {
-        {
-            Name = "click",
-            Event = "InputBegan",
-            Consumer = function(_binder, _event)
-                if not InterfaceService.isClicked(_event.UserInputType) then return end
-
-                local ui = InterfaceService.get("settings")
-                if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
-            end
-        },
-    }
-})
-
--- Base left settings icon.
-local left_settings_icon = left_panel_settings:addElement({
-    Name = "icon",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(55, 51),
-            Size = Vector2.new(129, 129)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.LEFT.SETTINGS
-    }
-})
 
 ------------------------
 -- LEFT (ENDS)
@@ -293,9 +459,54 @@ local left_settings_icon = left_panel_settings:addElement({
 
 
 ------------------------
--- BOTTOM (STARTS)
+-- RIGHT (STARTS)
 ------------------------
 
+-- Bottom base body.
+local right_body = interface:addElement({
+    Name = "right_body",
+    Type = "Frame",
+    Properties = {
+        Custom = {
+            Position = Vector2.new(2942, 728),
+            Size = Vector2.new(828, 704)
+        },
+
+        AnchorPoint = Vector2.new(1, 1),
+        BorderSizePixel = 0,
+        BackgroundTransparency = 1
+    },
+
+    BuildWith = {
+        "AspectRatio"
+    }
+})
+
+createRightPanel(right_body, "rank", Vector2.new(0, 0), {
+    Position = Vector2.new(46, 52),
+    Size = Vector2.new(148, 101),
+    AssetId = asset_ids.RIGHT.RANK
+})
+createRightPanel(right_body, "win", Vector2.new(0, 243), {
+    Position = Vector2.new(46, 42),
+    Size = Vector2.new(143, 134),
+    AssetId = asset_ids.RIGHT.WIN
+})
+createRightPanel(right_body, "money", Vector2.new(0, 487), {
+    Position = Vector2.new(56, 42),
+    Size = Vector2.new(129, 129),
+    AssetId = asset_ids.RIGHT.MONEY
+})
+
+
+------------------------
+-- RIGHT (ENDS)
+------------------------
+
+
+------------------------
+-- BOTTOM (STARTS)
+------------------------
 
 -- Bottom base body.
 local bottom_body = interface:addElement({
@@ -316,187 +527,16 @@ local bottom_body = interface:addElement({
         "AspectRatio"
     }
 })
--- Bottom speed base body.
-local bottom_speed = bottom_body:addElement({
-    Name = "bottom_speed",
-    Type = "Frame",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(0, 0),
-            Size = Vector2.new(578, 171)
-        },
 
-        AnchorPoint = Vector2.new(1, 1),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1
-    }
+createBottomPanel(bottom_body, "speed", Vector2.new(0, 0), {
+    Position = Vector2.new(56, 29),
+    Size = Vector2.new(78, 113),
+    AssetId = asset_ids.BOTTOM.SPEED
 })
--- Bottom jump base body.
-local bottom_jump = bottom_body:addElement({
-    Name = "bottom_jump",
-    Type = "Frame",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(656, 0),
-            Size = Vector2.new(578, 171)
-        },
-
-        AnchorPoint = Vector2.new(1, 1),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1
-    }
-})
-
--- Bottom speed icon panel.
-local bottom_speed_icon_panel = bottom_speed:addElement({
-    Name = "bottom_speed_icon_panel",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(-5, -5),
-            Size = Vector2.new(209, 180)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.BOTTOM.ICON_PANEL
-    }
-})
--- Bottom speed icon.
-local bottom_speed_icon = bottom_speed:addElement({
-    Name = "bottom_speed_icon",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(56, 29),
-            Size = Vector2.new(78, 113)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.BOTTOM.SPEED
-    }
-})
-
--- Bottom jump icon panel.
-local bottom_jump_icon_panel = bottom_jump:addElement({
-    Name = "bottom_jump_icon_panel",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(-5, -5),
-            Size = Vector2.new(209, 180)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.BOTTOM.ICON_PANEL
-    }
-})
--- Bottom jump icon.
-local bottom_jump_icon = bottom_jump:addElement({
-    Name = "bottom_jump_icon",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(52, 33),
-            Size = Vector2.new(90, 106)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.BOTTOM.JUMP
-    }
-})
-
--- Bottom speed panel.
-local bottom_speed_panel = bottom_speed:addElement({
-    Name = "bottom_speed_panel",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(200, 0),
-            Size = Vector2.new(386, 179)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.BOTTOM.PANEL
-    }
-})
--- Bottom speed panel text.
-local bottom_speed_panel_text = bottom_speed:addElement({
-    Name = "bottom_speed_panel_text",
-    Type = "TextLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(281, 55),
-            Size = Vector2.new(226, 68),
-            FontSize = 120
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        Font = "DenkOne",
-        Text = "x1.00",
-    }
-})
-
--- Bottom jump panel.
-local bottom_jump_panel = bottom_jump:addElement({
-    Name = "bottom_jump_panel",
-    Type = "ImageLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(200, 0),
-            Size = Vector2.new(386, 179)
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        ImageTransparency = 0,
-
-        Image = "rbxassetid://" .. asset_ids.BOTTOM.PANEL
-    }
-})
--- Bottom jump panel text.
-local bottom_jump_panel_text = bottom_jump:addElement({
-    Name = "bottom_jump_panel_text",
-    Type = "TextLabel",
-    Properties = {
-        Custom = {
-            Position = Vector2.new(281, 55),
-            Size = Vector2.new(226, 68),
-            FontSize = 120
-        },
-
-        AnchorPoint = Vector2.new(0.5, 0.5),
-        BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        
-        TextColor3 = Color3.fromRGB(255, 255, 255),
-        Font = "DenkOne",
-        Text = "x1.00",
-    }
+createBottomPanel(bottom_body, "jump", Vector2.new(656, 0), {
+    Position = Vector2.new(52, 33),
+    Size = Vector2.new(90, 106),
+    AssetId = asset_ids.BOTTOM.JUMP
 })
 
 

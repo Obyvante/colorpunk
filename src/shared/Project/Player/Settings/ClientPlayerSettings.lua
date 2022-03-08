@@ -112,6 +112,15 @@ function class.set(_type : string, _value : number)
     })
 end
 
+-- Handles player settings packet.
+-- @param _packet Player settings packet.
+-- @return Player settings. (BUILDER)
+function class.handlePacket(_packet : table)
+    -- Updates setting value.
+    class.content[_packet.Type] = math.floor(_packet.Value)
+    return class
+end
+
 
 -- ENDS
 return class

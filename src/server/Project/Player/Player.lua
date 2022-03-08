@@ -47,6 +47,12 @@ function class:getEventBinder()
     return self.event_binder
 end
 
+-- Gets roblox player.
+-- @return Roblox player.
+function class:getRobloxPlayer()
+    return game:GetService("Players"):GetPlayerByUserId(self.id)
+end
+
 -- Gets player roblox id.
 -- @return Player roblox id.
 function class:getId()
@@ -74,7 +80,7 @@ end
 -- Gets player stats.
 -- @return Player stats.
 function class:getStats()
-    return self.currencies
+    return self.stats
 end
 
 -- Gets player settings.

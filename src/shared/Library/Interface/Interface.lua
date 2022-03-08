@@ -99,6 +99,23 @@ function class:getElement(_id : string)
     return self.elements[_id]
 end
 
+-- Gets interface element by path.
+-- @param _path Interface element path.
+-- @return Interface element. (NULLABLE)
+function class:getElementByPath(_path : string)
+    -- Object nil checks.
+    assert(_path ~= nil, "Interface element path cannot be null")
+
+    local paths = string.split(_path, ".")
+    local current
+    for i = 1, #paths, 1 do
+        current = if i == 1 then self.elements[paths[i]] else current:getElements()[paths[i]]
+        if current == nil then return nil end
+    end
+
+    return current
+end
+
 -- Adds an interface element to the screen.
 -- @param _id Interface element id.
 -- @param _properties Properties of interface element.

@@ -452,7 +452,7 @@ local warning_text = background:addElement({
         Text =
 [[
     WARNING
-SOUND
+SCREEN
 ]]
     }
 })
