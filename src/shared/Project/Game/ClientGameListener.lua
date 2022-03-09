@@ -1,10 +1,12 @@
 local class = {}
 -- IMPORTS
+local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
+local ClientGame = require(script.Parent.ClientGame)
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local InterfaceService = Library.getService("InterfaceService")
 -- EVENTS
-local Q = EventService.get("PlayerSettings")
+local GameStateEvent = EventService.get("GameState")
 -- STARTS
 
 
@@ -20,9 +22,8 @@ local Q = EventService.get("PlayerSettings")
 -- SETTINGS (STARTS)
 ------------------------
 
-Q.OnClientEvent:Connect(function(_packet)
-    --local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
-    --ClientPlayer.getSettings().handlePacket(_packet)
+GameStateEvent.OnClientEvent:Connect(function(_state : string, _information : table)
+    ClientGame.applyState(_state, _information)
 end)
 
 ------------------------

@@ -1,9 +1,13 @@
 -- IMPORTS
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
-
+local EventService = Library.getService("EventService")
+-- EVENTS
+local PlayerLoadEvent = EventService.get("PlayerLoad")
 -- TIMER
 local time = os.time()
+
+
 ------------------------
 -- API CALLS AND IMPORTS (STARTS)
 ------------------------
@@ -20,14 +24,12 @@ if not game.Loaded then game.Loaded:Wait() end
 local character_load = require(script.Parent.Load.CharacterLoad)
 
 -- Loads player.
-local player_load = require(script.Parent.Load.PlayerLoad)
+local PlayerLoad = require(script.Parent.Load.PlayerLoad)
 local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
 local ClientPlayerProvider = require(game.ReplicatedStorage.Project.Player.ClientPlayerProvider)
 
 -- Starts warning screen.
 if ClientPlayer.getSettings().asBoolean("SKIP_WARNING_SCREEN") then interface_load.startWarning() end
--- Destroys interface.
-interface_load.destroy()
 
 -- Loads default interfaces.
 ClientPlayerProvider.loadDefaultInterfaces()
@@ -48,16 +50,14 @@ require(game.ReplicatedStorage.Project.Game.ClientGameProvider)
 -- GAME (ENDS)
 ------------------------
 
+-- Last think to inform server that player is fully loaded.
+PlayerLoadEvent:FireServer()
 
-------------------------
--- DESTROY AND BE READY (STARTS)
-------------------------
+-- Destroys interface.
+interface_load.destroy()
 
-print("✔️ DONE!")
-
-------------------------
--- DESTROY AND BE READY (ENDS)
-------------------------
+-- Informs client.
+print("✔️ DONE! (", os.time() - time, ")")
 
 
 ------------------------

@@ -95,11 +95,24 @@ local player_load = EventService.get("PlayerLoad")
 player_load.OnServerEvent:Connect(function(player)
     local timer = 0
     task.spawn(function()
+        -- Waits database to assign player to cache.
         while content[player.UserId] == nil do
             timer += task.wait()
             if timer >= 10 then return end
+            if player == nil then return end
         end
-        player_load:FireClient(player, content[player.UserId]:toTable())
+
+        -- Waits player character.
+        if player and not player.Character then player.CharacterAdded:Wait() end
+
+        -- If player is left the experience, no need to continue.
+        if player == nil then return end
+
+        local _player = class.find(player.UserId)
+        _player:waitLoading()
+
+        -- Fires client.
+        player_load:FireClient(player, _player:toTable())
     end)
 end)
 

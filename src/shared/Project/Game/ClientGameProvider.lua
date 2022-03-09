@@ -18,6 +18,7 @@ local StringService = Library.getService("StringService")
 ------------------------
 
 -- Loads client player listener.
+require(game.ReplicatedStorage.Project.Game.ClientGame)
 require(game.ReplicatedStorage.Project.Game.ClientGameListener)
 
 ------------------------

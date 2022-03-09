@@ -8,84 +8,84 @@ local class = {}
 
 class.content = {
 	[1] = {
-		duration = 8,
-		money = 10
+		Duration = 3,
+		Money = 10
 	},
 	[2] = {
-		duration = 8,
-		money = 15
+		Duration = 3,
+		Money = 15
 	},
 	[3] = {
-		duration = 7,
-		money = 20
+		Duration = 3,
+		Money = 20
 	},
 	[4] = {
-		duration = 7,
-		money = 25
+		Duration = 3,
+		Money = 25
 	},
 	[5] = {
-		duration = 7,
-		money = 30
+		Duration = 3,
+		Money = 30
 	},
 	[6] = {
-		duration = 6,
-		money = 35
+		Duration = 3,
+		Money = 35
 	},
 	[7] = {
-		duration = 6,
-		money = 40
+		Duration = 3,
+		Money = 40
 	},
 	[8] = {
-		duration = 6,
-		money = 45
+		Duration = 3,
+		Money = 45
 	},
 	[9] = {
-		duration = 5,
-		money = 50
+		Duration = 3,
+		Money = 50
 	},
 	[10] = {
-		duration = 5,
-		money = 100
+		Duration = 3,
+		Money = 100
 	},
-	[11] = {
-		duration = 5,
-		money = 110
+	[41] = {--TODO: CHANGE
+		Duration = 3,
+		Money = 110
 	},
 	[12] = {
-		duration = 5,
-		money = 120
+		Duration = 3,
+		Money = 120
 	},
 	[13] = {
-		duration = 4,
-		money = 130
+		Duration = 3,
+		Money = 130
 	},
 	[14] = {
-		duration = 4,
-		money = 140
+		Duration = 3,
+		Money = 140
 	},
 	[15] = {
-		duration = 4,
-		money = 150
+		Duration = 3,
+		Money = 150
 	},
 	[16] = {
-		duration = 4,
-		money = 175
+		Duration = 3,
+		Money = 175
 	},
 	[17] = {
-		duration = 4,
-		money = 200
+		Duration = 3,
+		Money = 200
 	},
 	[18] = {
-		duration = 3,
-		money = 225
+		Duration = 3,
+		Money = 225
 	},
 	[19] = {
-		duration = 2,
-		money = 250
+		Duration = 3,
+		Money = 250
 	},
 	[20] = {
-		duration = 1,
-		money = 1000
+		Duration = 3,
+		Money = 1000
 	}
 }
 

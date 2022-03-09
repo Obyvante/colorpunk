@@ -4,6 +4,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local SpamService = Library.getService("SpamService")
 -- EVENTS
+local PlayerLoadEvent = EventService.get("PlayerLoad")
 local PlayerSettingsEvent = EventService.get("PlayerSettings")
 -- STARTS
 
@@ -26,7 +27,7 @@ function spamCheck(_player : Player)
 (ERROR: SPAMMING)
             
 You've kicked from the experience due to
-spamming settings interface.
+spamming.
 
 If you think it is a bug/an issue, please contact our staff or Roblox staff.
 ]]
@@ -41,16 +42,43 @@ end
 
 
 ------------------------
--- SETTINGS (STARTS)
+-- LOADING (STARTS)
 ------------------------
 
-PlayerSettingsEvent.OnServerEvent:Connect(function(_player, _packet)
+PlayerLoadEvent.OnServerEvent:Connect(function(_player)
+    -- Prevents spamming.
+    if spamCheck(_player) then return end
+
     -- Declares required fields.
     local PlayerProvider = Library.getService("PlayerProvider")
     local player = PlayerProvider.find(_player.UserId)
 
+    -- If player is not exist, no need to continue.
+    if not player then return end
+
+    -- Completes player loading stage.
+    player:completeLoading()
+end)
+
+------------------------
+-- LOADING (ENDS)
+------------------------
+
+
+------------------------
+-- SETTINGS (STARTS)
+------------------------
+
+PlayerSettingsEvent.OnServerEvent:Connect(function(_player, _packet)
     -- Prevents spamming.
     if spamCheck(_player) then return end
+
+    -- Declares required fields.
+    local PlayerProvider = Library.getService("PlayerProvider")
+    local player = PlayerProvider.find(_player.UserId)
+
+    -- If player is not exist, no need to continue.
+    if not player then return end
 
     -- Updates player settings.
     player:getSettings():handlePacket(_packet)

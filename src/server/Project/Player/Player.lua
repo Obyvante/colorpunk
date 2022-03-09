@@ -53,6 +53,30 @@ function class:getRobloxPlayer()
     return game:GetService("Players"):GetPlayerByUserId(self.id)
 end
 
+-- Gets if player is waiting to be loaded or not.
+-- @return If player is waiting to be loaded or not.
+function class:isWaitingLoad()
+    return self.waitLoading
+end
+
+-- Waits player to be loaded.
+function class:waitLoading()
+    self.wait_loading = true
+end
+
+-- Gets if player is loaded or not.
+-- @return If player is loaded or not.
+function class:isLoaded()
+    return self.loaded
+end
+
+-- Completes player loading process.
+function class:completeLoading()
+    if not self.wait_loading then return end
+    self.wait_loading = false
+    self.loaded = true
+end
+
 -- Gets player roblox id.
 -- @return Player roblox id.
 function class:getId()
