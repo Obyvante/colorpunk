@@ -12,6 +12,8 @@ local PlayerService = game:GetService("Players")
 -- EVENTS
 local GameStateEvent = EventService.get("GameState")
 -- STARTS
+-- TODO: freeze player for 1-2 seconds when first game starting phase.
+-- TODO: will add player leave handler.
 
 
 ------------------------
@@ -53,7 +55,15 @@ class.Requirements = {
 
 class.Locations.Bottom.Touched:Connect(function(_part)
     local player = PlayerService:GetPlayerFromCharacter(_part.Parent)
+    if player == nil then return end
     TeleportService.teleport(player, class.Locations.Spawns.Lobby[math.random(1, #class.Locations.Spawns.Lobby)].Position, Vector3.new(0, 90, 0))
+
+    for index, _participant in pairs(class.Participants) do
+        if player == _participant then
+            table.remove(class.Participants, index)
+            break
+        end
+    end
 end)
 
 ------------------------
@@ -67,6 +77,14 @@ end)
 
 -- Resets game.
 function class.reset()
+    -- Player teleportation.
+    if class.Participants then
+        for index, player in pairs(class.Participants) do
+            if player == nil then continue end
+            TeleportService.teleport(player, class.Locations.Spawns.Lobby[index].Position, Vector3.new(0, 90, 0))
+        end
+    end
+
     class.Round = {
         Current = 1,
         Timer = 0,
@@ -187,6 +205,15 @@ local game_loop_func = function()
         })
     end
 
+    -- If there is no enough participants, ends game.
+    if #class.Participants <= 1 then
+        -- Resets class.
+        class.reset()
+        -- Sends cancelled packet.
+        GameStateEvent:FireAllClients("ENDED")
+        return
+    end
+
     -- Declares required fields.
     local round = GameRound.get(class.Round.Current)
 
@@ -216,12 +243,6 @@ local game_loop_func = function()
 
         -- If it was a last round!
         if not round then
-            -- Player teleportation.
-            for index, player in pairs(class.Participants) do
-                if player == nil then continue end
-                TeleportService.teleport(player, class.Locations.Spawns.Lobby[index].Position, Vector3.new(0, 90, 0))
-            end
-            
             -- Resets class.
             class.reset()
 

@@ -8,31 +8,31 @@ local class = {}
 
 class.content = {
 	[1] = {
-		Duration = 3,
+		Duration = 8,
 		Money = 10
 	},
 	[2] = {
-		Duration = 3,
+		Duration = 8,
 		Money = 15
 	},
 	[3] = {
-		Duration = 3,
+		Duration = 8,
 		Money = 20
 	},
 	[4] = {
-		Duration = 3,
+		Duration = 7,
 		Money = 25
 	},
 	[5] = {
-		Duration = 3,
+		Duration = 7,
 		Money = 30
 	},
 	[6] = {
-		Duration = 3,
+		Duration = 6,
 		Money = 35
 	},
 	[7] = {
-		Duration = 3,
+		Duration = 5,
 		Money = 40
 	},
 	[8] = {
@@ -40,11 +40,11 @@ class.content = {
 		Money = 45
 	},
 	[9] = {
-		Duration = 3,
+		Duration = 2,
 		Money = 50
 	},
 	[10] = {
-		Duration = 3,
+		Duration = 1,
 		Money = 100
 	},
 	[41] = {--TODO: CHANGE

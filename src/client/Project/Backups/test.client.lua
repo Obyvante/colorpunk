@@ -54,7 +54,7 @@ function create2(_position)
     _parent.Parent = game.Workspace
 
     local _particle = Instance.new("ParticleEmitter")
-    _particle.Texture = "rbxasset://textures/particles/stable2.png"
+    _particle.Texture = "rbxassetid://9055534720"
     _particle.Size = NumberSequence.new(math.random() + 0.3)
     _particle.Color = ColorSequence.new(Color3.fromRGB(0, 217, 255))
     _particle.LightEmission = 1
