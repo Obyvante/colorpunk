@@ -104,7 +104,7 @@ end
 -- Gets player statistics.
 -- @return Player statistics.
 function class.getStatistics()
-    return class.currencies
+    return class.statistics
 end
 
 

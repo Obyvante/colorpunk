@@ -384,6 +384,51 @@ top_background:addElement({
     }
 })
 
+-- Top right text for erros.
+interface:addElement({
+    Name = "error_panel",
+    Type = "Frame",
+    Properties = {
+        Custom = {
+            Position = Vector2.new(2898, 47),
+            Size = Vector2.new(928, 243),
+        },
+
+        AnchorPoint = Vector2.new(0.5, 0),
+        BorderSizePixel = 0,
+        BackgroundTransparency = 1
+    },
+
+    BuildWith = {
+        "AspectRatio"
+    }
+}):addElement({
+    Name = "text",
+    Type = "TextLabel",
+    Properties = {
+        Custom = {
+            Position = Vector2.new(-75, 100),
+            Size = Vector2.new(928, 243),
+            FontSize = 70
+        },
+
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        BackgroundTransparency = 1,
+
+        TextTransparency = 1,
+        TextColor3 = Color3.fromRGB(255, 0, 0),
+        Font = "DenkOne",
+        Text =
+[[
+Microtransactions and logins are
+temporarily suspended because an error
+occurred on the servers. You can continue
+playing the game.
+]]
+    }
+})
+
 ------------------------
 -- TOP (ENDS)
 ------------------------
@@ -448,6 +493,14 @@ left_body:getElement("body_settings"):updateEvents({
 
             local ui = InterfaceService.get("settings")
             if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
+
+            local sound = Instance.new("Sound", game.Workspace)
+            sound.SoundId = "rbxassetid://9059960341"
+            sound:Play()
+
+            sound.Ended:Connect(function()
+                sound:Destroy()
+            end)
         end
     }
 })

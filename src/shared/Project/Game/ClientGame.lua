@@ -39,7 +39,7 @@ end
 
 class.Requirements = {
     QUEUE_TIMER = 10,
-    MINIMUM_PLAYER = 2
+    MINIMUM_PLAYER = 3
 }
 
 ------------------------

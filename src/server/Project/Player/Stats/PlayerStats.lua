@@ -53,6 +53,8 @@ function class:set(_type : string, _value : number)
     assert(_value >= 0, "Player stat value must be positive")
     self.content[_type] = _value
 
+    -- Updates player character.
+    self:updateCharacterAttributes()
     -- Sends update packet.
     self:_sendUpdatePacket(_type)
 end
@@ -71,6 +73,8 @@ function class:add(_type : string, _value : number)
     assert(_value >= 0, "Player stat value must be positive")
     self.content[_type] = math.max(self:get(_type) + _value, 0)
 
+    -- Updates player character.
+    self:updateCharacterAttributes()
     -- Sends update packet.
     self:_sendUpdatePacket(_type)
 end
@@ -89,8 +93,22 @@ function class:remove(_type : string, _value : number)
     assert(_value >= 0, "Player stat value must be positive")
     self.content[_type] = math.max(self:get(_type) - _value, 0)
 
+    -- Updates player character.
+    self:updateCharacterAttributes()
     -- Sends update packet.
     self:_sendUpdatePacket(_type)
+end
+
+-- Updates character attributes.
+function class:updateCharacterAttributes()
+    -- Gets roblox player and checks if it is online.
+    local player = self.player:getRobloxPlayer()
+    if not player then return end
+
+    -- Applies stats to roblox character.
+    local _humanoid = player.Character.Humanoid
+    _humanoid.WalkSpeed = game.StarterPlayer.CharacterWalkSpeed * (self:get("WALK_SPEED") + 1)
+    _humanoid.JumpPower = game.StarterPlayer.CharacterJumpPower * (self:get("JUMP_HEIGHT") + 1)
 end
 
 -- Sends update packet for target type to client.
@@ -99,6 +117,12 @@ end
 function class:_sendUpdatePacket(_type : string)
     -- Object nil checks.
     assert(_type ~= nil, "Player stat type cannot be null")
+    
+    -- Gets roblox player and checks if it is online.
+    local player = self.player:getRobloxPlayer()
+    if not player then return end
+
+    -- Sends update packet.
     PlayerStatsEvent:FireClient(self.player:getRobloxPlayer(), {
         Type = _type,
         Value = self.content[_type]

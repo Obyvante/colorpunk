@@ -8,7 +8,7 @@ local ClientCallbackService = Library.getService("ClientCallbackService")
 
 
 -- Handles exceptions.
-local success, message = pcall(function() ClientPlayer.update(ClientCallbackService.handle("PlayerLoad", 10)) end)
+local success, message = pcall(function() ClientPlayer.update(ClientCallbackService.handle("PlayerLoad", 5)) end)
 
 -- If it is not successfully, kicks player.
 if not success then
@@ -27,17 +27,6 @@ If you think it is a bug/an issue, please contact our staff or Roblox staff.
     task.wait(5)
     return nil
 end
-
-
-------------------------
--- INITIALIZATION (STARTS)
-------------------------
-
-require(game.ReplicatedStorage.Project.Player.ClientPlayerProvider)
-
-------------------------
--- INITIALIZATION (ENDS)
-------------------------
 
 
 -- ENDS

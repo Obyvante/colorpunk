@@ -1,5 +1,6 @@
 local class = {}
 -- IMPORTS
+local ClientServer = require(game.ReplicatedStorage.Project.Server.ClientServer)
 local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
 local Library = require(game.ReplicatedStorage.Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
@@ -39,35 +40,28 @@ function class.loadDefaultInterfaces()
     local interface_game = InterfaceService.get("game")
     interface_game:bind(game.Players.LocalPlayer.PlayerGui)
 
-    local cp_stats = ClientPlayer.getStats()
-    TaskService.createRepeating(1, function(_task)
-        interface_game:getElementByPath("top_background.left_text"):updateProperties({
-            Text = NumberService.format(math.random(0, 99))
-        })
-        interface_game:getElementByPath("top_background.center_text"):updateProperties({
-            Text = StringService.random(math.random(1, 8), true)
-        })
-        interface_game:getElementByPath("top_background.right_text"):updateProperties({
-            Text = NumberService.format(math.random(0, 99))
-        })
-
+    TaskService.createRepeating(0.5, function(_task)
         interface_game:getElementByPath("bottom_body.body_speed.text"):updateProperties({
-            Text = "x" .. string.format("%0.2f", math.random() * 2)
+            Text = "x" .. string.format("%0.2f", 1 + ClientPlayer.getStats().get("WALK_SPEED"))
         })
         interface_game:getElementByPath("bottom_body.body_jump.text"):updateProperties({
-            Text = "x" .. string.format("%0.2f", math.random() * 2)
+            Text = "x" .. string.format("%0.2f", 1 + ClientPlayer.getStats().get("JUMP_HEIGHT"))
         })
 
         interface_game:getElementByPath("right_body.body_rank.text"):updateProperties({
-            Text = NumberService.format(math.random(0, 999999))
+            Text = NumberService.format(0)
         })
         interface_game:getElementByPath("right_body.body_win.text"):updateProperties({
-            Text = NumberService.format(math.random(0, 10000))
+            Text = NumberService.format(ClientPlayer.getStatistics().get("WIN"))
         })
         interface_game:getElementByPath("right_body.body_money.text"):updateProperties({
-            Text = NumberService.format(math.random(0, 999999999))
+            Text = NumberService.format(ClientPlayer.getCurrencies().get("GOLD"))
         })
-    end)--:run()
+
+        interface_game:getElementByPath("error_panel.text"):updateProperties({
+            TextTransparency = ClientServer.Active and 1 or 0
+        })
+    end):run()
 end
 
 ------------------------

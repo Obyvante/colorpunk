@@ -274,7 +274,7 @@ function class:setFontSize(_size : number)
 
         -- Updates font size with using "UISize" object. (HACKY SOLUTION)
         _binder:getParent():updateProperties({
-              Scale = _size * font_size_ratio
+              Scale = self:getFontSize() * font_size_ratio
         })
     end
 

@@ -1,13 +1,16 @@
 ------------------------
 -- VARIABLES (STARTS)
 ------------------------
+local time = os.time()
 
 local PATHS = {
     [1] = game.ServerScriptService.Project.Cosmetics.Pet.PetProvider,
     [2] = game.ServerScriptService.Project.Cosmetics.Trail.TrailProvider,
-    [3] = game.ServerScriptService.Project.Player.PlayerProvider
+    [3] = game.ServerScriptService.Project.Player.PlayerProvider,
+    [4] = game.ServerScriptService.Project.Marketplace.Marketplace,
+    [5] = game.ServerScriptService.Project.Server.Server
 }
-local PATH_SIZE = 3
+local PATH_SIZE = 5
 
 ------------------------
 -- VARIABLES (ENDS)
@@ -17,8 +20,6 @@ local PATH_SIZE = 3
 ------------------------
 -- IMPORTS (STARTS)
 ------------------------
-
-local time = os.time()
 
 local Library = require(game.ReplicatedStorage.Library.Library)
 

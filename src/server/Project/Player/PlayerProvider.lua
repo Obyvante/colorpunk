@@ -50,11 +50,6 @@ end
 
 
 ------------------------
--- INITIALIZATION (STARTS)
-------------------------
-
-
-------------------------
 -- TASKS (STARTS)
 -----------------------
 
@@ -109,6 +104,7 @@ player_load.OnServerEvent:Connect(function(player)
         if player == nil then return end
 
         local _player = class.find(player.UserId)
+        if _player:isDeleting() then return end
         _player:waitLoading()
 
         -- Fires client.
@@ -127,13 +123,22 @@ end)
 
 -- Creates player join signal.
 local signal_player_join = SignalService.create("PlayerJoin")
+local signal_player_leave = SignalService.create("PlayerLeave")
 
 -- Connects actual event.
 signal_player_join:connect(function(player)
-    local _table = PlayerHTTP.handle(player.UserId, player.Name)
-    local _player = Player.new(_table)
+    -- Handles exception.
+    local success, message = pcall(function()
+        local _player = class.find(player.UserId)
+        if _player then return end
 
-    content[_table.id] = _player
+        local _table = PlayerHTTP.handle(player.UserId, player.Name)
+        _player = Player.new(_table)
+        content[_table.id] = _player
+    end)
+
+    -- Informs server about player.
+    if not success then warn("Player(" .. player.UserId .. ") couldn't loaded from the backend! (signal) -> " .. message) end
 end)
 
 -- Fires player join signal when player join.
@@ -143,11 +148,30 @@ end)
 
 -- Handles player leave.
 PlayersService.PlayerRemoving:Connect(function(player)
+    -- First player leave signal.
+    signal_player_leave:fire(player)
+
+    if not _G.http_player_update_queue then _G.http_player_update_queue = {} end
+
+    -- Finds player.
+    local _player = class.find(player.UserId)
+    if _player == nil then return end
+
+    -- Saves player to the cache.
+     _G.http_player_update_queue[player.UserId] = _player:toTable()
+
+    -- Handles not active server.
+    if not _G.server_active then
+        -- Removes player from the cache.
+        class.remove(player.UserId)
+        return
+    end
+
+    -- Marks player is currently deleting.
+    _player:waitDeleting()
+
     -- Async task.
     task.spawn(function()
-        local _player = class.find(player.UserId)
-        if _player == nil then return end
-
         -- Safe http request.
         local success, message = pcall(PlayerHTTP.update, _player)
 
@@ -156,10 +180,10 @@ PlayersService.PlayerRemoving:Connect(function(player)
 
         -- If it is no successfully, warns server about that.
         if not success then
-            warn(" ")
+            warn("---------------------")
             warn("PLAYERS UPDATE(" .. player.UserId .. ") ERROR [IMPORTANT ISSUE!]")
             warn(message)
-            warn(" ")
+            warn("---------------------")
         end
     end)
 end)
@@ -185,12 +209,6 @@ require(script.Parent.PlayerListener)
 ------------------------
 -- IMPORTS (ENDS)
 ------------------------
-
-
-------------------------
--- INITIALIZATION (ENDS)
-------------------------
-
 
 
 -- ENDS

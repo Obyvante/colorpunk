@@ -6,6 +6,8 @@ local InterfaceService = Library.getService("InterfaceService")
 -- EVENTS
 local PlayerSettingsEvent = EventService.get("PlayerSettings")
 local PlayerStatsEvent = EventService.get("PlayerStats")
+local PlayerCurrenciesEvent = EventService.get("PlayerCurrencies")
+local PlayerStatisticsEvent = EventService.get("PlayerStatistics")
 -- STARTS
 
 
@@ -38,11 +40,51 @@ end)
 PlayerStatsEvent.OnClientEvent:Connect(function(_packet)
     local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
     ClientPlayer.getStats().handlePacket(_packet)
-    print("update!")
 end)
 
 ------------------------
 -- STATS (ENDS)
+------------------------
+
+
+------------------------
+-- CURRENCIES (STARTS)
+------------------------
+
+PlayerCurrenciesEvent.OnClientEvent:Connect(function(_packet)
+    local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
+    ClientPlayer.getCurrencies().handlePacket(_packet)
+end)
+
+------------------------
+-- CURRENCIES (ENDS)
+------------------------
+
+
+------------------------
+-- STATISTICS (STARTS)
+------------------------
+
+PlayerStatisticsEvent.OnClientEvent:Connect(function(_packet)
+    local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
+    ClientPlayer.getStatistics().handlePacket(_packet)
+end)
+
+------------------------
+-- STATISTICS (ENDS)
+------------------------
+
+
+------------------------
+-- SERVER STATE (STARTS)
+------------------------
+
+PlayerStatisticsEvent.OnClientEvent:Connect(function(_packet)
+
+end)
+
+------------------------
+-- SERVER STATE (ENDS)
 ------------------------
 
 

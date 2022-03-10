@@ -87,7 +87,7 @@ class.content = {
 		name = "Red",
 		brick_color = "Really red",
 		color = Color3.fromRGB(255, 0, 0)
-	},
+	}
 }
 
 ------------------------

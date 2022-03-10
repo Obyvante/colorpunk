@@ -75,6 +75,11 @@ function class:completeLoading()
     if not self.wait_loading then return end
     self.wait_loading = false
     self.loaded = true
+
+    -- Applies stats to roblox character.
+    local _humanoid = self:getRobloxPlayer().Character.Humanoid
+    _humanoid.WalkSpeed = game.StarterPlayer.CharacterWalkSpeed * (self.stats:get("WALK_SPEED") + 1)
+    _humanoid.JumpPower = game.StarterPlayer.CharacterJumpPower * (self.stats:get("JUMP_HEIGHT") + 1)
 end
 
 -- Gets player roblox id.
@@ -116,7 +121,18 @@ end
 -- Gets player statistics.
 -- @return Player statistics.
 function class:getStatistics()
-    return self.currencies
+    return self.statistics
+end
+
+-- Marks that player is currently deleting.
+function class:waitDeleting()
+    self.deleting = true
+end
+
+-- Gets if player is deleting or not.
+-- @return If player is deleting or not.
+function class:isDeleting()
+    return self.deleting
 end
 
 -- Destroys player.

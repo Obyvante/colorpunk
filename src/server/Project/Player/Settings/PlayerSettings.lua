@@ -98,8 +98,12 @@ function class:set(_type : string, _value : number)
     assert(_value >= 0, "Player setting value must be positive")
     self.content[_type] = math.floor(_value)
 
+    -- Gets roblox player and checks if it is online.
+    local player = self.player:getRobloxPlayer()
+    if not player then return end
+
     -- Sends update packet.
-    PlayerSettingsEvent:FireClient(self.player:getRobloxPlayer(), {
+    PlayerSettingsEvent:FireClient(player, {
         Type = _type,
         Value = _value
     })

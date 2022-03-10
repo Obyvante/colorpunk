@@ -4,6 +4,7 @@ local InterfaceService = Library.getService("InterfaceService")
 local EventService = Library.getService("EventService")
 -- EVENTS
 local PlayerLoadEvent = EventService.get("PlayerLoad")
+local TestCallbackEvent = EventService.get("TestCallback")
 -- TIMER
 local time = os.time()
 
@@ -40,15 +41,17 @@ ClientPlayerProvider.loadDefaultInterfaces()
 
 
 ------------------------
--- GAME (STARTS)
+-- IMPORTS (STARTS)
 ------------------------
 
--- Loads client game provider.
+require(game.ReplicatedStorage.Project.Player.ClientPlayerProvider)
+require(game.ReplicatedStorage.Project.Server.ClientServerProvider)
 require(game.ReplicatedStorage.Project.Game.ClientGameProvider)
 
 ------------------------
--- GAME (ENDS)
+-- IMPORTS (ENDS)
 ------------------------
+
 
 -- Last think to inform server that player is fully loaded.
 PlayerLoadEvent:FireServer()
@@ -64,7 +67,17 @@ print("✔️ DONE! (", os.time() - time, ")")
 -- TEST (STARTS)
 ------------------------
 
+local sound = Instance.new("Sound", game.Workspace)
+sound.SoundId = "rbxassetid://9059061304"
+sound.Looped = true
+sound:Play()
 
+local UserInputService = game:GetService("UserInputService")
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.KeyCode == Enum.KeyCode.Q then
+        TestCallbackEvent:FireServer()
+    end
+end)
 
 ------------------------
 -- TEST (ENDS)

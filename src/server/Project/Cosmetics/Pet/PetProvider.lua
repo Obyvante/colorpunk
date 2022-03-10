@@ -39,6 +39,7 @@ end
 ----------
 -- INITIALIZATION
 ----------
+
 local time = os.time()
 
 local response = HTTPService.GET(Endpoints.PET_ENDPOINT, { ["BARDEN-API-KEY"] = Endpoints.API_KEY })

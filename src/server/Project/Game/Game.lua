@@ -8,12 +8,14 @@ local TaskService = Library.getService("TaskService")
 local TeleportService = Library.getService("TeleportService")
 local PlayerProvider = Library.getService("PlayerProvider")
 local TableService = Library.getService("TableService")
+local SignalService = Library.getService("SignalService")
 local PlayerService = game:GetService("Players")
+local Debris = game:GetService("Debris")
+-- SIGNALS
+local PlayerLeaveSignal = SignalService.getById("PlayerLeave")
 -- EVENTS
 local GameStateEvent = EventService.get("GameState")
 -- STARTS
--- TODO: freeze player for 1-2 seconds when first game starting phase.
--- TODO: will add player leave handler.
 
 
 ------------------------
@@ -40,34 +42,12 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 2, -- 10
+    MINIMUM_PLAYER = 3, -- 10
     QUEUE_TIMER = 10 -- 30
 }
 
 ------------------------
 -- VARIABLES (ENDS)
-------------------------
-
-
-------------------------
--- EVENTS (STARTED)
-------------------------
-
-class.Locations.Bottom.Touched:Connect(function(_part)
-    local player = PlayerService:GetPlayerFromCharacter(_part.Parent)
-    if player == nil then return end
-    TeleportService.teleport(player, class.Locations.Spawns.Lobby[math.random(1, #class.Locations.Spawns.Lobby)].Position, Vector3.new(0, 90, 0))
-
-    for index, _participant in pairs(class.Participants) do
-        if player == _participant then
-            table.remove(class.Participants, index)
-            break
-        end
-    end
-end)
-
-------------------------
--- EVENTS (ENDS)
 ------------------------
 
 
@@ -82,6 +62,13 @@ function class.reset()
         for index, player in pairs(class.Participants) do
             if player == nil then continue end
             TeleportService.teleport(player, class.Locations.Spawns.Lobby[index].Position, Vector3.new(0, 90, 0))
+
+            -- Gets player.
+            local _player = PlayerProvider.find(player.UserId)
+            if _player == nil then continue end
+
+            -- Statistics.
+            _player:getStatistics():add("WIN", 1)
         end
     end
 
@@ -103,8 +90,9 @@ function class.reset()
         Timer = {
             Duration = 5,
             Current = 0
-        },
+        }
     }
+    class.FreezeDuration = 2
     class.Participants = {}
     class.Eliminated = {}
 end
@@ -134,8 +122,56 @@ function class.randomPist()
     class.Round.Color = PistPartColor.content[Colors[math.random(1, #Colors)]]
 end
 
+-- Removes target player from the participants
+-- @param _player Roblox player.
+function class.removeFromParticipants(_player : Player)
+    for index, _participant in pairs(class.Participants) do
+        if _player == _participant then
+            table.remove(class.Participants, index)
+
+            -- Gets player.
+            local player = PlayerProvider.find(_player.UserId)
+            if player == nil then break end
+
+            -- Statistics.
+            player:getStatistics():add("LOSE", 1)
+            break
+        end
+    end
+end
+
 ------------------------
 -- METHODS (ENDS)
+------------------------
+
+
+------------------------
+-- EVENTS (STARTED)
+------------------------
+
+-- Handles player elimination when they fell.
+class.Locations.Bottom.Touched:Connect(function(_part)
+    -- Gets player from its character.
+    local _player = PlayerService:GetPlayerFromCharacter(_part.Parent)
+    if _player == nil then return end
+    if _player:GetAttribute("falling") then return end
+    _player:SetAttribute("falling", true)
+
+    -- Teleports player to the target lobby spawn location.
+    TeleportService.teleport(_player, class.Locations.Spawns.Lobby[math.random(1, #class.Locations.Spawns.Lobby)].Position, Vector3.new(0, 90, 0))
+
+    -- Removes player from the participant list.
+    class.removeFromParticipants(_player)
+end)
+
+-- Handles player elimination when they quit.
+PlayerLeaveSignal:connect(function(_player)
+    -- Removes player from the participant list.
+    class.removeFromParticipants(_player)
+end)
+
+------------------------
+-- EVENTS (ENDS)
 ------------------------
 
 
@@ -162,6 +198,7 @@ local game_loop_func = function()
             return
         end
 
+        -- Starting timer increasment.
         class.Starting.Timer.Current += 0.1
         if class.Starting.Timer.Current < class.Starting.Timer.Duration then return end
     end
@@ -176,7 +213,6 @@ local game_loop_func = function()
 
         -- TODO: egg opening, doing stuff etc. check.
         GameStateEvent:FireAllClients("STARTING")
-        print("starting")
         return
     end
 
@@ -193,7 +229,19 @@ local game_loop_func = function()
 
         -- Player teleportation.
         for index, player in pairs(PlayerService:GetPlayers()) do
+            local _player = PlayerProvider.find(player.UserId)
+            if _player == nil then continue end
+     
+            -- Statistics.
+            _player:getStatistics():add("GAME_PLAYED", 1)
+
             TeleportService.teleport(player, class.Locations.Spawns.Pist[index].Position, Vector3.new(0, 90, 0))
+            player:SetAttribute("falling", nil)
+
+            local force_field = Instance.new("ForceField")
+            force_field.Visible = true
+            force_field.Parent = player.Character
+            Debris:AddItem(force_field, class.FreezeDuration)
         end
 
         -- Fires cancelled packet.
@@ -206,9 +254,11 @@ local game_loop_func = function()
     end
 
     -- If there is no enough participants, ends game.
-    if #class.Participants <= 1 then
+    -- TODO: will remove false.
+    if false and #class.Participants <= 1 then
         -- Resets class.
         class.reset()
+        
         -- Sends cancelled packet.
         GameStateEvent:FireAllClients("ENDED")
         return
@@ -221,9 +271,6 @@ local game_loop_func = function()
     if class.Round.Timer > round.Duration then
         -- Handles falling timer.
         if class.Falling.Timer == 0 then
-            local PistModule = require(class.Round.Pist)
-            local Colors = TableService.keys(PistModule.WHITELIST)
-
             -- Sends falling packet.
             GameStateEvent:FireAllClients("FALLING")
         end
@@ -231,6 +278,21 @@ local game_loop_func = function()
         -- If it is in falling stage.
         class.Falling.Timer += 0.1
         if class.Falling.Timer < class.Falling.Duration then return end
+
+        for _, player in pairs(class.Participants) do
+            local _player = PlayerProvider.find(player.UserId)
+            if _player == nil then continue end
+
+            -- Currencies.
+            _player:getCurrencies():add("GOLD", round.Money)
+     
+            -- Statistics.
+            _player:getStatistics():add("ROUND_PLAYED", 1)
+
+            -- For now.
+            _player:getStats():set("WALK_SPEED", math.random())
+            _player:getStats():set("JUMP_HEIGHT", math.random())
+        end
 
         -- Resets base fields.
         class.Falling.Timer = 0

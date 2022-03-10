@@ -1,5 +1,10 @@
 local class = {}
 class.__index = class
+-- IMPORTS
+local Library = require(game.ReplicatedStorage.Library.Library)
+local EventService = Library.getService("EventService")
+-- EVENTS
+local PlayerCurrenciesEvent = EventService.get("PlayerCurrencies")
 -- STARTS
 
 
@@ -65,6 +70,9 @@ function class:set(_type : string, _value : number)
     assert(_value ~= nil, "Player currency value cannot be null")
     assert(_value >= 0, "Player currency value must be positive")
     self.content[_type] = _value
+
+    -- Sends update packet.
+    self:_sendUpdatePacket(_type)
 end
 
 -- Adds value to player currency.
@@ -81,6 +89,9 @@ function class:add(_type : string, _value : number)
     assert(_value ~= nil, "Player currency value cannot be null")
     assert(_value >= 0, "Player currency value must be positive")
     self.content[_type] = math.max(self:get(_type) + _value, 0)
+
+    -- Sends update packet.
+    self:_sendUpdatePacket(_type)
 end
 
 -- Removes value from player currency.
@@ -97,9 +108,29 @@ function class:remove(_type : string, _value : number)
     assert(_value ~= nil, "Player currency value cannot be null")
     assert(_value >= 0, "Player currency value must be positive")
     self.content[_type] = math.max(self:get(_type) - _value, 0)
+
+    -- Sends update packet.
+    self:_sendUpdatePacket(_type)
 end
 
--- TODO: will add packet system.
+-- Sends update packet for target type to client.
+-- @param _type Currency type.
+-- @return Player currencies. (BUILDER)
+function class:_sendUpdatePacket(_type : string)
+    -- Object nil checks.
+    assert(_type ~= nil, "Player currency type cannot be null")
+
+    -- Gets roblox player and checks if it is online.
+    local player = self.player:getRobloxPlayer()
+    if not player then return end
+
+    -- Sends update packet.
+    PlayerCurrenciesEvent:FireClient(player, {
+        Type = _type,
+        Value = self.content[_type]
+    })
+    return self
+end
 
 -- Converts player currencies to a table.
 -- @return Player currencies table.

@@ -5,6 +5,8 @@ class.ENDPOINT = "65.108.166.161:8080"
 class.API_KEY = "BARDEN_SECRET_KEY"
 
 -- ENDPOINTS
+class.HEALTH_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/health/"
+
 class.PET_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/pet/"
 class.TRAIL_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/trail/"
 

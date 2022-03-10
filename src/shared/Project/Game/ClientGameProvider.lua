@@ -9,11 +9,6 @@ local StringService = Library.getService("StringService")
 
 
 ------------------------
--- INITIALIZATION (STARTS)
-------------------------
-
-
-------------------------
 -- IMPORTS (STARTS)
 ------------------------
 
@@ -35,46 +30,6 @@ require(game.ReplicatedStorage.Project.Game.ClientGameListener)
 
 ------------------------
 -- INTERFACES (ENDS)
-------------------------
-
-
-------------------------
--- INITIALIZATION (ENDS)
-------------------------
-
-
-------------------------
--- TEST (START)
-------------------------
-
-local client_game = require(game.ReplicatedStorage.Project.Game.Pist.GamePist)
-local pist
-
-local UserInputService = game:GetService("UserInputService")
-UserInputService.InputEnded:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode == Enum.KeyCode.Q then
-        client_game.reset()
-    elseif input.KeyCode == Enum.KeyCode.R then
-        local childs = game.ReplicatedStorage.Pists:GetDescendants()
-        pist = childs[math.random(1, #childs)]
-        client_game.load(pist.Name)
-    elseif input.KeyCode == Enum.KeyCode.T then
-        client_game.whitelist({
-            pist_id = pist.Name,
-            brick_color = "Really red"
-        })
-    end
-end)
-
---[[
-local childs = game.ReplicatedStorage.Pists:GetDescendants()
-TaskService.createRepeating(0.5, function(_task)
-    client_game.load(childs[math.random(1, #childs)].Name)
-end):run()
-]]
-
-------------------------
--- TEST (ENDS)
 ------------------------
 
 

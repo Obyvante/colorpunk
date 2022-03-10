@@ -18,28 +18,40 @@ function class.teleport(_player : Player, _location : Vector3, _orientation : Ve
     local walk_speed = humanoid.WalkSpeed
     local jump_power = humanoid.JumpPower
 
-    -- Freezes player.
-    humanoid.WalkSpeed = 0
-    humanoid.JumpPower = 0
+    task.spawn(function()
+		-- Freezes player.
+		game:GetService'RunService'.Heartbeat:Wait()
+		if _player == nil then return end
+		
+		character.PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
+		humanoid.WalkSpeed = 0
+		humanoid.JumpPower = 0
+	
+		-- Calculate height of root part from character base
+		local rootPartY
+		if humanoid.RigType == Enum.HumanoidRigType.R15 then
+			rootPartY = (humanoid.RootPart.Size.Y * 0.5) + humanoid.HipHeight
+		else
+			rootPartY = (humanoid.RootPart.Size.Y * 0.5) + humanoid.Parent.LeftLeg.Size.Y + humanoid.HipHeight
+		end
+	
+		-- Calculates locations.
+		local position = CFrame.new(_location + Vector3.new(0, rootPartY, 0))
+		local orientation = _orientation and CFrame.Angles(_orientation.X, _orientation.Y, _orientation.Z) or CFrame.Angles(0, 90, 0)
+	
+		task.wait(0.5)
+		if _player == nil then return end
 
-	-- Calculate height of root part from character base
-	local rootPartY
-	if humanoid.RigType == Enum.HumanoidRigType.R15 then
-		rootPartY = (humanoid.RootPart.Size.Y * 0.5) + humanoid.HipHeight
-	else
-		rootPartY = (humanoid.RootPart.Size.Y * 0.5) + humanoid.Parent.LeftLeg.Size.Y + humanoid.HipHeight
-	end
-
-	-- Calculates locations.
-	local position = CFrame.new(_location + Vector3.new(0, rootPartY, 0))
-	local orientation = _orientation and CFrame.Angles(_orientation.X, _orientation.Y, _orientation.Z) or CFrame.Angles(0, 90, 0)
-
-	-- Teleports player to target location.
-	character:SetPrimaryPartCFrame(position * orientation)
-
-	-- Unfreezes character
-    humanoid.WalkSpeed = walk_speed
-    humanoid.JumpPower = jump_power
+		-- Teleports player to target location.
+		character:SetPrimaryPartCFrame(position * orientation)
+	
+		task.wait(0.5)
+		if _player == nil then return end
+		
+		-- Unfreezes character
+		humanoid.WalkSpeed = walk_speed
+		humanoid.JumpPower = jump_power
+	end)
 end
 
 
