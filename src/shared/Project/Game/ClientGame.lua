@@ -15,6 +15,7 @@ local text_center = GameInterface:getElementByPath("top_background.center_text")
 local timer_text_1 = GameInterface:getElementByPath("top_background.left_text")
 local timer_text_2 = GameInterface:getElementByPath("top_background.right_text")
 -- STARTS
+-- TODO: will fix when player join during game, the game interface is not changing(staying 'waiting players...')
 
 
 ------------------------

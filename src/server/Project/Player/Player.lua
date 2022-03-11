@@ -10,6 +10,9 @@ local PlayerStatistics = require(game.ServerScriptService.Project.Player.Statist
 local HTTPService = Library.getService("HTTPService")
 local Metadata = Library.getTemplate("Metadata")
 local EventBinder = Library.getTemplate("EventBinder")
+local EventService = Library.getService("EventService")
+-- EVENTS
+local PlayerRankEvent = EventService.get("PlayerRank")
 -- STARTS
 
 
@@ -29,6 +32,7 @@ function class.new(_table : table)
     _player.settings = PlayerSettings.new(_player, _table.settings)
     _player.stats = PlayerStats.new(_player, _table.stats)
     _player.statistics = PlayerStatistics.new(_player, _table.statistics)
+    _player.rank = _table.rank
 
     return _player
 end
@@ -124,6 +128,25 @@ function class:getStatistics()
     return self.statistics
 end
 
+-- Gets player rank.
+function class:getRank()
+    return self.rank
+end
+
+-- Sets player rank.
+-- @param _rank Player rank.
+-- @return Player. (BUULDER)
+function class:setRank(_rank : number)
+    assert(_rank ~= nil, "Player(" .. self.id .. ") rank cannot be nil")
+    self.rank = _rank
+
+    local _player = self:getRobloxPlayer()
+    if not _player then return self end
+
+    PlayerRankEvent:FireClient(_player, _rank)
+    return self
+end
+
 -- Marks that player is currently deleting.
 function class:waitDeleting()
     self.deleting = true
@@ -153,7 +176,8 @@ function class:toTable()
         currencies = self.currencies:toTable(),
         stats = self.stats:toTable(),
         settings = self.settings:toTable(),
-        statistics = self.statistics:toTable()
+        statistics = self.statistics:toTable(),
+        rank = self.rank
     }
 end
 

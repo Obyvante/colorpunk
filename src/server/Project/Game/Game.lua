@@ -42,7 +42,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 3, -- 10
+    MINIMUM_PLAYER = 2, -- 10
     QUEUE_TIMER = 10 -- 30
 }
 
@@ -287,6 +287,7 @@ local game_loop_func = function()
             _player:getCurrencies():add("GOLD", round.Money)
      
             -- Statistics.
+            _player:getStatistics():add("GOLD_EARNED", round.Money)
             _player:getStatistics():add("ROUND_PLAYED", 1)
 
             -- For now.

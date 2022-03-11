@@ -8,6 +8,7 @@ local PlayerSettingsEvent = EventService.get("PlayerSettings")
 local PlayerStatsEvent = EventService.get("PlayerStats")
 local PlayerCurrenciesEvent = EventService.get("PlayerCurrencies")
 local PlayerStatisticsEvent = EventService.get("PlayerStatistics")
+local PlayerRankEvent = EventService.get("PlayerRank")
 -- STARTS
 
 
@@ -79,8 +80,9 @@ end)
 -- SERVER STATE (STARTS)
 ------------------------
 
-PlayerStatisticsEvent.OnClientEvent:Connect(function(_packet)
-
+PlayerRankEvent.OnClientEvent:Connect(function(_rank)
+    local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
+    ClientPlayer.setRank(_rank)
 end)
 
 ------------------------

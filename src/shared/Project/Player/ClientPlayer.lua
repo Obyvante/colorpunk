@@ -32,6 +32,7 @@ function class.update(_table : table)
     if not class.initialized then
         class.id = _table.id
         class.name = _table.name
+        class.rank = _table.rank
         --class.inventory = PlayerInventory.update(class, _table.inventory)
         class.currencies = ClientPlayerCurrencies.update(class, _table.currencies)
         class.settings = ClientPlayerSettings.update(class, _table.settings)
@@ -105,6 +106,20 @@ end
 -- @return Player statistics.
 function class.getStatistics()
     return class.statistics
+end
+
+-- Gets player rank.
+function class.getRank()
+    return class.rank
+end
+
+-- Sets player rank.
+-- @param _rank Player rank.
+-- @return Player. (BUULDER)
+function class.setRank(_rank : number)
+    assert(_rank ~= nil, "Rank cannot be nil")
+    class.rank = _rank
+    return class
 end
 
 

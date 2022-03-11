@@ -49,7 +49,7 @@ function class.loadDefaultInterfaces()
         })
 
         interface_game:getElementByPath("right_body.body_rank.text"):updateProperties({
-            Text = NumberService.format(0)
+            Text = ClientPlayer.getRank() < 1000 and ClientPlayer.getRank() or "+" .. NumberService.format(ClientPlayer.getRank(), "%.0f")
         })
         interface_game:getElementByPath("right_body.body_win.text"):updateProperties({
             Text = NumberService.format(ClientPlayer.getStatistics().get("WIN"))

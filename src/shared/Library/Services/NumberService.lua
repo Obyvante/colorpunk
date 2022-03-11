@@ -20,9 +20,9 @@ local abbriviations = {
 -- Formats number.
 -- @param number Number.
 -- @return Formatted number. (STRING)
-function class.format(number)
+function class.format(_number : number, _format : string)
 	-- Converts number to a text.
-	local text = tostring(math.floor(number))
+	local text = tostring(math.floor(_number))
 	
 	-- Creates emppty abbriviation field to handle number.
 	local chosen_abbriviation
@@ -42,16 +42,16 @@ function class.format(number)
 		local digits = abbriviations[chosen_abbriviation]
 		
 		-- Calculates rounded.
-		local rounded = math.floor(number / 10 ^ (digits - 2)) * 10 ^ (digits - 2)
+		local rounded = math.floor(_number / 10 ^ (digits - 2)) * 10 ^ (digits - 2)
 		-- Configures string format.
-		text = string.format("%.1f", rounded / 10 ^ (digits - 1)) .. chosen_abbriviation
+		text = string.format(_format and _format or "%.1f", rounded / 10 ^ (digits - 1)) .. chosen_abbriviation
 		
 		-- Returns calculated number as a string format.
 		return text
 	end
 	
 	-- If there is no fit for number, returns pure.
-	return number
+	return _number
 end
 
 
