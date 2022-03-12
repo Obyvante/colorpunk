@@ -3,7 +3,7 @@ local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerLoadEvent = EventService.get("PlayerLoad")
+local PlayerLoadCompleteEvent = EventService.get("PlayerLoadComplete")
 local TestCallbackEvent = EventService.get("TestCallback")
 -- TIMER
 local time = os.time()
@@ -54,7 +54,7 @@ require(game.ReplicatedStorage.Project.Game.ClientGameProvider)
 
 
 -- Last think to inform server that player is fully loaded.
-PlayerLoadEvent:FireServer()
+PlayerLoadCompleteEvent:FireServer()
 
 -- Destroys interface.
 interface_load.destroy()

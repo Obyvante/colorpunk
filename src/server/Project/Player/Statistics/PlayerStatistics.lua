@@ -3,6 +3,7 @@ class.__index = class
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
+local StatisticsService = Library.getService("StatisticsProvider")
 -- EVENTS
 local PlayerStatisticsEvent = EventService.get("PlayerStatistics")
 -- STARTS
@@ -52,9 +53,12 @@ function class:set(_type : string, _value : number)
     assert(_value ~= nil, "Player statistic value cannot be null")
     assert(_value >= 0, "Player statistic value must be positive")
     self.content[_type] = _value
-    
+
     -- Sends update packet.
     self:_sendUpdatePacket(_type)
+
+    -- Handles statistics.
+    StatisticsService.setPlayer(self.player:getId(), _type, _value)
 end
 
 -- Adds value to player statistic.
@@ -73,6 +77,9 @@ function class:add(_type : string, _value : number)
 
     -- Sends update packet.
     self:_sendUpdatePacket(_type)
+
+    -- Handles statistics.
+    StatisticsService.addPlayer(self.player:getId(), _type, _value)
 end
 
 -- Removes value from player statistic.
@@ -91,6 +98,9 @@ function class:remove(_type : string, _value : number)
 
     -- Sends update packet.
     self:_sendUpdatePacket(_type)
+
+    -- Handles statistics.
+    StatisticsService.addPlayer(self.player:getId(), _type, _value)
 end
 
 -- Sends update packet for target type to client.

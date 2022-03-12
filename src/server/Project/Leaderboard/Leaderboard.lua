@@ -6,6 +6,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local HTTPService = Library.getService("HTTPService")
 local TableService = Library.getService("TableService")
 local PlayerProvider = Library.getService("PlayerProvider")
+local StatisticsProvider = Library.getService("StatisticsProvider")
 -- STARTS
 
 
@@ -69,7 +70,12 @@ function class:update()
     end)
 
     -- Informs about errors.
-    if not success then warn("Couldn't update leaderboard(" .. self.type ..")! -> " .. message) end
+    if not success then
+        warn("Couldn't update leaderboard(" .. self.type ..")! -> " .. message)
+
+        -- Statistics.
+        StatisticsProvider.addGame("FAILED_LEADERBOARD_REQUEST", 1)
+    end
 end
 
 

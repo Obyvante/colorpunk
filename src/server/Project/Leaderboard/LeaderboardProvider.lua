@@ -79,14 +79,14 @@ end
 
 
 ------------------------
--- INITIALIZE (STARTS)
+-- LOOP (STARTS)
 ------------------------
 
 -- Resets surface guis.
 class.reset()
 
 -- Leaderboard loop.
-TaskService.createRepeating(10, function(_task)
+TaskService.createRepeating(90, function(_task)
     for key, value in pairs(class.content) do
         -- Updates leaderboard.
         value:update()
@@ -96,7 +96,7 @@ TaskService.createRepeating(10, function(_task)
 end):run()
 
 ------------------------
--- INITIALIZE (ENDS)
+-- LOOP (ENDS)
 ------------------------
 
 

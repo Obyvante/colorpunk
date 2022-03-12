@@ -7,8 +7,10 @@ local SignalService = Library.getService("SignalService")
 local TaskService = Library.getService("TaskService")
 local EventService = Library.getService("EventService")
 local TableService = Library.getService("TableService")
+local StatisticsProvider = Library.getService("StatisticsProvider")
 local PlayersService = game:GetService("Players")
 local RunService = game:GetService("RunService")
+local DataStore = game:GetService("DataStoreService"):GetDataStore("Restore")
 -- STARTS
 
 
@@ -70,6 +72,9 @@ TaskService.create(90, 90, function(_task)
             warn("PLAYERS UPDATES ERROR [IMPORTANT ISSUE!]")
             warn(message)
             warn(" ")
+
+            -- Statistics.
+            StatisticsProvider.addGame("FAILED_PLAYER_UPDATES_REQUEST", 1)
         end
     end)
 end):run()
@@ -90,11 +95,25 @@ local player_load = EventService.get("PlayerLoad")
 player_load.OnServerEvent:Connect(function(player)
     local timer = 0
     task.spawn(function()
+        local _player = class.find(player.UserId)
+
         -- Waits database to assign player to cache.
-        while content[player.UserId] == nil do
+        while true do
+            -- Gets player every time.
+            _player = class.find(player.UserId)
+            -- If player is exist, exit loop.
+            if _player ~= nil then break end
+
             timer += task.wait()
             if timer >= 10 then return end
             if player == nil then return end
+        end
+
+        -- If it is unsuccessfully.
+        if timer >= 10 or player == nil then
+            -- Statistics.
+            StatisticsProvider.addGame("FAILED_PLAYER_JOIN", 1)
+            return
         end
 
         -- Waits player character.
@@ -102,9 +121,14 @@ player_load.OnServerEvent:Connect(function(player)
 
         -- If player is left the experience, no need to continue.
         if player == nil then return end
+        
+        -- Gets player again to make sure it is online.
+        _player = class.find(player.UserId)
+        if _player == nil then return end
 
-        local _player = class.find(player.UserId)
+        -- If player is in deleting process, no need to continue.
         if _player:isDeleting() then return end
+        -- Marks that player class needs loading confirimation.
         _player:waitLoading()
 
         -- Fires client.
@@ -129,16 +153,39 @@ local signal_player_leave = SignalService.create("PlayerLeave")
 signal_player_join:connect(function(player)
     -- Handles exception.
     local success, message = pcall(function()
+        -- Safety check.
         local _player = class.find(player.UserId)
         if _player then return end
 
-        local _table = PlayerHTTP.handle(player.UserId, player.Name)
+        -- Restoration.
+        local _table = DataStore:GetAsync("player:" .. player.UserId)
+        local _restored = _table ~= nil
+
+        -- Content process.
+        _table = _table == nil and PlayerHTTP.handle(player.UserId, player.Name) or _table
         _player = Player.new(_table)
         content[_table.id] = _player
+
+        -- Handles restoration.
+        if _restored then
+            -- Informs.
+            warn("Player(" .. player.UserId .. ") restored!")
+            -- Removes player backup from the data store.
+            DataStore:RemoveAsync("player:" .. player.UserId)
+        end
+
+        -- Statistics.
+        StatisticsProvider.addGame("PLAYER_JOINED", 1)
+        if _table.new then StatisticsProvider.addGame("UNIQUE_PLAYER_JOINED", 1) end
     end)
 
     -- Informs server about player.
-    if not success then warn("Player(" .. player.UserId .. ") couldn't loaded from the backend! (signal) -> " .. message) end
+    if not success then
+        warn("Player(" .. player.UserId .. ") couldn't loaded from the backend! (signal) -> " .. message)
+
+        -- Statistics.
+        StatisticsProvider.addGame("FAILED_PLAYER_JOIN_REQUEST", 1)
+    end
 end)
 
 -- Fires player join signal when player join.
@@ -148,6 +195,9 @@ end)
 
 -- Handles player leave.
 PlayersService.PlayerRemoving:Connect(function(player)
+    -- Statistics.
+    StatisticsProvider.addGame("PLAYER_LEFT", 1)
+
     -- First player leave signal.
     signal_player_leave:fire(player)
 
@@ -157,11 +207,11 @@ PlayersService.PlayerRemoving:Connect(function(player)
     local _player = class.find(player.UserId)
     if _player == nil then return end
 
-    -- Saves player to the cache.
-     _G.http_player_update_queue[player.UserId] = _player:toTable()
-
     -- Handles not active server.
     if not _G.server_active then
+        -- Saves player to the cache.
+         _G.http_player_update_queue[player.UserId] = _player:toTable()
+
         -- Removes player from the cache.
         class.remove(player.UserId)
         return
@@ -175,6 +225,9 @@ PlayersService.PlayerRemoving:Connect(function(player)
         -- Safe http request.
         local success, message = pcall(PlayerHTTP.update, _player)
 
+        -- Saves player to the cache.
+        if not success then _G.http_player_update_queue[player.UserId] = _player:toTable() end
+
         -- Removes player from the cache.
         class.remove(player.UserId)
 
@@ -184,6 +237,9 @@ PlayersService.PlayerRemoving:Connect(function(player)
             warn("PLAYERS UPDATE(" .. player.UserId .. ") ERROR [IMPORTANT ISSUE!]")
             warn(message)
             warn("---------------------")
+
+            -- Statistics.
+            StatisticsProvider.addGame("FAILED_PLAYER_UPDATE_REQUEST", 1)
         end
     end)
 end)

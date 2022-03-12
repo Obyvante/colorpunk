@@ -103,6 +103,8 @@ function class.applyState(_state : string, _information : table)
 
         -- Loads pist.
         GamePist.load(class.Round.Pist)
+
+        print("[DEBUG] Pist information -> ", class.Round.Pist, class.Round.Color.name)
     elseif _state == "STARTED" then
         -- Updates texts.
         text_center:updateProperties({
@@ -123,6 +125,7 @@ function class.applyState(_state : string, _information : table)
         -- Loads pist.
         GamePist.load(class.Round.Pist)
     elseif _state == "FALLING" then
+        print("[DEBUG] Pist information(falling) -> ", class.Round)
         GamePist.whitelist(class.Round.Pist, class.Round.Color.brick_color)
     elseif _state == "CANCELLED" then
         class.reset()

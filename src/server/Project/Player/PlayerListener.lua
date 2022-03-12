@@ -4,7 +4,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local SpamService = Library.getService("SpamService")
 -- EVENTS
-local PlayerLoadEvent = EventService.get("PlayerLoad")
+local PlayerLoadCompleteEvent = EventService.get("PlayerLoadComplete")
 local PlayerSettingsEvent = EventService.get("PlayerSettings")
 -- STARTS
 
@@ -42,10 +42,10 @@ end
 
 
 ------------------------
--- LOADING (STARTS)
+-- LOAD COMPLETE (STARTS)
 ------------------------
 
-PlayerLoadEvent.OnServerEvent:Connect(function(_player)
+PlayerLoadCompleteEvent.OnServerEvent:Connect(function(_player)
     -- Prevents spamming.
     if spamCheck(_player) then return end
 
@@ -61,7 +61,7 @@ PlayerLoadEvent.OnServerEvent:Connect(function(_player)
 end)
 
 ------------------------
--- LOADING (ENDS)
+-- LOAD COMPLETE (ENDS)
 ------------------------
 
 

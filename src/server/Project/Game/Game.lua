@@ -9,6 +9,7 @@ local TeleportService = Library.getService("TeleportService")
 local PlayerProvider = Library.getService("PlayerProvider")
 local TableService = Library.getService("TableService")
 local SignalService = Library.getService("SignalService")
+local StatisticsProvider = Library.getService("StatisticsProvider")
 local PlayerService = game:GetService("Players")
 local Debris = game:GetService("Debris")
 -- SIGNALS
@@ -94,6 +95,7 @@ function class.reset()
     }
     class.FreezeDuration = 2
     class.Participants = {}
+    class.LastStarted = 0
     class.Eliminated = {}
 end
 
@@ -102,6 +104,7 @@ function class.getAvailablePlayers()
     local _available = {}
 
     for _, player in pairs(PlayerService:GetPlayers()) do
+        -- Only gets loaded players.
         local _player = PlayerProvider.find(player.UserId)
         if not _player or not _player:isLoaded() then continue end
 
@@ -120,6 +123,8 @@ function class.randomPist()
     -- Sets color field.
     local Colors = TableService.keys(PistModule.WHITELIST)
     class.Round.Color = PistPartColor.content[Colors[math.random(1, #Colors)]]
+
+    print("[DEBUG] Pist information -> ", class.Round.Pist, class.Round.Color.name)
 end
 
 -- Removes target player from the participants
@@ -154,6 +159,8 @@ class.Locations.Bottom.Touched:Connect(function(_part)
     -- Gets player from its character.
     local _player = PlayerService:GetPlayerFromCharacter(_part.Parent)
     if _player == nil then return end
+
+    -- Handles attributes.
     if _player:GetAttribute("falling") then return end
     _player:SetAttribute("falling", true)
 
@@ -184,6 +191,11 @@ class.reset()
 
 -- Game loop function.
 local game_loop_func = function()
+    -- Statistics.
+    if not class.Status.Started then
+        class.LastStarted += 0.1
+    end
+
     -- Declares required fields.
     local players = class.getAvailablePlayers()
 
@@ -218,11 +230,16 @@ local game_loop_func = function()
 
     -- If it is not started yet.
     if not class.Status.Started then
+        -- Game statistics.
+        StatisticsProvider.addGame("GAME_PLAYED", 1)
+        StatisticsProvider.addGame("GAME_START_TIME", class.LastStarted - class.Starting.Timer.Duration)
+
         -- Enables starting.
         class.Status.Starting = false
         class.Status.Started = true
         class.Starting.Timer.Current = 0
         class.Participants = players
+        class.LastStarted = 0
 
         -- Configures pist.
         class.randomPist()
@@ -287,6 +304,7 @@ local game_loop_func = function()
             _player:getCurrencies():add("GOLD", round.Money)
      
             -- Statistics.
+            StatisticsProvider.addGame("GOLD_EARNED", round.Money)
             _player:getStatistics():add("GOLD_EARNED", round.Money)
             _player:getStatistics():add("ROUND_PLAYED", 1)
 
@@ -295,14 +313,14 @@ local game_loop_func = function()
             _player:getStats():set("JUMP_HEIGHT", math.random())
         end
 
+        -- Games statistics.
+        StatisticsProvider.addGame("ROUND_PLAYED", 1)
+
         -- Resets base fields.
         class.Falling.Timer = 0
         class.Round.Current += 1
         class.Round.Timer = 0
         round = GameRound.get(class.Round.Current)
-
-        -- Configures pist.
-        class.randomPist()
 
         -- If it was a last round!
         if not round then
@@ -313,6 +331,9 @@ local game_loop_func = function()
             GameStateEvent:FireAllClients("ENDED")
             return
         end
+        
+        -- Configures pist.
+        class.randomPist()
 
         -- Sends round packet.
         GameStateEvent:FireAllClients("ROUND", {
