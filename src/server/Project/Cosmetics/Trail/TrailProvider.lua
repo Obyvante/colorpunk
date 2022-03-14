@@ -54,8 +54,8 @@ if not json.success == true then
 end
 
 -- Handles trails.
-for _id, _data in pairs(json.results) do
-	content[_id] = Trail.new(_id, _data.type, _data.name, _data.asset_id)
+for _, _data in pairs(json.results) do
+	content[_data.id] = Trail.new(_data.id, _data.type, _data.name, _data.asset_id)
 end
 
 -- Informing successful initialization.

@@ -3,6 +3,7 @@ class.__index = class
 -- IMPORTS
 local PlayerPetInventory = require(game.ServerScriptService.Project.Player.Inventory.Pet.PlayerPetInventory)
 local PlayerTrailInventory = require(game.ServerScriptService.Project.Player.Inventory.Trail.PlayerTrailInventory)
+local PlayerProductInventory = require(game.ServerScriptService.Project.Player.Inventory.Product.PlayerProductInventory)
 -- STARTS
 
 
@@ -18,7 +19,8 @@ function class.new(_player : ModuleScript, _table : table)
     return setmetatable({
         player = _player,
         pet = PlayerPetInventory.new(_player, _table.pets),
-        trail = PlayerTrailInventory.new(_player, _table.trails)
+        trail = PlayerTrailInventory.new(_player, _table.trails),
+        product = PlayerProductInventory.new(_player, _table.products)
     }, class)
 end
 
@@ -40,12 +42,19 @@ function class:getTrail()
     return self.trail
 end
 
+-- Gets player product inventory.
+-- @return Player product inventory.
+function class:getProduct()
+    return self.product
+end
+
 -- Converts player inventory to a table.
 -- @return Player inventory table.
 function class:toTable()
     return {
         pets = self.pet:toTable(),
-        trails = self.trail:toTable()
+        trails = self.trail:toTable(),
+        products = self.product:toTable()
     }
 end
 

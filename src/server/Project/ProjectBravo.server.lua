@@ -4,13 +4,15 @@
 local time = os.time()
 
 local PATHS = {
-    [1] = game.ServerScriptService.Project.Cosmetics.Pet.PetProvider,
-    [2] = game.ServerScriptService.Project.Cosmetics.Trail.TrailProvider,
-    [3] = game.ServerScriptService.Project.Player.PlayerProvider,
-    [4] = game.ServerScriptService.Project.Marketplace.Marketplace,
-    [5] = game.ServerScriptService.Project.Leaderboard.LeaderboardProvider,
-    [6] = game.ServerScriptService.Project.Statistics.StatisticsProvider,
-    [7] = game.ServerScriptService.Project.Server.Server
+    game.ServerScriptService.Project.Cosmetics.Pet.PetProvider,
+    game.ServerScriptService.Project.Cosmetics.Trail.TrailProvider,
+    game.ServerScriptService.Project.Product.ProductProvider,
+    game.ServerScriptService.Project.Player.PlayerProvider,
+    game.ServerScriptService.Project.Marketplace.Marketplace,
+    game.ServerScriptService.Project.Leaderboard.LeaderboardProvider,
+    game.ServerScriptService.Project.Statistics.StatisticsProvider,
+    game.ServerScriptService.Project.Transaction.Transaction,
+    game.ServerScriptService.Project.Server.Server
 }
 
 ------------------------

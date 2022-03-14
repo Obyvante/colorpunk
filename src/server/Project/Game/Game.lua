@@ -43,8 +43,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 2, -- 10
-    QUEUE_TIMER = 10 -- 30
+    MINIMUM_PLAYER = 2
 }
 
 ------------------------
@@ -89,7 +88,7 @@ function class.reset()
     }
     class.Starting = {
         Timer = {
-            Duration = 5,
+            Duration = 30,
             Current = 0
         }
     }

@@ -9,6 +9,9 @@ class.HEALTH_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/health/"
 
 class.PET_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/pet/"
 class.TRAIL_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/trail/"
+class.PRODUCT_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/product/"
+
+class.TRANSACTION_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/transaction/process"
 
 class.PLAYER_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/player/"
 class.PLAYER_UPDATE_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/player/update"
