@@ -4,7 +4,7 @@ class.__index = class
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerStatsEvent = EventService.get("PlayerStats")
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
@@ -111,6 +111,12 @@ function class:updateCharacterAttributes()
     _humanoid.JumpPower = game.StarterPlayer.CharacterJumpPower * (self:get("JUMP_HEIGHT") + 1)
 end
 
+-- Converts player stats to a table.
+-- @return Player stats table.
+function class:toTable()
+    return self.content
+end
+
 -- Sends update packet for target type to client.
 -- @param _type Stat type.
 -- @return Player stats. (BUILDER)
@@ -123,17 +129,11 @@ function class:_sendUpdatePacket(_type : string)
     if not player then return end
 
     -- Sends update packet.
-    PlayerStatsEvent:FireClient(self.player:getRobloxPlayer(), {
+    PlayerUpdateEvent:FireClient(player, "stats", {
         Type = _type,
         Value = self.content[_type]
     })
     return self
-end
-
--- Converts player stats to a table.
--- @return Player stats table.
-function class:toTable()
-    return self.content
 end
 
 

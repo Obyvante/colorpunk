@@ -4,6 +4,9 @@ local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
 local SpamService = Library.getService("SpamService")
+local EventService = Library.getService("EventService")
+-- EVENTS
+local InterfaceActionEvent = EventService.get("InterfaceAction")
 -- STARTS
 
 
@@ -92,8 +95,8 @@ end
 -- INITIALIZATION (STARTS)
 ------------------------
 
--- Creates match offer interface.
-local interface = InterfaceService.createScreen("match_offer", InterfaceService.VIEWPORTS.PC, 999)
+-- Creates agreement interface.
+local interface = InterfaceService.createScreen("agreement", InterfaceService.VIEWPORTS.PC, 999)
 
 -- Base panel.
 local panel = interface:addElement({
@@ -136,7 +139,7 @@ panel:addElement({
         
         TextColor3 = Color3.fromRGB(255, 255, 255),
         Font = "DenkOne",
-        Text = "MATCH FOUND!",
+        Text = "AGREEMENT",
     }
 })
 -- Panel text.
@@ -156,11 +159,7 @@ panel:addElement({
         
         TextColor3 = Color3.fromRGB(255, 255, 255),
         Font = "DenkOne",
-        Text =
-[[
-Match found! Press "Accept" button
-to join game.
-]]
+        Text = ""
     }
 })
 

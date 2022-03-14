@@ -161,7 +161,10 @@ function class.applyState(_state : string, _information : table)
         if class.State == nil then return end
 
         class.reset()
-        class.State = nil
+    elseif _state == "SUMMARY" then
+        -- Safety.
+        if class.State == nil then return end
+        
     end
 end
 

@@ -1,8 +1,5 @@
 local class = {}
 class.__index = class
--- IMPORTS
-local Library = require(game.ReplicatedStorage.Library.Library)
-local TrailProvider = Library.getService("TrailProvider")
 -- STARTS
 
 
@@ -27,12 +24,6 @@ function class.new(_player : ModuleScript, _uid : string, _id : number, _active 
     }, class)
 end
 
--- Gets trail.
--- @return Trail.
-function class:getTrail()
-    return TrailProvider.get(self.id)
-end
-
 -- Gets player.
 -- @return Player.
 function class:getPlayer()
@@ -55,27 +46,6 @@ end
 -- @return If player trail is active or not.
 function class:isActive()
     return self.active
-end
-
--- Sets player trail active status.
--- @param _active Player trail active status.
--- @return Player trail. (BUILDER)
-function class:setActive(_active : boolean)
-    -- Object nil checks.
-    assert(_active ~= nil, "Active status cannot be null")
-    if self.active == _active then return end
-
-    self.active = _active
-    return self
-end
-
--- Converts player trail to a table.
--- @return Player trail table.
-function class:toTable()
-   return {
-       id = self.id,
-       active = self.active
-   }
 end
 
 

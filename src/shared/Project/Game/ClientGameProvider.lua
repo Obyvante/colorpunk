@@ -21,18 +21,5 @@ require(game.ReplicatedStorage.Project.Game.ClientGameListener)
 ------------------------
 
 
-------------------------
--- INTERFACES (STARTS)
-------------------------
-
--- Imports interfaces. (ORDER IS IMPORTANT!)
---require(game.ReplicatedStorage.Project.Game.Interfaces.GameMatchOfferInterface)
-
-------------------------
--- INTERFACES (ENDS)
-------------------------
-
-
-
 -- ENDS
 return class

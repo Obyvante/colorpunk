@@ -4,90 +4,31 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local InterfaceService = Library.getService("InterfaceService")
 -- EVENTS
-local PlayerSettingsEvent = EventService.get("PlayerSettings")
-local PlayerStatsEvent = EventService.get("PlayerStats")
-local PlayerCurrenciesEvent = EventService.get("PlayerCurrencies")
-local PlayerStatisticsEvent = EventService.get("PlayerStatistics")
-local PlayerRankEvent = EventService.get("PlayerRank")
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
-------------------------
--- AUTOMATION (STARTS)
-------------------------
-------------------------
--- AUTOMATION (ENDS)
-------------------------
-
-
-------------------------
--- SETTINGS (STARTS)
-------------------------
-
-PlayerSettingsEvent.OnClientEvent:Connect(function(_packet)
+PlayerUpdateEvent.OnClientEvent:Connect(function(_type : string, _packet : string)
+    -- Declares required fields.
     local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
-    ClientPlayer.getSettings().handlePacket(_packet)
+
+    -- Handles types.
+    if _type == "settings" then
+        ClientPlayer.getSettings().handlePacket(_packet)
+    elseif _type == "stats" then
+        ClientPlayer.getStats().handlePacket(_packet)
+    elseif _type == "currencies" then
+        ClientPlayer.getCurrencies().handlePacket(_packet)
+    elseif _type == "statistics" then
+        ClientPlayer.getStatistics().handlePacket(_packet)
+    elseif _type == "rank" then
+        ClientPlayer.setRank(_packet)
+    elseif _type == "INVENTORY_PRODUCT" then
+        ClientPlayer.getInventory().getProduct().update(ClientPlayer, _packet)
+    elseif _type == "INVENTORY_PET" then
+        ClientPlayer.getInventory().getPet().update(ClientPlayer, _packet)
+    end
 end)
-
-------------------------
--- SETTINGS (ENDS)
-------------------------
-
-
-------------------------
--- STATS (STARTS)
-------------------------
-
-PlayerStatsEvent.OnClientEvent:Connect(function(_packet)
-    local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
-    ClientPlayer.getStats().handlePacket(_packet)
-end)
-
-------------------------
--- STATS (ENDS)
-------------------------
-
-
-------------------------
--- CURRENCIES (STARTS)
-------------------------
-
-PlayerCurrenciesEvent.OnClientEvent:Connect(function(_packet)
-    local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
-    ClientPlayer.getCurrencies().handlePacket(_packet)
-end)
-
-------------------------
--- CURRENCIES (ENDS)
-------------------------
-
-
-------------------------
--- STATISTICS (STARTS)
-------------------------
-
-PlayerStatisticsEvent.OnClientEvent:Connect(function(_packet)
-    local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
-    ClientPlayer.getStatistics().handlePacket(_packet)
-end)
-
-------------------------
--- STATISTICS (ENDS)
-------------------------
-
-
-------------------------
--- SERVER STATE (STARTS)
-------------------------
-
-PlayerRankEvent.OnClientEvent:Connect(function(_rank)
-    local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
-    ClientPlayer.setRank(_rank)
-end)
-
-------------------------
--- SERVER STATE (ENDS)
-------------------------
 
 
 -- ENDS

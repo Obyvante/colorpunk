@@ -598,10 +598,5 @@ createBottomPanel(bottom_body, "jump", Vector2.new(656, 0), {
 ------------------------
 
 
-------------------------
--- INITIALIZATION (ENDS)
-------------------------
-
-
 -- ENDS
 return class

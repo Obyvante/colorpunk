@@ -4,7 +4,7 @@ class.__index = class
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerSettingsEvent = EventService.get("PlayerSettings")
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
@@ -106,7 +106,7 @@ function class.set(_type : string, _value : number)
     class.content[_type] = math.floor(_value)
 
     -- Sends update packet.
-    PlayerSettingsEvent:FireServer({
+    PlayerUpdateEvent:FireServer("settings", {
         Type = _type,
         Value = _value
     })

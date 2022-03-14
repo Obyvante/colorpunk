@@ -4,7 +4,7 @@ class.__index = class
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerCurrenciesEvent = EventService.get("PlayerCurrencies")
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
@@ -125,7 +125,7 @@ function class:_sendUpdatePacket(_type : string)
     if not player then return end
 
     -- Sends update packet.
-    PlayerCurrenciesEvent:FireClient(player, {
+    PlayerUpdateEvent:FireClient(player, "currencies", {
         Type = _type,
         Value = self.content[_type]
     })

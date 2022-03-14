@@ -12,7 +12,7 @@ local Metadata = Library.getTemplate("Metadata")
 local EventBinder = Library.getTemplate("EventBinder")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerRankEvent = EventService.get("PlayerRank")
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
@@ -148,7 +148,7 @@ function class:setRank(_rank : number)
     local _player = self:getRobloxPlayer()
     if not _player then return self end
 
-    PlayerRankEvent:FireClient(_player, _rank)
+    PlayerUpdateEvent:FireClient(_player, "rank", _rank)
     return self
 end
 

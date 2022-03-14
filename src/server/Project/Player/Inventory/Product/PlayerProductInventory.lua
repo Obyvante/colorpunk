@@ -5,6 +5,9 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local PlayerProduct = require(game.ServerScriptService.Project.Player.Inventory.Product.PlayerProduct)
 local ProductProvider = Library.getService("ProductProvider")
 local TableService = Library.getService("TableService")
+local EventService = Library.getService("EventService")
+-- EVENTS
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
@@ -62,7 +65,6 @@ end
 -- Creates a player product.
 -- @param _id Product id.
 -- @param _amount Product amount.
--- @return Created player product.
 function class:add(_id : number, _amount : number)
     -- Object nil checks.
     assert(_id ~= nil, "Product id cannot be null")
@@ -78,17 +80,19 @@ function class:add(_id : number, _amount : number)
         self.content[_id] = product
     end
 
-    return product
+    -- Sends update packet.
+    self:_sendUpdatePacket()
 end
 
 -- Removes player product.
 -- @param _id Player product id.
--- @return Player product inventory. (BUILDER)
 function class:remove(_id : number)
     -- Object nil checks.
     assert(_id ~= nil, "Player(" .. self.player:getId() .. ") product id cannot be null")
     self.content[_id] = nil
-    return self
+
+    -- Sends update packet.
+    self:_sendUpdatePacket()
 end
 
 -- Converts player product inventory to a table.
@@ -101,6 +105,16 @@ function class:toTable()
     end
 
     return _table
+end
+
+-- Sends update packet for target type to client.
+function class:_sendUpdatePacket()
+    -- Gets roblox player and checks if it is online.
+    local player = self.player:getRobloxPlayer()
+    if not player then return end
+
+    -- Sends update packet.
+    PlayerUpdateEvent:FireClient(player, "INVENTORY_PRODUCT", self:toTable())
 end
 
 

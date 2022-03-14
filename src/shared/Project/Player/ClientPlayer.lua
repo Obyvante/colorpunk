@@ -3,7 +3,7 @@ local class = {}
 local PlayerFolder = game.ReplicatedStorage.Project.Player
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
---local PlayerInventory = require(PlayerFolder.Inventory.PlayerInventory)
+local ClientPlayerInventory = require(PlayerFolder.Inventory.ClientPlayerInventory)
 local ClientPlayerCurrencies = require(PlayerFolder.Currencies.ClientPlayerCurrencies)
 local ClientPlayerStats = require(PlayerFolder.Stats.ClientPlayerStats)
 local ClientPlayerSettings = require(PlayerFolder.Settings.ClientPlayerSettings)
@@ -33,7 +33,7 @@ function class.update(_table : table)
         class.id = _table.id
         class.name = _table.name
         class.rank = _table.rank
-        --class.inventory = PlayerInventory.update(class, _table.inventory)
+        class.inventory = ClientPlayerInventory.update(class, _table.inventory)
         class.currencies = ClientPlayerCurrencies.update(class, _table.currencies)
         class.settings = ClientPlayerSettings.update(class, _table.settings)
         class.stats = ClientPlayerStats.update(class, _table.stats)
@@ -43,7 +43,7 @@ function class.update(_table : table)
     end
 
     -- Handles updates.
-    --class.inventory.update(_table.inventory)
+    class.inventory.update(_table.inventory)
     class.currencies.update(class, _table.currencies)
     class.settings.update(class, _table.settings)
     class.stats.update(class, _table.stats)

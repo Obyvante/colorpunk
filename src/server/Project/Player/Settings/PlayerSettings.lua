@@ -4,7 +4,7 @@ class.__index = class
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerSettingsEvent = EventService.get("PlayerSettings")
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
@@ -103,7 +103,7 @@ function class:set(_type : string, _value : number)
     if not player then return end
 
     -- Sends update packet.
-    PlayerSettingsEvent:FireClient(player, {
+    PlayerUpdateEvent:FireClient(player, "settings", {
         Type = _type,
         Value = _value
     })

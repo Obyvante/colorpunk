@@ -16,6 +16,7 @@ local Debris = game:GetService("Debris")
 local PlayerLeaveSignal = SignalService.getById("PlayerLeave")
 -- EVENTS
 local GameStateEvent = EventService.get("GameState")
+local OpenInterfaceEvent = EventService.get("OpenInterface")
 -- STARTS
 
 
@@ -43,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 2
+    MINIMUM_PLAYER = 1
 }
 
 ------------------------
@@ -139,6 +140,17 @@ function class.removeFromParticipants(_player : Player)
 
             -- Statistics.
             player:getStatistics():add("LOSE", 1)
+
+            -- Opens informative message when you've eliminated.
+            OpenInterfaceEvent:FireClient(_player, "informative", {
+                Title = "<b>WARNING!</b>",
+                Message = [[
+It is a random informative message.
+If you see this message correctly, be
+happy since the developer of this project
+won't work more!
+                ]]
+            })
             break
         end
     end
@@ -300,7 +312,7 @@ local game_loop_func = function()
     if false and #class.Participants <= 1 then
         -- Resets class.
         class.reset()
-        
+
         -- Sends cancelled packet.
         GameStateEvent:FireAllClients("ENDED")
         return

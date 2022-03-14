@@ -5,7 +5,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local StatisticsService = Library.getService("StatisticsProvider")
 -- EVENTS
-local PlayerStatisticsEvent = EventService.get("PlayerStatistics")
+local PlayerUpdateEvent = EventService.get("PlayerUpdate")
 -- STARTS
 
 
@@ -115,7 +115,7 @@ function class:_sendUpdatePacket(_type : string)
     if not player then return end
 
     -- Sends update packet.
-    PlayerStatisticsEvent:FireClient(player, {
+    PlayerUpdateEvent:FireClient(player, "statistics", {
         Type = _type,
         Value = self.content[_type]
     })
