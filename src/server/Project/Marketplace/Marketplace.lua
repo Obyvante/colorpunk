@@ -10,11 +10,14 @@ local TestCallbackEvent = EventService.get("TestCallback")
 -- STARTS
 
 
+-- TODO: start coding and finish it.
+
 TestCallbackEvent.OnServerEvent:Connect(function(_player)
     MarketplaceService:PromptProductPurchase(_player, 1246742045)
 end)
 
 
+-- TODO: MORE TRUSTABLE SYSTEM!
 function MarketplaceService.ProcessReceipt(_data)
     local transaction = Transaction.new(_data.ProductId, _data.PlayerId, _data.CurrencySpent)
 

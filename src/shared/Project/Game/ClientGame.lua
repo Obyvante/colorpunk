@@ -15,7 +15,6 @@ local text_center = GameInterface:getElementByPath("top_background.center_text")
 local timer_text_1 = GameInterface:getElementByPath("top_background.left_text")
 local timer_text_2 = GameInterface:getElementByPath("top_background.right_text")
 -- STARTS
--- TODO: will fix when player join during game, the game interface is not changing(staying 'waiting players...')
 
 
 ------------------------
@@ -74,7 +73,23 @@ end
 -- Applies state information to client game.
 function class.applyState(_state : string, _information : table)
     -- Handles states.
-    if _state == "STARTING" then
+    if _state == "LOAD" then
+        class.Round = _information.Round
+        class.Starting = _information.Starting
+        class.State = _information.State
+
+        if class.State == "STARTING" then
+            class.applyState("STARTING")
+        elseif class.State == "STARTED" then
+            -- Updates texts.
+            text_center:updateProperties({
+                Custom = {
+                    FontSize = 120
+                },
+                Text = "BLACK",
+            })
+        end
+    elseif _state == "STARTING" then
         -- Resets pist with color.
         GamePist.restWithColor()
 
@@ -92,19 +107,10 @@ function class.applyState(_state : string, _information : table)
             TextColor3 = Color3.fromRGB(255, 255, 255)
         })
         class.State = _state
-    elseif _state == "ROUND" then
-        -- Updates round informations.
-        class.Round.Duration = _information.Duration
-        class.Round.Current = _information.Round
-        class.Round.Pist = _information.Pist
-        class.Round.Color = _information.Color
-        class.Round.Timer = 0
-
-        -- Loads pist.
-        GamePist.load(class.Round.Pist)
-
-        print("[DEBUG] Pist information -> ", class.Round.Pist, class.Round.Color.name)
     elseif _state == "STARTED" then
+        -- Safety.
+        if class.State == nil then return end
+
         -- Updates texts.
         text_center:updateProperties({
             Custom = {
@@ -123,15 +129,37 @@ function class.applyState(_state : string, _information : table)
 
         -- Loads pist.
         GamePist.load(class.Round.Pist)
+
+        class.State = _state
+    elseif _state == "ROUND" then
+        -- Safety.
+        if class.State == nil then return end
+        
+        -- Updates round informations.
+        class.Round.Duration = _information.Duration
+        class.Round.Current = _information.Round
+        class.Round.Pist = _information.Pist
+        class.Round.Color = _information.Color
+        class.Round.Timer = 0
+
+        -- Loads pist.
+        GamePist.load(class.Round.Pist)
     elseif _state == "FALLING" then
-        print("[DEBUG] Pist information(falling) -> ", class.Round)
+        -- Safety.
+        if class.State == nil then return end
+
         GamePist.whitelist(class.Round.Pist, class.Round.Color.brick_color)
     elseif _state == "CANCELLED" then
+        -- Safety.
+        if class.State == nil then return end
+
         class.reset()
         GamePist.reset()
         class.State = nil
-    elseif _state == "FALLING" then
     elseif _state == "ENDED" then
+        -- Safety.
+        if class.State == nil then return end
+
         class.reset()
         class.State = nil
     end

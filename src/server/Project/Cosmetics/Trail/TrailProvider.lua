@@ -49,7 +49,7 @@ end
 
 local json = HTTPService.decodeJson(response.Body)
 -- If backend response is not positive, no need to continue
-if not json.success == true then
+if not json.success then
 	error("Couldn't get trails from the backend! [2] -> " .. json.error)
 end
 

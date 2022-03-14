@@ -81,9 +81,14 @@ function class:completeLoading()
     self.loaded = true
 
     -- Applies stats to roblox character.
-    local _humanoid = self:getRobloxPlayer().Character.Humanoid
+    local _player = self:getRobloxPlayer()
+    local _humanoid = _player.Character.Humanoid
     _humanoid.WalkSpeed = game.StarterPlayer.CharacterWalkSpeed * (self.stats:get("WALK_SPEED") + 1)
     _humanoid.JumpPower = game.StarterPlayer.CharacterJumpPower * (self.stats:get("JUMP_HEIGHT") + 1)
+
+    -- Loads game.
+    local Game = require(game.ServerScriptService.Project.Game.Game)
+    Game.handlePlayerJoin(_player)
 end
 
 -- Gets player roblox id.

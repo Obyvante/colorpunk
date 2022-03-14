@@ -23,7 +23,7 @@ function class.handle(_id : number, _name : string)
 
     local json = HTTPService.decodeJson(response.Body)
     -- If backend response is not positive, no need to continue
-    if not json.success == true then
+    if not json.success then
         error("Couldn't get player(" .. _id .. ") from the backend! [2] -> " .. json.error)
     end
 
@@ -44,7 +44,7 @@ function class.update(_player : ModuleScript)
 
     local json = HTTPService.decodeJson(response.Body)
     -- If backend response is not positive, no need to continue
-    if not json.success == true then
+    if not json.success then
         error("Couldn't send player(" .. _player:getId() .. ") update request to the backend! [2] -> " .. json.error)
     end
 end
@@ -77,7 +77,7 @@ function class.updates(_players : table)
 
     local json = HTTPService.decodeJson(response.Body)
     -- If backend response is not positive, no need to continue
-    if not json.success == true then
+    if not json.success then
         error("Couldn't send players update request to the backend! [2] -> " .. json.error)
     end
 end
@@ -106,7 +106,7 @@ function class.updatesAsJson(_players : table)
 
     local json = HTTPService.decodeJson(response.Body)
     -- If backend response is not positive, no need to continue
-    if not json.success == true then
+    if not json.success then
         error("Couldn't send players update request(json) to the backend! [2] -> " .. json.error)
     end
 end

@@ -50,7 +50,7 @@ function class:update()
 
         -- Handles json answer.
         local json = HTTPService.decodeJson(response.Body)
-        if not json.success == true then error("Couldn't get leaderboard(" .. self.type .. ") from the backend! [2] -> " .. json.error) end
+        if not json.success then error("Couldn't get leaderboard(" .. self.type .. ") from the backend! [2] -> " .. json.error) end
 
         -- Updates class fields.
         self.content = json.results

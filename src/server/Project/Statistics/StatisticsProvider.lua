@@ -176,7 +176,7 @@ function class.save()
 
     -- Handles json answer.
     local json = HTTPService.decodeJson(response.Body)
-    if not json.success == true then error("Couldn't save satistics! [DB-2] -> " .. json.error) end
+    if not json.success then error("Couldn't save satistics! [DB-2] -> " .. json.error) end
 
     -- Resets
     class.content = {

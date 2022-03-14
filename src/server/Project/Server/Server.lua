@@ -63,7 +63,7 @@ TaskService.createRepeating(3, function(_task)
         
             local json = HTTPService.decodeJson(response.Body)
             -- If backend response is not positive, no need to continue
-            if not json.success == true then error("Health check is unsuccessfully! [1]", json.error) end
+            if not json.success then error("Health check is unsuccessfully! [1]", json.error) end
         end)
 
         -- If it is not successfully, increases counter.

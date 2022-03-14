@@ -144,6 +144,32 @@ function class.removeFromParticipants(_player : Player)
     end
 end
 
+-- Handles player join for game.
+function class.handlePlayerJoin(_player : Player)
+    -- Declares required fields.
+    local round = GameRound.get(class.Round.Current)
+
+    local state
+    if class.Status.Starting then
+        state = "STARTING"
+    elseif class.Status.Started then
+        state = "STARTED"
+    end
+
+    -- Fires cancelled packet.
+    GameStateEvent:FireClient(_player, "LOAD", {
+        Round = {
+            Current = class.Round.Current,
+            Duration = round.Duration,
+            Timer = class.Round.Timer,
+            Pist = class.Round.Pist and class.Round.Pist.Name or nil,
+            Color = class.Round.Color,
+        },
+        Starting = class.Starting,
+        State = state
+    })
+end
+
 ------------------------
 -- METHODS (ENDS)
 ------------------------
