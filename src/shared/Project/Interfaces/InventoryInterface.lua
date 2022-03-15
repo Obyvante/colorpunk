@@ -6,6 +6,10 @@ local TaskService = Library.getService("TaskService")
 -- STARTS
 
 
+------------------------
+-- VARIABLES (STARTS)
+------------------------
+
 -- Interface asset ids.
 local asset_ids = {
     BACKGROUND = 9014863981,
@@ -29,8 +33,60 @@ local asset_ids = {
     }
 }
 
+------------------------
+-- VARIABLES (ENDS)
+------------------------
+
+
+------------------------
+-- BUNDLES (STARTS)
+------------------------
+
+function createButton(_parent, _slot : number, _position : Vector2)
+    _parent:addElement({
+        Name = "button_body_normal_" .. _slot,
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new(_position.X, _position.Y),
+                Size = Vector2.new(250, 251)
+            },
+    
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+    
+            Image = "rbxassetid://" .. asset_ids.BUTTON.BODY.NORMAL
+        }
+    })
+end
+
+function createFooterButton(_parent, _slot : number, _position : Vector2)
+    _parent:addElement({
+        Name = "button_footer_" .. _slot,
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = _position,
+                Size = Vector2.new(252, 256)
+            },
+    
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+    
+            Image = "rbxassetid://" .. asset_ids.BUTTON.FOOTER
+        }
+    })
+end
+
+------------------------
+-- BUNDLES (ENDS)
+------------------------
+
 local interface = InterfaceService.createScreen("inventory", InterfaceService.VIEWPORTS.PC)
 
+-- Creates background.
 local background = interface:addElement({
     Name = "background",
     Type = "ImageLabel",
@@ -53,7 +109,8 @@ local background = interface:addElement({
     }
 })
 
-local title = background:addElement({
+-- Creates title.
+background:addElement({
     Name = "title",
     Type = "TextLabel",
     Properties = {
@@ -73,7 +130,8 @@ local title = background:addElement({
     }
 })
 
-local button_exit = background:addElement({
+-- Creates exit button.
+background:addElement({
     Name = "button_exit",
     Type = "ImageLabel",
     Properties = {
@@ -104,7 +162,8 @@ local button_exit = background:addElement({
     }
 })
 
-local body = background:addElement({
+-- Creates body.
+background:addElement({
     Name = "body",
     Type = "Frame",
     Properties = {
@@ -119,54 +178,18 @@ local body = background:addElement({
     }
 })
 
-function createButton(_slot : number, _position : Vector2)
-    body:addElement({
-        Name = "button_body_normal_" .. _slot,
-        Type = "ImageLabel",
-        Properties = {
-            Custom = {
-                Position = Vector2.new(_position.X, _position.Y),
-                Size = Vector2.new(250, 251)
-            },
-    
-            AnchorPoint = Vector2.new(0.5, 0.5),
-            BorderSizePixel = 0,
-            BackgroundTransparency = 1,
-    
-            Image = "rbxassetid://" .. asset_ids.BUTTON.BODY.NORMAL
-        }
-    })
-end
-
-function createFooterButton(_slot : number, _position : Vector2)
-    return background:addElement({
-        Name = "button_footer_" .. _slot,
-        Type = "ImageLabel",
-        Properties = {
-            Custom = {
-                Position = _position,
-                Size = Vector2.new(252, 256)
-            },
-    
-            AnchorPoint = Vector2.new(0.5, 0.5),
-            BorderSizePixel = 0,
-            BackgroundTransparency = 1,
-    
-            Image = "rbxassetid://" .. asset_ids.BUTTON.FOOTER
-        }
-    })
-end
-
+-- Creates buttons/slots.
 local total = 0
 for row = 1, 3, 1 do
     local height = (row - 1) * 248
     for slot = 1, 9, 1 do
-        createButton(total, Vector2.new(106 + ((slot - 1) * 260), 62 + height))
+        createButton(background, total, Vector2.new(106 + ((slot - 1) * 260), 62 + height))
         total += 1
     end
 end
 
-createFooterButton(1, Vector2.new(863, 1159)):addElement({
+-- Creates footer bar. (PARTICLES)
+createFooterButton(background, 1, Vector2.new(863, 1159)):addElement({
     Name = "icon",
     Type = "ImageLabel",
     Properties = {
@@ -183,7 +206,8 @@ createFooterButton(1, Vector2.new(863, 1159)):addElement({
     }
 })
 
-createFooterButton(2, Vector2.new(1123, 1159)):addElement({
+-- Creates footer bar. (FEET)
+createFooterButton(background, 2, Vector2.new(1123, 1159)):addElement({
     Name = "icon",
     Type = "ImageLabel",
     Properties = {
@@ -200,7 +224,8 @@ createFooterButton(2, Vector2.new(1123, 1159)):addElement({
     }
 })
 
-createFooterButton(3, Vector2.new(1383, 1159)):addElement({
+-- Creates footer bar. (PET)
+createFooterButton(background, 3, Vector2.new(1383, 1159)):addElement({
     Name = "icon",
     Type = "ImageLabel",
     Properties = {
@@ -217,7 +242,8 @@ createFooterButton(3, Vector2.new(1383, 1159)):addElement({
     }
 })
 
-createFooterButton(4, Vector2.new(1907, 1159)):addElement({
+-- Creates footer bar. (UNEQUIP)
+createFooterButton(background, 4, Vector2.new(1907, 1159)):addElement({
     Name = "icon",
     Type = "ImageLabel",
     Properties = {
@@ -234,7 +260,8 @@ createFooterButton(4, Vector2.new(1907, 1159)):addElement({
     }
 })
 
-createFooterButton(5, Vector2.new(2164, 1159)):addElement({
+-- Creates footer bar. (TRASH)
+createFooterButton(background, 5, Vector2.new(2164, 1159)):addElement({
     Name = "icon",
     Type = "ImageLabel",
     Properties = {
@@ -250,10 +277,6 @@ createFooterButton(5, Vector2.new(2164, 1159)):addElement({
         Image = "rbxassetid://" .. asset_ids.ICON.TRASH
     }
 })
-
-function class.equip()
-    interface:bind(game.Players.LocalPlayer.PlayerGui)
-end
 
 
 -- ENDS

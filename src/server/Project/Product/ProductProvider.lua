@@ -56,7 +56,7 @@ end
 
 -- Handles products.
 for _, _data in pairs(json.results) do
-	content[_data.id] = Product.new(_data.id, _data.cap)
+	content[tonumber(_data.id)] = Product.new(tonumber(_data.id), tonumber(_data.cap))
 end
 
 -- Informing successful initialization.

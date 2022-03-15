@@ -44,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 1
+    MINIMUM_PLAYER = 2
 }
 
 ------------------------
@@ -56,6 +56,34 @@ class.Requirements = {
 -- METHODS (STARTED)
 ------------------------
 
+-- Handles winners.
+function class.winners()
+    for _, player in pairs(class.Participants) do
+        -- Gets player.
+        local _player = PlayerProvider.find(player.UserId)
+        if _player == nil then continue end
+
+        -- Statistics.
+        _player:getStatistics():add("WIN", 1)
+
+        -- Declares required fields.
+        local round = GameRound.get(class.Round.Current)
+        
+        -- Currencies.
+        _player:getCurrencies():add("GOLD", round.Money)
+        -- Statistics.
+        _player:getStatistics():add("GOLD_EARNED", round.Money)
+        StatisticsProvider.addGame("GOLD_EARNED", round.Money)
+
+        -- Shows summary screen for player.
+        InterfaceOpenEvent:FireClient(player, "summary", {
+            ROUND_PLAYED = class.Round.Current,
+            GOLD_EARNED = GameRound.totalEarnedMoney(class.Round.Current),
+            RANK = 1
+        })
+    end
+end
+
 -- Resets game.
 function class.reset()
     -- Player teleportation.
@@ -63,20 +91,6 @@ function class.reset()
         for index, player in pairs(class.Participants) do
             if player == nil then continue end
             TeleportService.teleport(player, class.Locations.Spawns.Lobby[index].Position, Vector3.new(0, 90, 0))
-
-            -- Gets player.
-            local _player = PlayerProvider.find(player.UserId)
-            if _player == nil then continue end
-
-            -- Statistics.
-            _player:getStatistics():add("WIN", 1)
-
-            -- Shows summary screen for player..
-            InterfaceOpenEvent:FireClient(_player, "summary", {
-                ROUND_PLAYED = class.Round.Current,
-                GOLD_EARNED = GameRound.totalEarnedMoney(class.Round.Current),
-                RANK = 1
-            })
         end
     end
 
@@ -312,7 +326,10 @@ local game_loop_func = function()
 
     -- If there is no enough participants, ends game.
     -- TODO: will remove false.
-    if false and #class.Participants <= 1 then
+    if #class.Participants <= 1 then
+        -- Handles winners.
+        class.winners()
+
         -- Resets class.
         class.reset()
 

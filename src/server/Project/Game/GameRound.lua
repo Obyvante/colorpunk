@@ -106,7 +106,9 @@ end
 -- @return Total earned money.
 function class.totalEarnedMoney(_round : number)
     local summary = 0
-    for i = 1, math.min(_round, 20), 1 do summary += class.content[i].Money end
+    for i = 1, math.min(_round, 20), 1 do
+        summary += class.content[i].Money
+    end
     return summary
 end
 

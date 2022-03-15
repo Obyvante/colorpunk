@@ -12,21 +12,21 @@ local class = {}
 -- @param _location Target tocation.
 -- @param _orientation Orientation. (OPTIONAL)
 function class.teleport(_player : Player, _location : Vector3, _orientation : Vector3)
-    -- Declares required fields.
-	local character = _player.Character
-	local humanoid = _player.Character.Humanoid
-    local walk_speed = humanoid.WalkSpeed
-    local jump_power = humanoid.JumpPower
-
     task.spawn(function()
 		-- Freezes player.
 		game:GetService'RunService'.Heartbeat:Wait()
 		if _player == nil then return end
-		
+
+		-- Declares required fields.
+		local character = _player.Character
+		local humanoid = _player.Character.Humanoid
+		local walk_speed = humanoid.WalkSpeed
+		local jump_power = humanoid.JumpPower
+
 		character.PrimaryPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
 		humanoid.WalkSpeed = 0
 		humanoid.JumpPower = 0
-	
+
 		-- Calculate height of root part from character base
 		local rootPartY
 		if humanoid.RigType == Enum.HumanoidRigType.R15 then
@@ -34,23 +34,27 @@ function class.teleport(_player : Player, _location : Vector3, _orientation : Ve
 		else
 			rootPartY = (humanoid.RootPart.Size.Y * 0.5) + humanoid.Parent.LeftLeg.Size.Y + humanoid.HipHeight
 		end
-	
+
 		-- Calculates locations.
 		local position = CFrame.new(_location + Vector3.new(0, rootPartY, 0))
 		local orientation = _orientation and CFrame.Angles(_orientation.X, _orientation.Y, _orientation.Z) or CFrame.Angles(0, 90, 0)
-	
+
 		task.wait(0.5)
 		if _player == nil then return end
 
 		-- Teleports player to target location.
 		character:SetPrimaryPartCFrame(position * orientation)
-	
-		task.wait(0.5)
+
+		-- Waits
+		task.wait(0.2)
 		if _player == nil then return end
-		
+
+		character = _player.Character
+		humanoid = _player.Character.Humanoid
+
 		-- Unfreezes character
-		humanoid.WalkSpeed = walk_speed
-		humanoid.JumpPower = jump_power
+		if walk_speed > 0 and humanoid.WalkSpeed == 0 then humanoid.WalkSpeed = walk_speed end
+		if jump_power > 0 and humanoid.JumpPower == 0 then humanoid.JumpPower = jump_power end
 	end)
 end
 
