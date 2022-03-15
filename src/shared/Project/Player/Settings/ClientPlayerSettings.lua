@@ -4,7 +4,7 @@ class.__index = class
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerUpdateEvent = EventService.get("PlayerUpdate")
+local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
 -- STARTS
 
 

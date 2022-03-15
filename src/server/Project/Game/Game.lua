@@ -15,8 +15,8 @@ local Debris = game:GetService("Debris")
 -- SIGNALS
 local PlayerLeaveSignal = SignalService.getById("PlayerLeave")
 -- EVENTS
-local GameStateEvent = EventService.get("GameState")
-local OpenInterfaceEvent = EventService.get("OpenInterface")
+local GameStateEvent = EventService.get("Game.GameState")
+local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
 -- STARTS
 
 
@@ -70,6 +70,13 @@ function class.reset()
 
             -- Statistics.
             _player:getStatistics():add("WIN", 1)
+
+            -- Shows summary screen for player..
+            InterfaceOpenEvent:FireClient(_player, "summary", {
+                ROUND_PLAYED = class.Round.Current,
+                GOLD_EARNED = GameRound.totalEarnedMoney(class.Round.Current),
+                RANK = 1
+            })
         end
     end
 
@@ -141,15 +148,11 @@ function class.removeFromParticipants(_player : Player)
             -- Statistics.
             player:getStatistics():add("LOSE", 1)
 
-            -- Opens informative message when you've eliminated.
-            OpenInterfaceEvent:FireClient(_player, "informative", {
-                Title = "<b>WARNING!</b>",
-                Message = [[
-It is a random informative message.
-If you see this message correctly, be
-happy since the developer of this project
-won't work more!
-                ]]
+            -- Shows summary screen for player..
+            InterfaceOpenEvent:FireClient(_player, "summary", {
+                ROUND_PLAYED = class.Round.Current - 1,
+                GOLD_EARNED = GameRound.totalEarnedMoney(class.Round.Current - 1),
+                RANK = #class.Participants + 1
             })
             break
         end

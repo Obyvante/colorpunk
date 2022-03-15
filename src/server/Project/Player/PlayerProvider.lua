@@ -89,7 +89,7 @@ end):run()
 ------------------------
 
 -- Gets remote events about player.
-local player_load = EventService.get("PlayerLoad")
+local player_load = EventService.get("Player.PlayerLoad")
 
 -- [PLAYER LOAD]
 player_load.OnServerEvent:Connect(function(player)

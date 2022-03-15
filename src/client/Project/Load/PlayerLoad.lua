@@ -8,7 +8,7 @@ local ClientCallbackService = Library.getService("ClientCallbackService")
 
 
 -- Handles exceptions.
-local success, message = pcall(function() ClientPlayer.update(ClientCallbackService.handle("PlayerLoad", 8)) end)
+local success, message = pcall(function() ClientPlayer.update(ClientCallbackService.handle("Player.PlayerLoad", 8)) end)
 
 -- If it is not successfully, kicks player.
 if not success then

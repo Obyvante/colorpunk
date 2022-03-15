@@ -12,7 +12,7 @@ local Metadata = Library.getTemplate("Metadata")
 local EventBinder = Library.getTemplate("EventBinder")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerUpdateEvent = EventService.get("PlayerUpdate")
+local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
 -- STARTS
 
 

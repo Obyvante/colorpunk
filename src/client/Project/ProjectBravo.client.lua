@@ -3,7 +3,7 @@ local Library = require(game:GetService("ReplicatedStorage").Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerLoadCompleteEvent = EventService.get("PlayerLoadComplete")
+local PlayerLoadCompleteEvent = EventService.get("Player.PlayerLoadComplete")
 local TestCallbackEvent = EventService.get("TestCallback")
 -- TIMER
 local time = os.time()

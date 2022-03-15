@@ -7,8 +7,6 @@ local EventService = Library.getService("EventService")
 local TaskService = Library.getService("TaskService")
 local InterfaceService = Library.getService("InterfaceService")
 local PlayerService = game:GetService("Players")
--- EVENTS
-local GameStateEvent = EventService.get("GameState")
 -- INTERFACES
 local GameInterface = InterfaceService.get("game")
 local text_center = GameInterface:getElementByPath("top_background.center_text")

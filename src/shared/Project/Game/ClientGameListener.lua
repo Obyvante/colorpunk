@@ -5,7 +5,7 @@ local ClientGame = require(script.Parent.ClientGame)
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 -- EVENTS
-local GameStateEvent = EventService.get("GameState")
+local GameStateEvent = EventService.get("Game.GameState")
 -- STARTS
 
 

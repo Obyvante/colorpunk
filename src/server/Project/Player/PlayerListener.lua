@@ -4,9 +4,9 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local SpamService = Library.getService("SpamService")
 -- EVENTS
-local PlayerLoadCompleteEvent = EventService.get("PlayerLoadComplete")
-local PlayerUpdateEvent = EventService.get("PlayerUpdate")
-local PlayerRequestEvent = EventService.get("PlayerRequest")
+local PlayerLoadCompleteEvent = EventService.get("Player.PlayerLoadComplete")
+local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
+local PlayerRequestEvent = EventService.get("Player.PlayerRequest")
 -- STARTS
 
 

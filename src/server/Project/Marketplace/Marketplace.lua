@@ -7,13 +7,33 @@ local Transaction = Library.getService("Transaction")
 local MarketplaceService = game:GetService("MarketplaceService")
 -- EVENTS
 local TestCallbackEvent = EventService.get("TestCallback")
+local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
+local InterfaceActionEvent = EventService.get("Interface.InterfaceAction")
 -- STARTS
 
 
 -- TODO: start coding and finish it.
 
 TestCallbackEvent.OnServerEvent:Connect(function(_player)
-    MarketplaceService:PromptProductPurchase(_player, 1246742045)
+    InterfaceOpenEvent:FireClient(_player, "agreement", {
+        ActionId = "PURCHASE_BOOSTER",
+        Title = [[<b>Purchase Notification</b>]],
+        Message =
+[[
+You already have <font color="#ff0000">Jump Booster</font>!
+
+You will only get <font color="#00ffff">Money Booster</font>
+Do you want to buy?
+]]
+    })
+end)
+
+InterfaceActionEvent.OnServerEvent:Connect(function(_player : Player, _id : string, _information : table)
+    if _id == nil or _information == nil or _information.Id ~= "PURCHASE_BOOSTER" then return end
+    
+    if _information.Action then
+        MarketplaceService:PromptProductPurchase(_player, 1246742045)
+    end
 end)
 
 

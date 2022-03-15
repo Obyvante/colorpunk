@@ -7,7 +7,7 @@ local ProductProvider = Library.getService("ProductProvider")
 local TableService = Library.getService("TableService")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerUpdateEvent = EventService.get("PlayerUpdate")
+local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
 -- STARTS
 
 

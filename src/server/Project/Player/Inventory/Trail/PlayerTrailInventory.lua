@@ -8,7 +8,7 @@ local TableService = Library.getService("TableService")
 local HTTPService = Library.getService("HTTPService")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerUpdateEvent = EventService.get("PlayerUpdate")
+local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
 -- STARTS
 
 

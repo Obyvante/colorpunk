@@ -6,7 +6,7 @@ local ClientPlayerTrail = require(game.ReplicatedStorage.Project.Player.Cosmetic
 local TableService = Library.getService("TableService")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local PlayerRequestEvent = EventService.get("PlayerRequest")
+local PlayerRequestEvent = EventService.get("Player.PlayerRequest")
 -- STARTS
 
 

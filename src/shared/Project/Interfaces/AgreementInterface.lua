@@ -6,7 +6,7 @@ local InterfaceService = Library.getService("InterfaceService")
 local SpamService = Library.getService("SpamService")
 local EventService = Library.getService("EventService")
 -- EVENTS
-local InterfaceActionEvent = EventService.get("InterfaceAction")
+local InterfaceActionEvent = EventService.get("Interface.InterfaceAction")
 -- STARTS
 
 
@@ -47,6 +47,33 @@ function createButton(_parent, _name : string, _position : Vector2, _status : bo
             ImageTransparency = 0,
 
             Image = "rbxassetid://" .. (_status and asset_ids.ACCEPT or asset_ids.DECLINE)
+        },
+
+        Events = {
+            {
+                Name = "click",
+                Event = "InputEnded",
+                Consumer = function(_binder, _event)
+                    -- Listen click.
+                    if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
+
+                    -- Declares required fields.
+                    local _interface = _parent:getInterface()
+                    local _metadata = _interface:getMetadata()
+                    local _action_id = _metadata:get("action:id")
+
+                    -- Unbinds interface. (CLOSES)
+                    InterfaceService.get("agreement"):unbind()
+
+                    -- Handles interface action event.
+                    if _action_id ~= nil then
+                        InterfaceActionEvent:FireServer("agreement", {
+                            Id = _action_id,
+                            Action = _status
+                        })
+                    end
+                end
+            }
         }
     })
     -- Button text.
@@ -137,6 +164,7 @@ panel:addElement({
         BorderSizePixel = 0,
         BackgroundTransparency = 1,
         
+        RichText = true,
         TextColor3 = Color3.fromRGB(255, 255, 255),
         Font = "DenkOne",
         Text = "AGREEMENT",
@@ -157,6 +185,7 @@ panel:addElement({
         BorderSizePixel = 0,
         BackgroundTransparency = 1,
         
+        RichText = true,
         TextColor3 = Color3.fromRGB(255, 255, 255),
         Font = "DenkOne",
         Text = ""

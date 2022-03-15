@@ -101,6 +101,15 @@ function class.get(_round : number)
     return class.content[_round]
 end
 
+-- Calculates total earned money.
+-- @param _round Current round.
+-- @return Total earned money.
+function class.totalEarnedMoney(_round : number)
+    local summary = 0
+    for i = 1, math.min(_round, 20), 1 do summary += class.content[i].Money end
+    return summary
+end
+
 
 -- ENDS
 return class
