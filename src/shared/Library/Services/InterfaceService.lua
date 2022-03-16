@@ -69,6 +69,18 @@ function class.get(_id : string)
     return _interfaces[_id]
 end
 
+-- Gets current interfaces.
+-- @return Interface. (NULLABLE)
+function class.getCurrents()
+    local _content = {}
+    for key, value in pairs(_interfaces) do
+        if value:isBound() then
+            _content[key] = value
+        end
+    end
+    return _content
+end
+
 -- Creates an interface for screen gui.
 -- @param _id Interface id.
 -- @param _viewport Interface viewport. (BASED ON)
@@ -126,7 +138,7 @@ end
 -- @param _state Input state
 -- @return If it is clicked or not.
 function class.isClicked(_type : Enum, _state : Enum)
-    if _state ~= Enum.UserInputState.End then return false end
+    if _state ~= Enum.UserInputState.Begin and _state ~= Enum.UserInputState.End then return false end
     return _type == Enum.UserInputType.MouseButton1 or _type == Enum.UserInputType.Touch
 end
 

@@ -182,20 +182,6 @@ end
 -- EVENTS (STARTS)
 ------------------------
 
-TestCallbackEvent.OnServerEvent:Connect(function(_player)
-    InterfaceOpenEvent:FireClient(_player, "agreement", {
-        ActionId = "PRODUCT_MONEY_BOOSTER",
-        Title = [[SHOP]],
-        Message =
-[[
-The money you've earned at the end of
-the game will be doubled.
-
-Would you like to buy?
-]]
-    })
-end)
-
 InterfaceActionEvent.OnServerEvent:Connect(function(_player : Player, _id : string, _information : table)
     -- Safety checks.
     if _id == nil

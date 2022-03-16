@@ -3,49 +3,15 @@ local class = {}
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 -- EVENTS
-local TestCallbackEvent = EventService.get("TestCallback")
 local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
-local InterfaceActionEvent = EventService.get("Interface.InterfaceAction")
-local PlayerService = game:GetService("Players")
+local ProximityPromptService = game:GetService("ProximityPromptService")
 -- STARTS
 
 
-------------------------
--- VARIABLES (STARTS)
-------------------------
-
-class.Locations = {
-    Pedestals = {
-        MoneyBoosterBoundingBox = game.Workspace.World.Lobby.Pedestal.Right["1"]["Bound Box"]
-    }
-}
-
-class.Touchs = {}
-
-------------------------
--- VARIABLES (ENDS)
-------------------------
-
-
-------------------------
--- METHODS (STARTS)
-------------------------
-
-function class.touchStarted(_part : BasePart, _id : string)
-    -- Gets player from its character.
-    local player = PlayerService:GetPlayerFromCharacter(_part)
-    if player == nil then return end
-
-    -- Safety check.
-    if class.Touchs[player.UserId] then return end
-
-    -- Marks player currently touching.
-    class.Touchs[player.UserId] = _id
-
-    if _id == "MONEY_BOOSTER" then
-        print("a")
-        InterfaceOpenEvent:FireClient(player, "agreement", {
-            ActionId = "PRODUCT_MONEY_BOSSTER",
+ProximityPromptService.PromptTriggered:Connect(function(prompt, playerWhoTriggered)
+    if prompt.Name == "MONEY_BOOSTER" then
+        InterfaceOpenEvent:FireClient(playerWhoTriggered, "agreement", {
+            ActionId = "PRODUCT_" .. prompt.Name,
             Title = [[SHOP]],
             Message =
 [[
@@ -55,55 +21,57 @@ the game will be doubled.
 Would you like to buy?
 ]]
         })
-    end
-end
-
-function class.touchEnded(_part : BasePart)
-    -- Gets player from its character.
-    local player = PlayerService:GetPlayerFromCharacter(_part)
-    if player == nil then return end
-
-    -- Removes player from the touching list.
-    class.Touchs[player.UserId] = nil
-
-    print("ended")
-end
-
-------------------------
--- METHODS (ENDS)
-------------------------
-
-
-------------------------
--- EVENTS (STARTS)
-------------------------
-
-class.Locations.Pedestals.MoneyBoosterBoundingBox.Touched:Connect(function(_part : BasePart)
-    class.touchStarted(_part.Parent, "MONEY_BOOSTER")
-end)
-
-
-class.Locations.Pedestals.MoneyBoosterBoundingBox.TouchEnded:Connect(function(_part : BasePart)
-    class.touchEnded(_part.Parent)
-end)
-
-------------------------
--- EVENTS (ENDS)
-------------------------
-
-
-TestCallbackEvent.OnServerEvent:Connect(function(_player)
-    InterfaceOpenEvent:FireClient(_player, "agreement", {
-        ActionId = "PRODUCT_MONEY_BOSSTER",
-        Title = [[SHOP]],
-        Message =
+    elseif prompt.Name == "FORESEEING_GOGGLES" then
+        InterfaceOpenEvent:FireClient(playerWhoTriggered, "agreement", {
+            ActionId = "PRODUCT_" .. prompt.Name,
+            Title = [[SHOP]],
+            Message =
 [[
-The money you've earned at the end of
-the game will be doubled.
+The blocks you have to stand on in the arena
+will be more visible.
 
 Would you like to buy?
 ]]
-    })
+        })
+    elseif prompt.Name == "SPEED_AND_JUMP_BOOSTER" then
+        InterfaceOpenEvent:FireClient(playerWhoTriggered, "agreement", {
+            ActionId = "PRODUCT_" .. prompt.Name,
+            Title = [[SHOP]],
+            Message =
+[[
+Your movement speed and jump height will
+be increased by 50%.
+
+Would you like to buy?
+]]
+        })
+    elseif prompt.Name == "JUMP_BOOSTER" then
+        InterfaceOpenEvent:FireClient(playerWhoTriggered, "agreement", {
+            ActionId = "PRODUCT_" .. prompt.Name,
+            Title = [[SHOP]],
+            Message =
+[[
+Your jump height will be increased by
+50% permanently.
+
+Would you like to buy?
+]]
+        })
+    elseif prompt.Name == "SPEED_BOOSTER" then
+        InterfaceOpenEvent:FireClient(playerWhoTriggered, "agreement", {
+            ActionId = "PRODUCT_" .. prompt.Name,
+            Title = [[SHOP]],
+            Message =
+[[
+Your movement speed will be increased by
+50% permanently.
+
+Would you like to buy?
+]]
+        })
+    end
 end)
 
+
+-- ENDS
 return class

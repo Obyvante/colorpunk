@@ -6,6 +6,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
 local TaskService = Library.getService("TaskService")
 local NumberService = Library.getService("NumberService")
+local ProximityPromptService = game:GetService("ProximityPromptService")
 -- STARTS
 
 
@@ -16,11 +17,11 @@ local NumberService = Library.getService("NumberService")
 -- Loads client player listener.
 require(game.ReplicatedStorage.Project.Player.ClientPlayerListener)
 require(game.ReplicatedStorage.Project.Interfaces.InterfaceProvider)
+require(game.ReplicatedStorage.Project.Interfaces.Prompt.PromptClickInterface)
 
 ------------------------
 -- IMPORTS (ENDS)
 ------------------------
-
 
 -- Loads default interfaces.
 function class.loadDefaultInterfaces()
