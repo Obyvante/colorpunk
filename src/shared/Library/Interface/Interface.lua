@@ -30,7 +30,8 @@ function class.createBillboard(_id : string, _viewport : Vector2, _properties : 
         ["id"] = _id,
         ["screen"] = _screen,
         ["viewport"] = _viewport,
-        ["elements"] = {}
+        ["elements"] = {},
+        ["functions"] = {}
     }, class)
 end
 
@@ -55,7 +56,8 @@ function class.createScreen(_id : string, _viewport : Vector2, _proirity : numbe
         ["id"] = _id,
         ["screen"] = _screen,
         ["viewport"] = _viewport,
-        ["elements"] = {}
+        ["elements"] = {},
+        ["functions"] = {}
     }, class)
 end
 
@@ -133,6 +135,37 @@ function class:addElement(_data : string)
     self.elements[_id] = element
 
     return element
+end
+
+-- Gets interface function by its id.
+-- @param _id Interface function id.
+-- @return Interface function. (NULLABLE)
+function class:getFunction(_id : string)
+    -- Object nil checks.
+    assert(_id ~= nil, "Interface funtion id cannot be null")
+    return self.functions[_id]
+end
+
+-- Adds a function to the interface.
+-- @param _id Function id.
+-- @param _function Function.
+-- @return Interface function.
+function class:addFunction(_id : string, _function)
+    -- Object nil checks.
+    assert(_id ~= nil, "Interface function id cannot be null")
+    assert(_function ~= nil, "Interface function cannot be null")
+    if self.functions[_id] ~= nil then error("Tried to create an interface(" .. self.id .. ") function with same id of " .. _id) end
+
+    self.functions[_id] = _function
+    return _function
+end
+
+-- Runs interface function by its id.
+-- @param _id Interface function id.
+-- @return Function output.
+function class:runFunction(_id : string, ...)
+    local _function = self:getFunction(_id)
+    return _function(self, ...)
 end
 
 -- Gets if interface is bound or not.

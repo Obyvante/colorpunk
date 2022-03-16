@@ -2,6 +2,7 @@ local class = {}
 class.__index = class
 -- IMPORTS
 local ClientPlayerPetInventory = require(game.ReplicatedStorage.Project.Player.Inventory.Pet.ClientPlayerPetInventory)
+local ClientPlayerTrailInventory = require(game.ReplicatedStorage.Project.Player.Inventory.Trail.ClientPlayerTrailInventory)
 local ClientPlayerProductInventory = require(game.ReplicatedStorage.Project.Player.Inventory.Product.ClientPlayerProductInventory)
 -- STARTS
 
@@ -27,11 +28,13 @@ function class.update(_player : ModuleScript, _table : table)
     if not class.initialized then
         class.player = _player
         class.pet = ClientPlayerPetInventory.update(_player, _table.pets)
+        class.trail = ClientPlayerTrailInventory.update(_player, _table.trails)
         class.product = ClientPlayerProductInventory.update(_player, _table.products)
     end
 
     -- Handles updates.
     class.pet.update(_player, _table.pets)
+    class.trail.update(_player, _table.trails)
     class.product.update(_player, _table.products)
     return class
 end

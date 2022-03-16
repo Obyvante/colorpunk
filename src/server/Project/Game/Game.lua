@@ -329,10 +329,8 @@ local game_loop_func = function()
     if #class.Participants <= 1 then
         -- Handles winners.
         class.winners()
-
         -- Resets class.
         class.reset()
-
         -- Sends cancelled packet.
         GameStateEvent:FireAllClients("ENDED")
         return
@@ -381,9 +379,10 @@ local game_loop_func = function()
 
         -- If it was a last round!
         if not round then
+            -- Handles winners.
+            class.winners()
             -- Resets class.
             class.reset()
-
             -- Sends cancelled packet.
             GameStateEvent:FireAllClients("ENDED")
             return

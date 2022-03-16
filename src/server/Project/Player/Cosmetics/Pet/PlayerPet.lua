@@ -70,8 +70,16 @@ function class:setActive(_active : boolean)
 end
 
 -- Converts player pet to a table.
+-- @param _client Is it for client or not.
 -- @return Player pet table.
-function class:toTable()
+function class:toTable(_client : boolean)
+    if _client then
+        return {
+            id = self.id,
+            assetId = self:getPet():getAssetId(),
+            active = self.active
+         }
+    end
     return {
        id = self.id,
        active = self.active

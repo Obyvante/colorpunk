@@ -21,7 +21,7 @@ function class.update(_player : ModuleScript, _table : table)
     class.player = _player
     class.content = {}
     for key, value in pairs(_table) do
-        class.content[key] = ClientPlayerPet.new(_player, key, value.id, value.active)
+        class.content[key] = ClientPlayerPet.new(_player, key, value.id, tonumber(value.assetId), value.active)
     end
     return class
 end

@@ -18,6 +18,7 @@ local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
 require(game.ReplicatedStorage.Project.Interfaces.InformativeInterface)
 require(game.ReplicatedStorage.Project.Interfaces.GameInterface)
 require(game.ReplicatedStorage.Project.Interfaces.SettingsInterface)
+require(game.ReplicatedStorage.Project.Interfaces.InventoryInterface)
 require(game.ReplicatedStorage.Project.Interfaces.AgreementInterface)
 require(game.ReplicatedStorage.Project.Interfaces.SummaryInterface)
 

@@ -9,17 +9,19 @@ class.__index = class
 -- @param _id Pet id.
 -- @param _active Player pet active status.
 -- @return Created player pet.
-function class.new(_player, _uid : string, _id : number, _active : boolean)
+function class.new(_player, _uid : string, _id : number, _assetId : number, _active : boolean)
     -- Object nil checks.
     assert(_player ~= nil, "Player cannot be null")
     assert(_uid ~= nil, "Player pet unique id cannot be null")
     assert(_id ~= nil, "Player pet id cannot be null")
+    assert(_assetId ~= nil, "Player pet asset id cannot be null")
     assert(_active ~= nil, "Player pet active status cannot be null")
 
     return setmetatable({
         player = _player,
         uid = _uid,
         id = _id,
+        assetId = _assetId,
         active = _active,
     }, class)
 end
@@ -40,6 +42,12 @@ end
 -- @return Pet id.
 function class:getId()
     return self.id
+end
+
+-- Gets pet asset id.
+-- @return Pet asset id.
+function class:getAssetId()
+    return self.assetId
 end
 
 -- Gets if player pet is active or not.

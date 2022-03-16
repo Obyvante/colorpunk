@@ -87,12 +87,13 @@ function class:remove(_uid : string)
 end
 
 -- Converts player pet inventory to a table.
+-- @param _client Is it for client or not.
 -- @return Player pet inventory table.
-function class:toTable()
+function class:toTable(_client : boolean)
     local _table = {}
 
     for key, value in pairs(self.content) do
-        _table[key] = value:toTable()
+        _table[key] = value:toTable(_client)
     end
 
     return _table

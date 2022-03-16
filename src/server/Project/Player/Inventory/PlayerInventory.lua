@@ -49,8 +49,16 @@ function class:getProduct()
 end
 
 -- Converts player inventory to a table.
+-- @param _client Is it for client or not.
 -- @return Player inventory table.
-function class:toTable()
+function class:toTable(_client : boolean)
+    if _client then
+        return {
+            pets = self.pet:toTable(_client),
+            trails = self.trail:toTable(_client),
+            products = self.product:toTable(_client)
+        }
+    end
     return {
         pets = self.pet:toTable(),
         trails = self.trail:toTable(),

@@ -471,10 +471,12 @@ left_body:getElement("body_backpack"):updateEvents({
             -- If it is not clicked, no need to continue.
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 
-            print("backpack!")
-
-            --local ui = InterfaceService.get("settings")
-            --if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
+            local ui = InterfaceService.get("inventory")
+            if ui:isBound() then
+                ui:unbind()
+            else
+                ui:bind(game.Players.LocalPlayer.PlayerGui)
+            end
         end
     }
 })
@@ -493,14 +495,6 @@ left_body:getElement("body_settings"):updateEvents({
 
             local ui = InterfaceService.get("settings")
             if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
-
-            local sound = Instance.new("Sound", game.Workspace)
-            sound.SoundId = "rbxassetid://9059960341"
-            sound:Play()
-
-            sound.Ended:Connect(function()
-                sound:Destroy()
-            end)
         end
     }
 })

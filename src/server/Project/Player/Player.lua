@@ -172,16 +172,17 @@ function class:destroy()
 end
 
 -- Converts player to a table.
+-- @param _client Is it for client or not.
 -- @return Player table.
-function class:toTable()
+function class:toTable(_client : boolean)
     return {
         id = self.id,
         name = self.name,
-        inventory = self.inventory:toTable(),
-        currencies = self.currencies:toTable(),
-        stats = self.stats:toTable(),
-        settings = self.settings:toTable(),
-        statistics = self.statistics:toTable(),
+        inventory = self.inventory:toTable(_client),
+        currencies = self.currencies:toTable(_client),
+        stats = self.stats:toTable(_client),
+        settings = self.settings:toTable(_client),
+        statistics = self.statistics:toTable(_client),
         rank = self.rank
     }
 end

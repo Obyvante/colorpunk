@@ -132,7 +132,7 @@ player_load.OnServerEvent:Connect(function(player)
         _player:waitLoading()
 
         -- Fires client.
-        player_load:FireClient(player, _player:toTable())
+        player_load:FireClient(player, _player:toTable(true))
     end)
 end)
 
