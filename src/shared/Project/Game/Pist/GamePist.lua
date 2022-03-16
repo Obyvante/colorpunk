@@ -1,4 +1,6 @@
 local class = {}
+-- IMPORTS
+local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
 -- STARTS
 
 
@@ -77,12 +79,16 @@ function class.whitelist(id, target_color)
 end
 
 -- Builds pist.
-function class.load(pist_id)
+function class.load(pist_id, target_color)
 	local _blocks = game.Workspace.World.Arena.Pist
 
 	-- Gets current pist.
 	local pist = require(game.ReplicatedStorage.Pists[pist_id])
 	local parts = pist.texture.parts
+
+    -- Declares required fields.
+    local _products = ClientPlayer.getInventory().getProduct()
+    local _goggles = _products.has(1248410359)
 
 	-- Loops through "x" and "y" axises.
 	for x = 1, 48, 1 do
@@ -95,11 +101,22 @@ function class.load(pist_id)
 			-- Declares required fields.
 			local target_block = x_section[y < 10 and "0" .. y or y]
 			local texture_color = x_texture[tostring(y)].color
-			
+
 			-- Sets target block color.
 			target_block.Transparency = 0
 			target_block.CanCollide = true
 			target_block.Color = Color3.fromRGB(texture_color.r, texture_color.g, texture_color.b)
+
+			-- Handles goggles.
+			if _goggles then
+				-- Declares required fields.
+				local brick_color = BrickColor.new(Color3.fromRGB(texture_color.r, texture_color.g, texture_color.b)).Name
+				-- If block color is in whitelist, no need to continue.
+				if (target_color == brick_color) then continue end
+
+				-- Sets transparency.
+				target_block.Transparency = 0.7
+			end
 		end
 	end
 end

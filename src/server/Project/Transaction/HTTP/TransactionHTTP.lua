@@ -21,7 +21,8 @@ function class.send(_transaction : ModuleScript)
     local json = HTTPService.decodeJson(response.Body)
     -- If backend response is not positive, no need to continue
     if not json.success then
-        error("Couldn't send transaction information to the backend! [2] -> " .. json.error)
+        if json.error then warn(json.error) end
+        error("Couldn't send transaction information to the backend! [2] -> ")
     end
 end
 

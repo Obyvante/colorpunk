@@ -82,6 +82,18 @@ function createBodyPanel(_parent, _name : string, _position : Vector2, _status :
             ImageTransparency = 0,
 
             Image = "rbxassetid://" .. target_asset
+        },
+
+        Events = {
+            {
+                Name = "click",
+                Event = "InputEnded",
+                Consumer = function(_binder, _event)
+                    if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
+                    
+                    print(_binder:getParent():getId())
+                end
+            }
         }
     }):addElement({
         Name = "icon",
@@ -241,9 +253,10 @@ local body = panel:addElement({
 })
 
 -- Inventory update function.
-interface:addFunction("updateInvetory", function(_interface, _category : string)
+interface:addFunction("updateInvetory", function(_interface)
     -- Declares content.
     local _content = {}
+    local _category = interface:getMetadata():get("category", "TRAIL")
 
     -- Handles category content.
     if _category == "PET" then
@@ -355,7 +368,8 @@ trail_footer_panel:updateEvents({
         Event = "InputEnded",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
-            interface:runFunction("updateInvetory", "TRAIL")
+            interface:getMetadata():set("category", "TRAIL")
+            interface:runFunction("updateInvetory")
         end
     }
 })
@@ -387,7 +401,8 @@ feet_footer_panel:updateEvents({
         Event = "InputEnded",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
-            interface:runFunction("updateInvetory", "FEET")
+            interface:getMetadata():set("category", "FEET")
+            interface:runFunction("updateInvetory")
         end
     }
 })
@@ -419,13 +434,15 @@ pet_footer_panel:updateEvents({
         Event = "InputEnded",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
-            interface:runFunction("updateInvetory", "PET")
+            interface:getMetadata():set("category", "PET")
+            interface:runFunction("updateInvetory")
         end
     }
 })
 
 -- Handles trail category.
-interface:runFunction("updateInvetory", "TRAIL")
+interface:getMetadata():set("category", "TRAIL")
+interface:runFunction("updateInvetory")
 
 ------------------------
 -- FOOTER (STARTS)

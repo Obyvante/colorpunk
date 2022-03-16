@@ -9,82 +9,82 @@ local class = {}
 class.content = {
     [1] = {
         Duration = 8,
-        Money = 10
+        Money = 0
     },
     [2] = {
-        Duration = 8,
-        Money = 15
+        Duration = 7,
+        Money = 2
     },
     [3] = {
-        Duration = 8,
-        Money = 20
+        Duration = 6,
+        Money = 4
     },
     [4] = {
-        Duration = 7,
-        Money = 25
+        Duration = 5,
+        Money = 6
     },
     [5] = {
-        Duration = 7,
-        Money = 30
+        Duration = 5,
+        Money = 8
     },
     [6] = {
-        Duration = 7,
-        Money = 35
+        Duration = 5,
+        Money = 10
     },
     [7] = {
-        Duration = 6,
-        Money = 40
+        Duration = 5,
+        Money = 14
     },
     [8] = {
-        Duration = 6,
-        Money = 45
+        Duration = 5,
+        Money = 18
     },
     [9] = {
-        Duration = 6,
-        Money = 50
+        Duration = 5,
+        Money = 22
     },
     [10] = {
         Duration = 5,
-        Money = 55
+        Money = 26
     },
     [11] = {
-        Duration = 5,
-        Money = 60
+        Duration = 4,
+        Money = 35
     },
     [12] = {
-        Duration = 5,
-        Money = 65
+        Duration = 4,
+        Money = 40
     },
     [13] = {
         Duration = 4,
-        Money = 70
+        Money = 45
     },
     [14] = {
         Duration = 4,
-        Money = 75
+        Money = 50
     },
     [15] = {
         Duration = 4,
-        Money = 80
+        Money = 56
     },
     [16] = {
         Duration = 3,
-        Money = 85
+        Money = 72
     },
     [17] = {
         Duration = 3,
-        Money = 90
+        Money = 79
     },
     [18] = {
         Duration = 3,
-        Money = 95
+        Money = 90
     },
     [19] = {
-        Duration = 3,
+        Duration = 2,
         Money = 100
     },
     [20] = {
-        Duration = 3,
+        Duration = 2,
         Money = 125
     }
 }
@@ -104,10 +104,10 @@ end
 -- Calculates total earned money.
 -- @param _round Current round.
 -- @return Total earned money.
-function class.totalEarnedMoney(_round : number)
+function class.totalEarnedMoney(_round : number, _multiple : number)
     local summary = 0
     for i = 1, math.min(_round, 20), 1 do
-        summary += class.content[i].Money
+        summary += class.content[i].Money * (_multiple or 1)
     end
     return summary
 end

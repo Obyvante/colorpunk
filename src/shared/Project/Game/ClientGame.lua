@@ -126,7 +126,7 @@ function class.applyState(_state : string, _information : table)
         class.State = _state
 
         -- Loads pist.
-        GamePist.load(class.Round.Pist)
+        GamePist.load(class.Round.Pist, class.Round.Color.brick_color)
 
         class.State = _state
     elseif _state == "ROUND" then
@@ -141,7 +141,7 @@ function class.applyState(_state : string, _information : table)
         class.Round.Timer = 0
 
         -- Loads pist.
-        GamePist.load(class.Round.Pist)
+        GamePist.load(class.Round.Pist, class.Round.Color.brick_color)
     elseif _state == "FALLING" then
         -- Safety.
         if class.State == nil then return end

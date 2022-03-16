@@ -44,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 2
+    MINIMUM_PLAYER = 1
 }
 
 ------------------------
@@ -68,9 +68,12 @@ function class.winners()
 
         -- Declares required fields.
         local round = GameRound.get(class.Round.Current)
+        -- Declares required fields.
+        local _products = _player:getInventory():getProduct()
+        local _multiple = _products:has(1248410518)
         
         -- Currencies.
-        _player:getCurrencies():add("GOLD", round.Money)
+        _player:getCurrencies():add("GOLD", round.Money * (_multiple and 2 or 1))
         -- Statistics.
         _player:getStatistics():add("GOLD_EARNED", round.Money)
         StatisticsProvider.addGame("GOLD_EARNED", round.Money)
@@ -355,17 +358,17 @@ local game_loop_func = function()
             local _player = PlayerProvider.find(player.UserId)
             if _player == nil then continue end
 
+            -- Declares required fields.
+            local _products = _player:getInventory():getProduct()
+            local _multiple = _products:has(1248410518)
+
             -- Currencies.
-            _player:getCurrencies():add("GOLD", round.Money)
-     
+            _player:getCurrencies():add("GOLD", round.Money * (_multiple and 2 or 1))
+
             -- Statistics.
             StatisticsProvider.addGame("GOLD_EARNED", round.Money)
             _player:getStatistics():add("GOLD_EARNED", round.Money)
             _player:getStatistics():add("ROUND_PLAYED", 1)
-
-            -- For now.
-            _player:getStats():set("WALK_SPEED", math.random())
-            _player:getStats():set("JUMP_HEIGHT", math.random())
         end
 
         -- Games statistics.

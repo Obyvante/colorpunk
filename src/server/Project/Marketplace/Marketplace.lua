@@ -226,6 +226,16 @@ InterfaceActionEvent.OnServerEvent:Connect(function(_player : Player, _id : stri
         return
     end
 
+    -- Handles speed and jump booster.
+    if _product:getId() == 1248410416 then
+        -- Declares required fields.
+        local _products = player:getInventory():getProduct()
+        if _products:has(1248410518) and _products:has(1248410451) then
+            class.error(_player, class.Messages.CapError)
+            return
+        end
+    end
+
     -- Starts purchasing.
     MarketplaceService:PromptProductPurchase(_player, _product:getId())
 end)
@@ -279,7 +289,18 @@ function MarketplaceService.ProcessReceipt(_data)
     or _data.ProductId == class.Products.FORESEEING_GOGGLES
     or _data.ProductId == class.Products.SPEED_AND_JUMP_BOOSTER
     then
-        success, message = pcall(function() player:getInventory():getProduct():add(tonumber(_data.ProductId), 1) end)
+        success, message = pcall(function()
+            -- Adds product to the player's inventoryç
+            player:getInventory():getProduct():add(tonumber(_data.ProductId), 1)
+
+            -- Handles attribute changes.<
+            if _data.ProductId == class.Products.SPEED_BOOSTER
+            or _data.ProductId == class.Products.JUMP_BOOSTER
+            or _data.ProductId == class.Products.SPEED_AND_JUMP_BOOSTER
+            then
+                player:getStats():updateCharacterAttributes()
+            end
+        end)
         if not success then
             class.error(_player, class.Messages.BuyError)
             return class.failedReceipt(_data, "PRODUCT ADDING", message)

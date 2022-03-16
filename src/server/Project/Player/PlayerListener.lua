@@ -7,6 +7,7 @@ local SpamService = Library.getService("SpamService")
 local PlayerLoadCompleteEvent = EventService.get("Player.PlayerLoadComplete")
 local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
 local PlayerRequestEvent = EventService.get("Player.PlayerRequest")
+local InventoryUpdateEvent = EventService.get("Inventory.InventoryUpdate")
 -- STARTS
 
 
@@ -115,6 +116,22 @@ PlayerRequestEvent.OnServerEvent:Connect(function(_player, _type, _packet)
 
         -- Handles error.
         if not success then warn(_player.UserId .. " tried to remove their pet(" .. _packet .. ")", message) end
+    elseif _type == "STATE_PET" then
+        -- Prevents spamming.
+        if spamCheck(_player, "STATE_PET", 60, 30) then return end
+
+        -- Packet safety check.
+        if _packet.UID == nil or _packet.STATE == nil then return end
+
+        -- Updates player settings.
+        local success, message = pcall(function()
+            player:getInventory():getPet():get(_packet.UID):setActive(_packet.STATE)
+            player:getInventory():getPet():_sendUpdatePacket()
+            InventoryUpdateEvent:FireClient(player)
+        end)
+
+        -- Handles error.
+        if not success then warn(_player.UserId .. " tried to change state of their pet(" .. _packet .. ") to " .. _packet.STATE, message) end
     elseif _type == "REMOVE_TRAIL" then
         -- Prevents spamming.
         if spamCheck(_player, "REMOVE_TRAIL", 60, 30) then return end

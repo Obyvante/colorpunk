@@ -7,6 +7,7 @@ local EventService = Library.getService("EventService")
 local NumberService = Library.getService("NumberService")
 -- EVENTS
 local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
+local InventoryUpdateEvent = EventService.get("Inventory.InventoryUpdate")
 -- STARTS
 
 
@@ -73,8 +74,19 @@ class.InterfaceOpen = function(_id : string, _information : table)
     end
 end
 
+class.InventoryUpdate = function()
+    -- Declares required fields.
+    local interface = InterfaceService.get("inventory")
+    if not interface:isBound() then return end
+
+    -- Runs function.
+    interface:runFunction("updateInventory")
+end
+
+
 -- Listens event.
 InterfaceOpenEvent.OnClientEvent:Connect(class.InterfaceOpen)
+InventoryUpdateEvent.OnClientEvent:Connect(class.InventoryUpdate)
 
 ------------------------
 -- EVENTS (ENDS)

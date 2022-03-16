@@ -105,10 +105,16 @@ function class:updateCharacterAttributes()
     local player = self.player:getRobloxPlayer()
     if not player then return end
 
+    -- Declares required fields.
+    local _products = self:getPlayer():getInventory():getProduct()
+    local _bundle = _products:has(1248410416)
+    local _speed = if _products:has(1248410518) or _bundle then 0.5 else 0
+    local _jump = if _products:has(1248410451) or _bundle then 0.5 else 0
+
     -- Applies stats to roblox character.
     local _humanoid = player.Character.Humanoid
-    _humanoid.WalkSpeed = game.StarterPlayer.CharacterWalkSpeed * (self:get("WALK_SPEED") + 1)
-    _humanoid.JumpPower = game.StarterPlayer.CharacterJumpPower * (self:get("JUMP_HEIGHT") + 1)
+    _humanoid.WalkSpeed = game.StarterPlayer.CharacterWalkSpeed * ((self:get("WALK_SPEED") + 1) + _speed)
+    _humanoid.JumpPower = game.StarterPlayer.CharacterJumpPower * ((self:get("JUMP_HEIGHT") + 1) + _jump)
 end
 
 -- Converts player stats to a table.

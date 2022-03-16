@@ -45,6 +45,15 @@ function class.find(_id : number)
     return class.content[_id]
 end
 
+-- Checks if player has product by its id or not.
+-- @param _id Player product id.
+-- @return If player has product by its id or not.
+function class.has(_id : number)
+    -- Object nil checks.
+    assert(_id ~= nil, "Player product id cannot be null")
+    return class.content[_id] ~= nil
+end
+
 -- Gets player product by its id.
 -- @param _id Player product id.
 -- @return Player product.

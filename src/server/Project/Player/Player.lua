@@ -89,6 +89,9 @@ function class:completeLoading()
     -- Loads game.
     local Game = require(game.ServerScriptService.Project.Game.Game)
     Game.handlePlayerJoin(_player)
+
+    -- Updates player stats.
+    self:getStats():updateCharacterAttributes()
 end
 
 -- Gets player roblox id.
