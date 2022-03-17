@@ -1,6 +1,5 @@
 local class = {}
 -- IMPORTS
-local ProductOpenAnimation = require(game.ServerScriptService.Project.Animations.ProductOpenAnimation)
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local PlayerProvider = Library.getService("PlayerProvider")
@@ -14,11 +13,6 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _player)
     -- Declares required fields.
     local player = PlayerProvider.find(_player.UserId)
     if player == nil then return end
-
-
-    if prompt.Name == "PREMIUM_EGG" or prompt.Name == "BASIC_EGG" then
-        ProductOpenAnimation.start(_player, {})
-    end
 
     -- Declares required fields.
     local _name = prompt.Name

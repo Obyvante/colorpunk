@@ -44,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 2
+    MINIMUM_PLAYER = 3
 }
 
 ------------------------
@@ -67,7 +67,7 @@ function class.winners()
         _player:getStatistics():add("WIN", 1)
 
         -- Declares required fields.
-        local round = GameRound.get(class.Round.Current)
+        local round = GameRound.get(class.Round.Current) or GameRound.get(class.Round.Current - 1)
         -- Declares required fields.
         local _products = _player:getInventory():getProduct()
         local _multiple = _products:has(1248410518)
@@ -113,7 +113,7 @@ function class.reset()
     }
     class.Starting = {
         Timer = {
-            Duration = 30,
+            Duration = 60,
             Current = 0
         }
     }

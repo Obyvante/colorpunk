@@ -6,6 +6,8 @@ local time = os.time()
 local PATHS = {
     game.ServerScriptService.Project.Cosmetics.Pet.PetProvider,
     game.ServerScriptService.Project.Cosmetics.Trail.TrailProvider,
+    game.ServerScriptService.Project.Cosmetics.Case.CaseProvider,
+    game.ServerScriptService.Project.Cosmetics.CosmeticProvider,
     game.ServerScriptService.Project.Product.ProductProvider,
     game.ServerScriptService.Project.Player.PlayerProvider,
     game.ServerScriptService.Project.Marketplace.Marketplace,

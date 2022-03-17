@@ -227,7 +227,7 @@ InterfaceActionEvent.OnServerEvent:Connect(function(_player : Player, _id : stri
     end
 
     -- Handles speed and jump booster.
-    if _product:getId() == 1248410416 then
+    if _product:getId() == 1248410416 then -- SPEED AND JUMP BOOSTER INVENTORY CHECK.
         -- Declares required fields.
         local _products = player:getInventory():getProduct()
         if _products:has(1248410518) and _products:has(1248410451) then

@@ -72,15 +72,6 @@ sound.SoundId = "rbxassetid://9059061304"
 sound.Looped = true
 sound:Play()
 
-local UserInputService = game:GetService("UserInputService")
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode == Enum.KeyCode.Q then
-        TestCallbackEvent:FireServer()
-    elseif input.KeyCode == Enum.KeyCode.R then
-        InterfaceService.get("summary"):bind(game.Players.LocalPlayer.PlayerGui)
-    end
-end)
-
 ------------------------
 -- TEST (ENDS)
 ------------------------
