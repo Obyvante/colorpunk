@@ -22,7 +22,7 @@ function class.update(_player : ModuleScript, _table : table)
     class.player = _player
     class.content = {}
     for key, value in pairs(_table) do
-        class.content[key] = ClientPlayerTrail.new(_player, key, value.id, value.active)
+        class.content[key] = ClientPlayerTrail.new(_player, key, tonumber(value.id), value.active)
     end
 
     return class
@@ -58,10 +58,16 @@ function class.get(_uid : number)
     return _result
 end
 
+-- Sends player trail state request to the backend.
+-- @param _content Player trails.
+function class.stateRequest(_content : table)
+    PlayerRequestEvent:FireServer("STATE_TRAIL", _content)
+end
+
 -- Sends player trail remove request to the backend.
--- @param _uid Player trail uid.
-function class.removeRequest(_uid : string)
-    PlayerRequestEvent:FireServer("REMOVE_TRAIL", class.get(_uid):getUID()) -- Getting player trail to prevent nil.
+-- @param _content Player trails.
+function class.removeRequest(_content : table)
+    PlayerRequestEvent:FireServer("REMOVE_TRAIL", _content)
 end
 
 

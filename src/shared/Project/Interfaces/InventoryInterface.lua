@@ -253,7 +253,7 @@ local body = panel:addElement({
 })
 
 -- Inventory update function.
-interface:addFunction("updateInvetory", function(_interface)
+interface:addFunction("updateInventory", function(_interface)
     -- Declares content.
     local _content = {}
     local _category = interface:getMetadata():get("category", "TRAIL")
@@ -283,6 +283,21 @@ interface:addFunction("updateInvetory", function(_interface)
     pet_footer_panel:updateProperties({ Image = "rbxassetid://" .. (_category == "PET" and asset_ids.PANEL.FOOTER_ACTIVE or asset_ids.PANEL.FOOTER) })
 
     -- Declares required fields.
+    local _trash = interface:getMetadata():get("trash", false)
+    local _selected = interface:getMetadata():get("selected", {})
+    if _trash then
+        local delete_footer_panel = _interface:getElementByPath("panel.panel_DELETE")
+        local delete_footer_icon = delete_footer_panel:getElement("icon")
+        
+        if #_selected > 0 then
+            delete_footer_panel:updateProperties({ ImageTransparency = 0 })
+            delete_footer_icon:updateProperties({ ImageTransparency = 0 })
+        else
+            delete_footer_panel:updateProperties({ ImageTransparency = 1 })
+            delete_footer_icon:updateProperties({ ImageTransparency = 1 })
+        end
+    end
+
     local current = 1
     for _ = 1, 3, 1 do
         for _ = 1, 9, 1 do
@@ -290,14 +305,38 @@ interface:addFunction("updateInvetory", function(_interface)
             local _panel = _interface:getElementByPath("panel.body.panel_" .. current)
             local _slot = _panel:getElementByPath("icon")
             local _item = _content[current]
+            if not _panel:getMetadata():get("image_color") then _panel:getMetadata():set("image_color", _panel:getInstance().ImageColor3) end
+
+            -- Clears previous events.
+            if _panel:getEventBinder():get("click") then _panel:getEventBinder():unbind("click") end
+
+            -- Reset panel morph.
+            _panel:updateProperties({
+                ImageColor3 = _panel:getMetadata():get("image_color")
+            })
+            -- Resets icon.
+            _slot:updateProperties({
+                Image = "",
+                ImageTransparency = 1
+            })
 
             -- Handles item.
             if _item then
-                -- If item is currently active, change panel morph.
-                if _item:isActive() then
+                if _trash and TableService.containsValue(_selected, _item:getUID()) then
                     _panel:updateProperties({
-                        Image = "rbxassetid://" .. asset_ids.PANEL.BODY_ACTIVE
+                        ImageColor3 = Color3.fromRGB(248, 80, 80)
                     })
+                else
+                    -- If item is currently active, change panel morph.
+                    if _item:isActive() then
+                        _panel:updateProperties({
+                            ImageColor3 = Color3.fromRGB(20, 168, 0)
+                        })
+                    else
+                        _panel:updateProperties({
+                            ImageColor3 = _panel:getMetadata():get("image_color")
+                        })
+                    end
                 end
 
                 -- Updates item icon.
@@ -305,15 +344,48 @@ interface:addFunction("updateInvetory", function(_interface)
                     Image = "rbxassetid://" .. _item:getAssetId(),
                     ImageTransparency = 0
                 })
-            else
-                -- Reset panel morph.
-                _panel:updateProperties({
-                    Image = "rbxassetid://" .. asset_ids.PANEL.BODY
-                })
-                -- Resets icon.
-                _slot:updateProperties({
-                    Image = "",
-                    ImageTransparency = 1
+
+                -- Events.
+                _panel:updateEvents({
+                    {
+                        Name = "click",
+                        Event = "InputEnded",
+                        Consumer = function(_binder, _event)
+                            if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
+
+                            -- Declares required fields.
+                            _trash = interface:getMetadata():get("trash", false)
+                            _selected = interface:getMetadata():get("selected")
+
+                            -- Handles trash mode.
+                            if _trash then
+                                if TableService.containsValue(_selected, _item:getUID()) then
+                                    table.remove(_selected, TableService.getKeyByValue(_selected, _item:getUID()))
+                                else
+                                    table.insert(_selected, _item:getUID())
+                                end
+                                interface:runFunction("updateInventory")
+                                return
+                            end
+                      
+                            -- Handles categories.
+                            if _category == "PET" then
+                                ClientPlayer.getInventory().getPet().stateRequest({
+                                    {
+                                        UID = _item:getUID(),
+                                        STATE = not _item:isActive()
+                                    }
+                                })
+                            else
+                                ClientPlayer.getInventory().getTrail().stateRequest({
+                                    {
+                                        UID = _item:getUID(),
+                                        STATE = not _item:isActive()
+                                    }
+                                })
+                            end
+                        end
+                    }
                 })
             end
             current += 1
@@ -340,6 +412,59 @@ end
 ------------------------
 -- FOOTER (STARTS)
 ------------------------
+
+-- Creates delete footer panel.
+local delete_footer_panel = createFooterPanel(panel, "DELETE", Vector2.new(114, 1159))
+delete_footer_panel:updateProperties({
+    ImageTransparency = 1,
+    Active = false,
+})
+-- Icon.
+local delete_footer_icon = delete_footer_panel:addElement({
+    Name = "icon",
+    Type = "ImageLabel",
+    Properties = {
+        Custom = {
+            Position = Vector2.new(46, 48),
+            Size = Vector2.new(160, 160)
+        },
+
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+        BackgroundTransparency = 1,
+        ImageTransparency = 1,
+
+        Image = "rbxassetid://" .. asset_ids.BUTTON.EXIT
+    }
+})
+-- Button.
+delete_footer_panel:updateEvents({
+    {
+        Name = "click",
+        Event = "InputEnded",
+        Consumer = function(_binder, _event)
+            if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
+            if delete_footer_panel:getInstance().ImageTransparency == 1 then return end
+
+            -- Declares required fields.
+            local _category = interface:getMetadata():get("category")
+            local _trash = interface:getMetadata():get("trash", false)
+            if not _trash then return end
+            local _selected = interface:getMetadata():get("selected")
+
+            if #_selected > 0 then
+                interface:runFunction("updateCategory", interface:getMetadata():get("category"))
+                
+                if _category == "PET" then
+                    ClientPlayer.getInventory().getPet().removeRequest(_selected)
+                else
+                    ClientPlayer.getInventory().getTrail().removeRequest(_selected)
+                end
+            end
+        end
+    }
+})
 
 -- Creates trail footer panel.
 local trail_footer_panel = createFooterPanel(panel, "TRAIL", Vector2.new(863, 1159))
@@ -368,8 +493,7 @@ trail_footer_panel:updateEvents({
         Event = "InputEnded",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
-            interface:getMetadata():set("category", "TRAIL")
-            interface:runFunction("updateInvetory")
+            interface:runFunction("updateCategory", "TRAIL")
         end
     }
 })
@@ -401,8 +525,7 @@ feet_footer_panel:updateEvents({
         Event = "InputEnded",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
-            interface:getMetadata():set("category", "FEET")
-            interface:runFunction("updateInvetory")
+            interface:runFunction("updateCategory", "FEET")
         end
     }
 })
@@ -434,18 +557,151 @@ pet_footer_panel:updateEvents({
         Event = "InputEnded",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
-            interface:getMetadata():set("category", "PET")
-            interface:runFunction("updateInvetory")
+            interface:runFunction("updateCategory", "PET")
+        end
+    }
+})
+
+-- Creates unequip footer panel.
+local unequip_footer_panel = createFooterPanel(panel, "UNEQUIP", Vector2.new(1907, 1159))
+-- Icon.
+unequip_footer_panel:addElement({
+    Name = "icon",
+    Type = "ImageLabel",
+    Properties = {
+        Custom = {
+            Position = Vector2.new(34, 48),
+            Size = Vector2.new(184, 153)
+        },
+
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+        BackgroundTransparency = 1,
+
+        Image = "rbxassetid://" .. asset_ids.ICON.UNEQUIP
+    }
+})
+-- Button.
+unequip_footer_panel:updateEvents({
+    {
+        Name = "click",
+        Event = "InputEnded",
+        Consumer = function(_binder, _event)
+            if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
+
+            -- Declares content.
+            local _content = {}
+            local _category = interface:getMetadata():get("category", "TRAIL")
+
+            -- Handles category content.
+            if _category == "PET" then
+                for _, value in pairs(ClientPlayer.getInventory().getPet().getContent()) do
+                    if not value:isActive() then continue end
+
+                    table.insert(_content, {
+                        UID = value:getUID(),
+                        STATE = false
+                    })
+                end
+
+                if #_content > 0 then
+                    ClientPlayer.getInventory().getPet().stateRequest(_content)
+                end
+            else
+                -- Adds trails by its type to content table.
+                for _, value in pairs(ClientPlayer.getInventory().getTrail().getContent()) do
+                    if not value:isActive() then continue end
+
+                    if _category == "TRAIL" and value:getType() == "FOLLOW" then
+                        table.insert(_content, {
+                            UID = value:getUID(),
+                            STATE = false
+                        })
+                    elseif _category == "FEET" and value:getType() == "FEET" then
+                        table.insert(_content, {
+                            UID = value:getUID(),
+                            STATE = false
+                        })
+                    end
+                end
+
+                if #_content > 0 then
+                    ClientPlayer.getInventory().getTrail().stateRequest(_content)
+                end
+            end
+        end
+    }
+})
+
+-- Creates trash footer panel.
+local trash_footer_panel = createFooterPanel(panel, "TRASH", Vector2.new(2164, 1159))
+-- Icon.
+trash_footer_panel:addElement({
+    Name = "icon",
+    Type = "ImageLabel",
+    Properties = {
+        Custom = {
+            Position = Vector2.new(59, 48),
+            Size = Vector2.new(134, 152)
+        },
+
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        BorderSizePixel = 0,
+        BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+        BackgroundTransparency = 1,
+
+        Image = "rbxassetid://" .. asset_ids.ICON.TRASH
+    }
+})
+-- Button.
+trash_footer_panel:updateEvents({
+    {
+        Name = "click",
+        Event = "InputEnded",
+        Consumer = function(_binder, _event)
+            if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
+
+            local _active = interface:getMetadata():get("trash", false)
+            interface:getMetadata():set("trash", not _active)
+            interface:getMetadata():set("selected", {})
+
+            if _active then
+                -- Updates properties.
+                delete_footer_panel:updateProperties({ ImageTransparency = 1 })
+                delete_footer_icon:updateProperties({ ImageTransparency = 1 })
+                trash_footer_panel:updateProperties({ Image = "rbxassetid://" .. asset_ids.PANEL.FOOTER })
+
+                -- Updates inventory with running function.
+                interface:runFunction("updateInventory")
+            else
+                trash_footer_panel:updateProperties({ Image = "rbxassetid://" .. asset_ids.PANEL.FOOTER_ACTIVE })
+            end
         end
     }
 })
 
 -- Handles trail category.
-interface:getMetadata():set("category", "TRAIL")
-interface:runFunction("updateInvetory")
+interface:addFunction("updateCategory", function(_interface, _category : string)
+    -- Sets metadata values.
+    interface:getMetadata():set("category", _category)
+    interface:getMetadata():set("trash", false)
+    interface:getMetadata():set("selected", {})
+
+    -- Updates properties.
+    delete_footer_panel:updateProperties({ ImageTransparency = 1 })
+    delete_footer_icon:updateProperties({ ImageTransparency = 1 })
+    trash_footer_panel:updateProperties({ Image = "rbxassetid://" .. asset_ids.PANEL.FOOTER })
+
+    -- Updates inventory with running function.
+    interface:runFunction("updateInventory")
+end)
+
+-- Sets default category.
+interface:runFunction("updateCategory", "PET")
 
 ------------------------
--- FOOTER (STARTS)
+-- FOOTER (ENDS)
 ------------------------
 
 

@@ -76,7 +76,7 @@ function class:toTable(_client : boolean)
     if _client then
         return {
             id = self.id,
-            assetId = self:getPet():getAssetId(),
+            assetId = self:getPet():getIconId(),
             active = self.active
          }
     end

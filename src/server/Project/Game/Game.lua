@@ -44,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 1
+    MINIMUM_PLAYER = 2
 }
 
 ------------------------

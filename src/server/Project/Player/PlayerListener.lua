@@ -109,38 +109,76 @@ PlayerRequestEvent.OnServerEvent:Connect(function(_player, _type, _packet)
     -- Handles types.
     if _type == "REMOVE_PET" then
         -- Prevents spamming.
-        if spamCheck(_player, "REMOVE_PET", 60, 30) then return end
-
-        -- Updates player settings.
-        local success, message = pcall(function() player:getInventory():getPet():remove(_packet) end)
-
-        -- Handles error.
-        if not success then warn(_player.UserId .. " tried to remove their pet(" .. _packet .. ")", message) end
-    elseif _type == "STATE_PET" then
-        -- Prevents spamming.
-        if spamCheck(_player, "STATE_PET", 60, 30) then return end
-
-        -- Packet safety check.
-        if _packet.UID == nil or _packet.STATE == nil then return end
+        if spamCheck(_player, _type, 60, 30) then return end
 
         -- Updates player settings.
         local success, message = pcall(function()
-            player:getInventory():getPet():get(_packet.UID):setActive(_packet.STATE)
+            for _, value in pairs(_packet) do
+                player:getInventory():getPet():remove(value, false)
+            end
             player:getInventory():getPet():_sendUpdatePacket()
-            InventoryUpdateEvent:FireClient(player)
+            InventoryUpdateEvent:FireClient(_player)
         end)
 
         -- Handles error.
-        if not success then warn(_player.UserId .. " tried to change state of their pet(" .. _packet .. ") to " .. _packet.STATE, message) end
+        if not success then warn(_player.UserId .. " tried to remove their pet(" .. _packet .. ")", message) end
     elseif _type == "REMOVE_TRAIL" then
         -- Prevents spamming.
-        if spamCheck(_player, "REMOVE_TRAIL", 60, 30) then return end
+        if spamCheck(_player, _type, 60, 30) then return end
 
         -- Updates player settings.
-        local success, message = pcall(function() player:getInventory():getTrail():remove(_packet) end)
+        local success, message = pcall(function()
+            for _, value in pairs(_packet) do
+                player:getInventory():getTrail():remove(value, false)
+            end
+            player:getInventory():getTrail():_sendUpdatePacket()
+            InventoryUpdateEvent:FireClient(_player)
+        end)
 
         -- Handles error.
         if not success then warn(_player.UserId .. " tried to remove their trail(" .. _packet .. ")", message) end
+    elseif _type == "STATE_PET" then
+        -- Prevents spamming.
+        if spamCheck(_player, _type, 60, 30) then return end
+
+        -- Packet safety check.
+        if _packet == nil or typeof(_packet) ~= "table" or #_packet == 0 then return end
+
+        -- Updates player settings.
+        local success, message = pcall(function()
+            for _, value in pairs(_packet) do
+                player:getInventory():getPet():get(value.UID):setActive(value.STATE)
+            end
+            player:getInventory():getPet():_sendUpdatePacket()
+            InventoryUpdateEvent:FireClient(_player)
+        end)
+
+        -- Handles error.
+        if not success then
+            warn(_player.UserId .. " tried to change state of their pet")
+            warn(message)
+        end
+    elseif _type == "STATE_TRAIL" then
+        -- Prevents spamming.
+        if spamCheck(_player, _type, 60, 30) then return end
+
+        -- Packet safety check.
+        if _packet == nil or typeof(_packet) ~= "table" or #_packet == 0 then return end
+
+        -- Updates player settings.
+        local success, message = pcall(function()
+            for _, value in pairs(_packet) do
+                player:getInventory():getTrail():get(value.UID):setActive(value.STATE)
+            end
+            player:getInventory():getTrail():_sendUpdatePacket()
+            InventoryUpdateEvent:FireClient(_player)
+        end)
+
+        -- Handles error.
+        if not success then
+            warn(_player.UserId .. " tried to change state of their trail")
+            warn(message)
+        end
     end
 end)
 

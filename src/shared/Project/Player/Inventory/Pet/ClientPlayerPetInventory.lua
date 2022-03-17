@@ -57,18 +57,15 @@ function class.get(_uid : string)
 end
 
 -- Sends player pet state request to the backend.
--- @param _uid Player pet uid.
-function class.stateRequest(_uid : string, _state : boolean)
-    PlayerRequestEvent:FireServer("STATE_PET", {
-        UID = class.get(_uid):getUID(), -- Getting player pet to prevent nil.
-        STATE = _state
-    })
+-- @param _content Player pets.
+function class.stateRequest(_content : table)
+    PlayerRequestEvent:FireServer("STATE_PET", _content)
 end
 
 -- Sends player pet remove request to the backend.
--- @param _uid Player pet uid.
-function class.removeRequest(_uid : string)
-    PlayerRequestEvent:FireServer("REMOVE_PET", class.get(_uid):getUID()) -- Getting player pet to prevent nil.
+-- @param _content Player pets.
+function class.removeRequest(_content : table)
+    PlayerRequestEvent:FireServer("REMOVE_PET", _content)
 end
 
 

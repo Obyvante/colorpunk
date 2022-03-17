@@ -77,13 +77,13 @@ end
 
 -- Removes player pet.
 -- @param _uid Player pet unique id.
-function class:remove(_uid : string)
+function class:remove(_uid : string, _packet : boolean)
     -- Object nil checks.
     assert(_uid ~= nil, "Player pet unique id cannot be null")
     self.content[_uid] = nil
 
     -- Sends update packet.
-    self:_sendUpdatePacket()
+    if _packet == nil or _packet then  self:_sendUpdatePacket() end
 end
 
 -- Converts player pet inventory to a table.
@@ -106,7 +106,7 @@ function class:_sendUpdatePacket()
     if not player then return end
 
     -- Sends update packet.
-    PlayerUpdateEvent:FireClient(player, "INVENTORY_PET", self:toTable())
+    PlayerUpdateEvent:FireClient(player, "INVENTORY_PET", self:toTable(true))
 end
 
 

@@ -56,7 +56,7 @@ end
 
 -- Handles pets.
 for _, _data in pairs(json.results) do
-	content[_data.id] = Pet.new(_data.id, _data.name, _data.asset_id)
+	content[_data.id] = Pet.new(_data.id, _data.name, _data.iconId, _data.meshId, _data.textureId)
 end
 
 -- Informing successful initialization.

@@ -149,7 +149,6 @@ function class.getKeyByValue(_table : table, _value : ObjectValue)
     assert(_value ~= nil, "Value to search in table cannot be nil")
 
     for key, value in pairs(_table) do
-        print("-> ", value)
         if value == _value then
             return key
         end
