@@ -18,7 +18,7 @@ class.PLAYER_UPDATE_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/player/up
 class.PLAYER_UPDATES_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/player/updates"
 
 class.LEADERBOARD_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/leaderboard"
-class.STATISTICS_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/statistics/updates"
+class.STATISTICS_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/metrics/write"
 
 class.PIST_CONVERTER_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/image/converter/"
 

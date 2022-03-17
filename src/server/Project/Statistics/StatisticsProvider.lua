@@ -165,10 +165,10 @@ function class.save()
     -- Creates request body.
     local request_body = HTTPService.encodeJson({
         players = class.content.Players,
-        overall = class.content.Game
+        global = class.content.Game
     })
     :gsub('"players":%[%]', '"players":{}')
-    :gsub('"overall":%[%]', '"overall":{}')
+    :gsub('"global":%[%]', '"global":{}')
 
     -- Handles HTTP response.
     local response = HTTPService.POST(Endpoints.STATISTICS_ENDPOINT, request_body, { ["BARDEN-API-KEY"] = Endpoints.API_KEY })
