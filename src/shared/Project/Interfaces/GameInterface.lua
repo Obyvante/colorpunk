@@ -288,10 +288,6 @@ end
 ------------------------
 
 
-------------------------
--- INITIALIZATION (STARTS)
-------------------------
-
 -- Creates game interface.
 local interface = InterfaceService.createScreen("game", InterfaceService.VIEWPORTS.PC)
 

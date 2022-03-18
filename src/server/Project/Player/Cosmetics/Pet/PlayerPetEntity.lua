@@ -13,11 +13,13 @@ function class.new(_pet)
 
     -- Creates pet entity.
     local self = setmetatable({ pet = _pet }, class)
+    self.started = false
 
     -- Clones and spawn pet entity.
     self.entity = AssetLocation.Models.Pets[_pet:getPet():getId()]:Clone()
     self.entity.CanCollide = false
     self.entity.CanTouch = false
+    self.entity.Anchored = false
     self:startLoop()
 
     -- Returns created pet entity.
@@ -26,62 +28,62 @@ end
 
 -- Starts entity follow loop.
 function class:startLoop()
-    -- Handles process in background.
-    task.spawn(function()
-        -- Infinite loop to wait player to be loaded.
-        while true do
-            -- If player is not active or loaded, escapes from the loop.
-            if self.pet:getPlayer() == nil or self.pet:getPlayer():isLoaded() then break end
-            task.wait(1)
-        end
+    -- Gets roblox player.
+    local player = self.pet:getPlayer():getRobloxPlayer()
 
-        -- If player is not active, no need to continue.
-        if self == nil or self.pet:getPlayer() == nil then return end
+    -- Gets roblox player character.
+    local character = player.Character
+    local character_primary = character.PrimaryPart
 
-        -- Gets roblox player.
-        local player = self.pet:getPlayer():getRobloxPlayer()
-        if player == nil then return end
+    -- Creates character attachments.
+    class.character_rotation_attachment = Instance.new("Attachment", character_primary)
+    class.character_position_attachment = Instance.new("Attachment", character_primary)
+    class.character_rotation_attachment.Rotation = Vector3.new(0, -90, 0)
+    class.character_position_attachment.Position = Vector3.new(0, 3, 14)
+    class.character_rotation_attachment.Parent = character_primary
+    class.character_position_attachment.Parent = character_primary
 
-        -- Gets roblox player character.
-        local character = player.Character
-        if player.Character == nil then return end
-        local character_primary = character.PrimaryPart
+    -- Creates pet attachments.
+    class.pet_rotation_attachment = Instance.new("Attachment")
+    class.pet_position_attachment = Instance.new("Attachment")
+    class.pet_rotation_attachment.Parent = self.entity
+    class.pet_position_attachment.Parent = self.entity
 
-        -- Creates character attachments.
-		local character_rotation_attachment = Instance.new("Attachment", character_primary)
-		local character_position_attachment = Instance.new("Attachment", character_primary)
-        character_rotation_attachment.Rotation = Vector3.new(0, -90, 0)
-		character_position_attachment.Position = Vector3.new(0, 3, 14)
-        character_rotation_attachment.Parent = character_primary
-        character_position_attachment.Parent = character_primary
-		
-        -- Creates pet attachments.
-		local pet_rotation_attachment = Instance.new("Attachment")
-		local pet_position_attachment = Instance.new("Attachment")
-        pet_rotation_attachment.Parent = self.entity
-        pet_position_attachment.Parent = self.entity
+    -- Creates align position.
+    local aligin_position = Instance.new("AlignPosition")
+    aligin_position.Attachment0 = class.pet_position_attachment
+    aligin_position.Attachment1 = class.character_position_attachment
+    aligin_position.Parent = self.entity
 
-        -- Creates align position.
-        local aligin_position = Instance.new("AlignPosition")
-		aligin_position.Attachment0 = pet_position_attachment
-		aligin_position.Attachment1 = character_position_attachment
-		aligin_position.Parent = self.entity
+    -- Creates align rotation.
+    local aligin_rotation = Instance.new("AlignOrientation")
+    aligin_rotation.RigidityEnabled = false
+    aligin_rotation.Attachment0 = class.pet_rotation_attachment
+    aligin_rotation.Attachment1 = class.character_rotation_attachment
+    aligin_rotation.Parent = self.entity
 
-        -- Creates align rotation.
-        local aligin_rotation = Instance.new("AlignOrientation")
-        aligin_rotation.RigidityEnabled = false
-		aligin_rotation.Attachment0 = pet_rotation_attachment
-		aligin_rotation.Attachment1 = character_rotation_attachment
-		aligin_rotation.Parent = self.entity
+    -- Sets pet properties.
+    self.entity.Position = character.HumanoidRootPart.Position
+    self.entity.Parent = game.Workspace
 
-        -- Sets pet properties.
-        self.entity.Position = character.HumanoidRootPart.Position
-        self.entity.Anchored = false
-        self.entity.Parent = game.Workspace
+    -- Sets entity network owner to achieve smooth movements.
+    self.entity:SetNetworkOwner(player)
+end
 
-        -- Sets entity network owner to achieve smooth movements.
-        self.entity:SetNetworkOwner(player)
-    end)
+-- Updates entity positions.
+function class:updatePosition(_order : number, _size : number)
+    local vector
+    if _order == 1 then
+        vector = Vector3.new(0, 2, 8)
+    elseif _order == 2 then
+        vector = Vector3.new(-5, 2, 12)
+    elseif _order == 3 then
+        vector = Vector3.new(5, 2, 12)
+    elseif _order == 4 then
+        vector = Vector3.new(0, 2, 16)
+    end
+
+    class.character_position_attachment.Position = vector
 end
 
 -- Destroys entity.

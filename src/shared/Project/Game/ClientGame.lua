@@ -62,7 +62,7 @@ function class.reset()
     class.State = nil
     class.Starting = {
         Timer = {
-            Duration = 30,
+            Duration = 90,
             Current = 0
         }
     }

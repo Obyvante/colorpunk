@@ -26,9 +26,6 @@ function class.new(_player : ModuleScript, _uid : string, _id : number, _active 
         id = _id,
         active = _active,
     }, class)
-
-    if _active then self:spawnEntity() end
-
     return self
 end
 
@@ -76,8 +73,9 @@ function class:setActive(_active : boolean)
     else
         self:spawnEntity()
     end
-
     self.active = _active
+
+    self.player:getInventory():getPet():updateEntities()
     return self
 end
 

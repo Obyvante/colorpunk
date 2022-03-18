@@ -125,6 +125,17 @@ function class:toTable(_client : boolean)
     return _table
 end
 
+-- Updates entities.
+function class:updateEntities()
+    local _actives = self:getContentByState(true)
+    for key, value in pairs(_actives) do
+        if not value:getEntity() then continue end
+
+        -- Updates position.
+        value:getEntity():updatePosition(key, #_actives)
+    end
+end
+
 -- Sends update packet for target type to client.
 function class:_sendUpdatePacket()
     -- Gets roblox player and checks if it is online.

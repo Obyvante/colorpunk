@@ -50,6 +50,8 @@ function class.updateRankStands()
         -- Gets winner content.
         local content = TableService.values(class.content.Win:getContent())
 
+        if #content < 3 then return end
+
         -- Updates leaderboard stands.
         for i = 1, 3, 1 do
             local appearance = game.Players:GetHumanoidDescriptionFromUserId(tonumber(content[i].id))
