@@ -6,9 +6,9 @@ local PlayerProvider = Library.getService("PlayerProvider")
 local ProductProvider = Library.getService("ProductProvider")
 local Transaction = Library.getService("Transaction")
 local StringService = Library.getService("StringService")
+local TableService = Library.getService("TableService")
 local MarketplaceService = game:GetService("MarketplaceService")
 -- EVENTS
-local TestCallbackEvent = EventService.get("TestCallback")
 local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
 local InterfaceActionEvent = EventService.get("Interface.InterfaceAction")
 -- STARTS
@@ -22,23 +22,6 @@ require(script.Parent.MarketplaceListener)
 
 ------------------------
 -- IMPORTS (ENDS)
-------------------------
-
-
-------------------------
--- PRODUCTS (STARTS)
-------------------------
-
-class.Products = {
-    MONEY_BOOSTER = 1246742045,
-    SPEED_BOOSTER = 1248410518,
-    JUMP_BOOSTER = 1248410451,
-    FORESEEING_GOGGLES = 1248410359,
-    SPEED_AND_JUMP_BOOSTER = 1248410416
-}
-
-------------------------
--- PRODUCTS (ENDS)
 ------------------------
 
 
@@ -60,6 +43,10 @@ will be transferred back.</font>
 [[
 You've already bought this item,
 you cannot have more!
+]],
+    InventoryError =
+[[
+Your inventory is full!
 ]],
     UnknownpProduct =
 [[
@@ -85,6 +72,7 @@ class.InProgressPurchases = {}
 -- METHODS (STARTS)
 ------------------------
 
+-- Handles error with interface.
 function class.error(_player : Player, _message : string)
     InterfaceOpenEvent:FireClient(_player, "informative", {
         Title = [[ERROR]],
@@ -92,21 +80,34 @@ function class.error(_player : Player, _message : string)
     })
 end
 
-function class.canPurchase(_user_id : number, _id : number)
+-- Checks if purchase has failed.
+function class.isFailed(_user_id : number, _id : number)
+    -- Declares required fields.
+    _user_id = tonumber(_user_id)
+    _id = tonumber(_id)
+
+    -- Object creations.
+    class.FailedPurchases[_user_id] = class.FailedPurchases[_user_id] or {}
+    return class.FailedPurchases[_user_id][_id]
+end
+
+-- Checks if purchase has failed.
+function class.isInProgress(_user_id : number, _id : number)
     -- Declares required fields.
     _user_id = tonumber(_user_id)
     _id = tonumber(_id)
 
     -- Object creations.
     class.InProgressPurchases[_user_id] = class.InProgressPurchases[_user_id] or {}
-    class.FailedPurchases[_user_id] = class.FailedPurchases[_user_id] or {}
-
-    local saved = class.FailedPurchases[_user_id][_id]
-    or class.InProgressPurchases[_user_id][_id]
-
-    return saved == nil
+    return class.InProgressPurchases[_user_id][_id]
 end
 
+-- Checks if player can purchase or not.
+function class.canPurchase(_user_id : number, _id : number)
+    return (class.isFailed(_user_id, _id) or class.isInProgress(_user_id, _id)) == nil
+end
+
+-- Handles succeed purchase.
 function class.handleSucceedPurchase(_data : table)
     -- Declares required fields.
     _data.PlayerId = tonumber(_data.PlayerId)
@@ -120,6 +121,7 @@ function class.handleSucceedPurchase(_data : table)
     class.FailedPurchases[_data.PlayerId][_data.ProductId] = nil
 end
 
+-- Handles in progres purchase.
 function class.handleInProgressPurchase(_data : table)
     -- Declares required fields.
     _data.PlayerId = tonumber(_data.PlayerId)
@@ -133,6 +135,7 @@ function class.handleInProgressPurchase(_data : table)
     class.FailedPurchases[_data.PlayerId][_data.ProductId] = nil
 end
 
+-- Handles failed purchase.
 function class.handleFailedPurchase(_data : table)
     -- Declares required fields.
     _data.PlayerId = tonumber(_data.PlayerId)
@@ -144,6 +147,84 @@ function class.handleFailedPurchase(_data : table)
 
     class.FailedPurchases[_data.PlayerId][_data.ProductId] = _data
     class.InProgressPurchases[_data.PlayerId][_data.ProductId] = nil
+end
+
+-- Handles purchase.
+function class.handlePurchase(_player : Player, _id : string)
+    -- Object nil checks.
+    assert(_player ~= nil and _id ~= nil)
+
+    -- Gets and check player.
+    local player = PlayerProvider.find(_player.UserId)
+    if player == nil then return end
+
+    -- If server is not active, no need to continue.
+    if not _G.server_active then
+        class.error(_player, class.Messages.UnknownError)
+        return
+    end
+
+    -- Declares required fields. (1)
+    local _product = ProductProvider.findByName(_id)
+
+    -- If product is not exist, no need to continue.
+    if not _product then
+        class.error(_player, class.Messages.UnknownpProduct)
+        return
+    end
+
+    -- Checks if player can purchase it or not.
+    if class.isInProgress(_player.UserId, _product:getId()) then
+        class.error(_player, class.Messages.UnknownError)
+        return
+    end
+
+    -- Checks if player can purchase it or not.
+    if class.isFailed(_player.UserId, _product:getId()) then
+        class.error(_player, class.Messages.BuyError)
+        return
+    end
+
+    -- If product is an item, handles it.
+    if _product:isItem() then
+        -- Declares required fields. (2)
+        local _player_product = player:getInventory():getProduct():find(_product:getId())
+        -- If player doesn't have any inventory space, no need to continue.
+        if _player_product ~= nil and _player_product:getAmount() >= _product:getCap() then
+            class.error(_player, class.Messages.CapError)
+            return
+        end
+
+        -- Handles speed and jump booster.
+        if _product:getType() == "BOOSTER_BUNDLE" then -- SPEED AND JUMP BOOSTER INVENTORY CHECK.
+            -- Declares required fields.
+            local _products = player:getInventory():getProduct()
+            if _products:has(1248410518) and _products:has(1248410451) then
+                class.error(_player, class.Messages.CapError)
+                return
+            end
+        end
+    elseif _product:getType() == "PET" then
+        -- Checks player inventory size.
+        local _inventory_size = TableService.size(player:getInventory():getPet():getContent())
+        if _inventory_size >= 27 then
+            class.error(_player, class.Messages.InventoryError)
+            return
+        end
+    elseif _product:getType() == "CASE" then
+        if StringService.endsWith(_product:getName(), "Egg") then
+            -- Checks player inventory size.
+            local _inventory_size = TableService.size(player:getInventory():getPet():getContent())
+            if _inventory_size >= 27 then
+                class.error(_player, class.Messages.InventoryError)
+                return
+            end
+        end
+    end
+
+    -- Starts purchasing.
+    MarketplaceService:PromptProductPurchase(_player, _product:getId())
+    return true
 end
 
 ------------------------
@@ -182,6 +263,7 @@ end
 -- EVENTS (STARTS)
 ------------------------
 
+-- Handles purchase.
 InterfaceActionEvent.OnServerEvent:Connect(function(_player : Player, _id : string, _information : table)
     -- Safety checks.
     if _id == nil
@@ -189,55 +271,19 @@ InterfaceActionEvent.OnServerEvent:Connect(function(_player : Player, _id : stri
     or _information.Id == nil
     or not StringService.startsWith(_information.Id, "PRODUCT_")
     then return end
+
     -- If the answer is nil or false, no need to continue.
     if not _information.Action then return end
 
-    -- Gets and check player.
-    local player = PlayerProvider.find(_player.UserId)
-    if player == nil then return end
+    -- Handles purchase.
+    local success, message = pcall(function() class.handlePurchase(_player, _information.Id:split("PRODUCT_")[2]) end)
 
-    -- If server is not active, no need to continue.
-    if not _G.server_active then
+    -- Handles exceptions.
+    if not success then
         class.error(_player, class.Messages.UnknownError)
-        return
+        warn("player(" .. _player ..") tried to purchase item(" .. _id .. ")")
+        warn(message)
     end
-
-    -- Declares required fields. (1)
-    local _product = class.Products[_information.Id:split("PRODUCT_")[2]]
-    _product = if _product ~= nil then ProductProvider.find(_product) else nil
-
-    -- If product is not exist, no need to continue.
-    if not _product then
-        class.error(_player, class.Messages.UnknownpProduct)
-        return
-    end
-
-    -- Checks if player can purchase it or not.
-    if not class.canPurchase(_player.UserId, _product:getId()) then
-        class.error(_player, class.Messages.BuyError)
-        return
-    end
-
-    -- Declares required fields. (2)
-    local _player_product = player:getInventory():getProduct():find(_product:getId())
-    -- If player doesn't have any inventory space, no need to continue.
-    if _player_product ~= nil and _player_product:getAmount() >= _product:getCap() then
-        class.error(_player, class.Messages.CapError)
-        return
-    end
-
-    -- Handles speed and jump booster.
-    if _product:getId() == 1248410416 then -- SPEED AND JUMP BOOSTER INVENTORY CHECK.
-        -- Declares required fields.
-        local _products = player:getInventory():getProduct()
-        if _products:has(1248410518) and _products:has(1248410451) then
-            class.error(_player, class.Messages.CapError)
-            return
-        end
-    end
-
-    -- Starts purchasing.
-    MarketplaceService:PromptProductPurchase(_player, _product:getId())
 end)
 
 -- Market purchase process recepit handler.
@@ -249,6 +295,15 @@ function MarketplaceService.ProcessReceipt(_data)
     local _player = game.Players:GetPlayerByUserId(_data.PlayerId)
     -- If player is not online, no need to continue.
     if _player == nil then return class.failedReceipt(_data, "OFFLINE PLAYER") end
+
+    -- Declares required fields.
+    local _product = ProductProvider.find(_data.ProductId)
+
+    -- If product is not exist, no need to continue.
+    if not _product then
+        class.error(_player, class.Messages.BuyError)
+        return class.failedReceipt(_data, "PRODUCT NOT FOUND!")
+    end
 
     -- Tries to get custom player.
     local player
@@ -282,34 +337,35 @@ function MarketplaceService.ProcessReceipt(_data)
     -- TRANSACTION (ENDS)
     ------------------------
 
+
     -- Handles procuts.
-    if _data.ProductId == class.Products.MONEY_BOOSTER
-    or _data.ProductId == class.Products.SPEED_BOOSTER
-    or _data.ProductId == class.Products.JUMP_BOOSTER
-    or _data.ProductId == class.Products.FORESEEING_GOGGLES
-    or _data.ProductId == class.Products.SPEED_AND_JUMP_BOOSTER
-    then
-        success, message = pcall(function()
+    success, message = pcall(function()
+        if _product:isItem() then
             -- Adds product to the player's inventoryç
             player:getInventory():getProduct():add(tonumber(_data.ProductId), 1)
 
-            -- Handles attribute changes.<
-            if _data.ProductId == class.Products.SPEED_BOOSTER
-            or _data.ProductId == class.Products.JUMP_BOOSTER
-            or _data.ProductId == class.Products.SPEED_AND_JUMP_BOOSTER
-            then
+            -- Handles attribute changes.
+            if _product:getType() == "BOOSTER" or _product:getType() == "BOOSTER_BUNDLE" then
                 player:getStats():updateCharacterAttributes()
             end
-        end)
-        if not success then
-            class.error(_player, class.Messages.BuyError)
-            return class.failedReceipt(_data, "PRODUCT ADDING", message)
+        else
+            print(_product)
+            -- Handles pets.
+            if _product:getType() == "PET" then
+                -- Adds pet to the players pet inventory.
+                player:getInventory():getPet():add(tonumber(_product:getMetadataValue("petId")))
+            elseif _product:getType() == "CASE" then
+                Library.getService("CosmeticProvider").openCase(_player, _product:getName())
+            end
         end
-    else
+    end)
+
+    -- Handles unsuccessful product adding.
+    if not success then
         class.error(_player, class.Messages.BuyError)
-        -- If we reach end of the code, we are not sure if the purchase has granted or not.
-        return class.failedReceipt(_data, "PRODUCT NOT FOUND", message)
+        return class.failedReceipt(_data, "PRODUCT ADDING", message)
     end
+
 
     ------------------------
     -- TRANSFER/PURCHASE HISTORY (STARTS)

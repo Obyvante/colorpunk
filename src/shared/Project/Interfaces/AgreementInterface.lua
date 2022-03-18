@@ -93,7 +93,7 @@ function createButton(_parent, _name : string, _position : Vector2, _status : bo
             
             TextColor3 = Color3.fromRGB(255, 255, 255),
             Font = "DenkOne",
-            Text = _status and "ACCPET" or "DECLINE",
+            Text = _status and "ACCEPT" or "DECLINE",
         }
     })
 end

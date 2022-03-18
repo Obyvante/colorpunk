@@ -26,6 +26,22 @@ function class.find(_id : number)
     return content[_id]
 end
 
+-- Finds product by its name. (SAFE)
+-- @param _id Product name.
+-- @return Product. (NULLABLE)
+function class.findByName(_name : string)
+    -- Object nil checks.
+    assert(_name ~= nil, "Product name cannot be null")
+
+    for _, value in pairs(content) do
+        if value:getName() == _name then
+            return value
+        end
+    end
+
+    return nil
+end
+
 -- Gets product by its id.
 -- @param _id Product id.
 -- @return Product.
@@ -56,7 +72,7 @@ end
 
 -- Handles products.
 for _, _data in pairs(json.results) do
-	content[tonumber(_data.id)] = Product.new(tonumber(_data.id), tonumber(_data.cap))
+	content[tonumber(_data.id)] = Product.new(tonumber(_data.id), _data.type, _data.name, _data.item, tonumber(_data.cap), _data.metadata)
 end
 
 -- Informing successful initialization.

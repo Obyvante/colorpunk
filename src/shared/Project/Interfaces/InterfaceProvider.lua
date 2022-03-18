@@ -16,6 +16,7 @@ local InventoryUpdateEvent = EventService.get("Inventory.InventoryUpdate")
 ------------------------
 
 -- Imports interfaces. (ORDER IS IMPORTANT!)
+require(game.ReplicatedStorage.Project.Interfaces.Prompt.PromptClickInterface)
 require(game.ReplicatedStorage.Project.Interfaces.InformativeInterface)
 require(game.ReplicatedStorage.Project.Interfaces.GameInterface)
 require(game.ReplicatedStorage.Project.Interfaces.SettingsInterface)

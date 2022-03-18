@@ -1,16 +1,14 @@
 -- IMPORTS
 local Library = require(game:GetService("ReplicatedStorage").Library.Library)
-local InterfaceService = Library.getService("InterfaceService")
 local EventService = Library.getService("EventService")
 -- EVENTS
 local PlayerLoadCompleteEvent = EventService.get("Player.PlayerLoadComplete")
-local TestCallbackEvent = EventService.get("TestCallback")
 -- TIMER
 local time = os.time()
 
 
 ------------------------
--- API CALLS AND IMPORTS (STARTS)
+-- FIRST LOGIN LOADING (STARTS)
 ------------------------
 
 -- Loads interface first.
@@ -19,24 +17,30 @@ local interface_load = require(script.Parent.Load.InterfaceLoad)
 -- Loads game.
 if not game.Loaded then game.Loaded:Wait() end
 
--- Loads assets.
---local asset_load = require(script.Parent.Load.AssetsLoad)
 -- Loads character.
-local character_load = require(script.Parent.Load.CharacterLoad)
+require(script.Parent.Load.CharacterLoad)
 
 -- Loads player.
-local PlayerLoad = require(script.Parent.Load.PlayerLoad)
+require(script.Parent.Load.PlayerLoad)
 local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)
-local ClientPlayerProvider = require(game.ReplicatedStorage.Project.Player.ClientPlayerProvider)
 
 -- Starts warning screen.
 if ClientPlayer.getSettings().asBoolean("SKIP_WARNING_SCREEN") then interface_load.startWarning() end
 
--- Loads default interfaces.
-ClientPlayerProvider.loadDefaultInterfaces()
+------------------------
+-- FIRST LOGIN LOADING (ENDS)
+------------------------
+
 
 ------------------------
--- API CALLS AND IMPORTS (ENDS)
+-- SERVICE SAVING (STARTS)
+------------------------
+
+require(game.ReplicatedStorage.Project.Locations.AssetLocation)
+Library.saveService(game.ReplicatedStorage.Project.Locations.AssetLocation)
+
+------------------------
+-- SERVICE SAVING (ENDS)
 ------------------------
 
 
@@ -44,14 +48,24 @@ ClientPlayerProvider.loadDefaultInterfaces()
 -- IMPORTS (STARTS)
 ------------------------
 
-require(game.ReplicatedStorage.Project.Player.ClientPlayerProvider)
+require(game.ReplicatedStorage.Project.Interfaces.InterfaceProvider)
+local ClientPlayerProvider = require(game.ReplicatedStorage.Project.Player.ClientPlayerProvider)
 require(game.ReplicatedStorage.Project.Server.ClientServerProvider)
 require(game.ReplicatedStorage.Project.Game.ClientGameProvider)
+require(game.ReplicatedStorage.Project.Cosmetics.ClientCosmeticsHandler)
+require(game.ReplicatedStorage.Project.Music.MusicPlayer)
+
+-- Loads default interfaces.
+ClientPlayerProvider.loadDefaultInterfaces()
 
 ------------------------
 -- IMPORTS (ENDS)
 ------------------------
 
+
+------------------------
+-- LAST CHECK (STARTS)
+------------------------
 
 -- Last think to inform server that player is fully loaded.
 PlayerLoadCompleteEvent:FireServer()
@@ -59,19 +73,10 @@ PlayerLoadCompleteEvent:FireServer()
 -- Destroys interface.
 interface_load.destroy()
 
+------------------------
+-- LAST CHECK (ENDS)
+------------------------
+
+
 -- Informs client.
 print("✔️ DONE! (", os.time() - time, ")")
-
-
-------------------------
--- TEST (STARTS)
-------------------------
-
-local sound = Instance.new("Sound", game.Workspace)
-sound.SoundId = "rbxassetid://9059061304"
-sound.Looped = true
-sound:Play()
-
-------------------------
--- TEST (ENDS)
-------------------------

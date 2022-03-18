@@ -272,6 +272,9 @@ interface:addFunction("updateInventory", function(_interface)
         end
     end
 
+    -- Sort by active.
+    table.sort(_content, function(A, B) return A:isActive() and not B:isActive() end)
+
     -- Handles category footer icon.
     local trail_footer_panel = _interface:getElementByPath("panel.panel_TRAIL")
     trail_footer_panel:updateProperties({ Image = "rbxassetid://" .. (_category == "TRAIL" and asset_ids.PANEL.FOOTER_ACTIVE or asset_ids.PANEL.FOOTER) })
@@ -305,6 +308,7 @@ interface:addFunction("updateInventory", function(_interface)
             local _panel = _interface:getElementByPath("panel.body.panel_" .. current)
             local _slot = _panel:getElementByPath("icon")
             local _item = _content[current]
+            if not _slot:getMetadata():get("image_color") then _slot:getMetadata():set("image_color", _slot:getInstance().ImageColor3) end
             if not _panel:getMetadata():get("image_color") then _panel:getMetadata():set("image_color", _panel:getInstance().ImageColor3) end
 
             -- Clears previous events.
@@ -313,6 +317,9 @@ interface:addFunction("updateInventory", function(_interface)
             -- Reset panel morph.
             _panel:updateProperties({
                 ImageColor3 = _panel:getMetadata():get("image_color")
+            })
+            _slot:updateProperties({
+                ImageColor3 = _slot:getMetadata():get("image_color")
             })
             -- Resets icon.
             _slot:updateProperties({
@@ -323,8 +330,8 @@ interface:addFunction("updateInventory", function(_interface)
             -- Handles item.
             if _item then
                 if _trash and TableService.containsValue(_selected, _item:getUID()) then
-                    _panel:updateProperties({
-                        ImageColor3 = Color3.fromRGB(248, 80, 80)
+                    _slot:updateProperties({
+                        ImageColor3 = Color3.fromRGB(255, 0, 0)
                     })
                 else
                     -- If item is currently active, change panel morph.
@@ -333,6 +340,9 @@ interface:addFunction("updateInventory", function(_interface)
                             ImageColor3 = Color3.fromRGB(20, 168, 0)
                         })
                     else
+                        _slot:updateProperties({
+                            ImageColor3 = _slot:getMetadata():get("image_color")
+                        })
                         _panel:updateProperties({
                             ImageColor3 = _panel:getMetadata():get("image_color")
                         })
@@ -359,6 +369,7 @@ interface:addFunction("updateInventory", function(_interface)
 
                             -- Handles trash mode.
                             if _trash then
+                                if _item:isActive() then return end
                                 if TableService.containsValue(_selected, _item:getUID()) then
                                     table.remove(_selected, TableService.getKeyByValue(_selected, _item:getUID()))
                                 else

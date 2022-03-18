@@ -30,6 +30,11 @@ PlayerUpdateEvent.OnClientEvent:Connect(function(_type : string, _packet : strin
         ClientPlayer.getInventory().getProduct().update(ClientPlayer, _packet)
     elseif _type == "INVENTORY_PET" then
         ClientPlayer.getInventory().getPet().update(ClientPlayer, _packet)
+
+        local _inventoryInterface = InterfaceService.get("inventory")
+        if _inventoryInterface ~= nil then
+            _inventoryInterface:runFunction("updateInventory")
+        end
     end
 end)
 
@@ -38,40 +43,28 @@ end)
 -- PROXIMITY PROMPT (STARTS)
 ------------------------
 
-function isPedestal(_name : string)
-    return _name == "MONEY_BOOSTER"
-    or _name == "FORESEEING_GOGGLES"
-    or _name == "SPEED_AND_JUMP_BOOSTER"
-    or _name == "JUMP_BOOSTER"
-    or _name == "SPEED_BOOSTER"
-
-    or _name == "PREMIUM_CHEST"
-    or _name == "PREMIUM_EGG"
-    or _name == "BASIC_CHEST"
-    or _name == "BASIC_EGG"
+function isClickable(prompt : ProximityPrompt)
+    return prompt:GetAttribute("hasClick")
 end
 
-function isContentPedestal(_name : string)
-    return _name == "PREMIUM_CHEST"
-    or _name == "PREMIUM_EGG"
-    or _name == "BASIC_CHEST"
-    or _name == "BASIC_EGG"
+function isContentPedestal(prompt : ProximityPrompt)
+    return prompt:GetAttribute("hasContent")
 end
 
 ProximityPromptService.PromptShown:Connect(function(prompt, inputType)
     -- Safety check.
-    if not isPedestal(prompt.Name) then return end
+    if not isClickable(prompt) then return end
 
     -- Handles click interface.
     local click_interface = PromptClickInterface.create(prompt.Parent, prompt, inputType)
     if not click_interface:isBound() then click_interface:bind(game.Players.LocalPlayer.PlayerGui) end
 
     -- Handles content interface.
-    if isContentPedestal(prompt.Name) then
+    if isContentPedestal(prompt) then
         local _content = {}
-        if prompt.Name == "PREMIUM_EGG" then
+        if prompt.Name == "Premium Egg" then
             _content = PromptContentInterface.Content.Pets.Premium
-        elseif prompt.Name == "BASIC_EGG" then
+        elseif prompt.Name == "Basic Egg" then
             _content = PromptContentInterface.Content.Pets.Free
         end
 
@@ -82,18 +75,18 @@ end)
 
 ProximityPromptService.PromptHidden:Connect(function(prompt, inputType)
     -- Safety check.
-    if not isPedestal(prompt.Name) then return end
+    if not isClickable(prompt) then return end
 
     -- Handles click interface.
     local click_interface = PromptClickInterface.create(prompt.Parent, prompt, inputType)
     if click_interface:isBound() then click_interface:unbind() end
 
     -- Handles content interface.
-    if isContentPedestal(prompt.Name) then
+    if isContentPedestal(prompt) then
         local _content = {}
-        if prompt.Name == "PREMIUM_EGG" then
+        if prompt.Name == "Premium Egg" then
             _content = PromptContentInterface.Content.Pets.Premium
-        elseif prompt.Name == "BASIC_EGG" then
+        elseif prompt.Name == "Basic Egg" then
             _content = PromptContentInterface.Content.Pets.Free
         end
 

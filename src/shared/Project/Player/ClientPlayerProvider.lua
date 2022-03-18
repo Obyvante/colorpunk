@@ -6,8 +6,6 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
 local TaskService = Library.getService("TaskService")
 local NumberService = Library.getService("NumberService")
-local ProximityPromptService = game:GetService("ProximityPromptService")
-local AssetLocation = game.ReplicatedStorage.Project.Locations.AssetLocation
 -- STARTS
 
 
@@ -16,12 +14,7 @@ local AssetLocation = game.ReplicatedStorage.Project.Locations.AssetLocation
 ------------------------
 
 -- Loads client player listener.
-require(AssetLocation)
-Library.saveService(AssetLocation)
 require(game.ReplicatedStorage.Project.Player.ClientPlayerListener)
-require(game.ReplicatedStorage.Project.Interfaces.InterfaceProvider)
-require(game.ReplicatedStorage.Project.Interfaces.Prompt.PromptClickInterface)
-require(game.ReplicatedStorage.Project.Cosmetics.ClientCosmeticsHandler)
 
 ------------------------
 -- IMPORTS (ENDS)

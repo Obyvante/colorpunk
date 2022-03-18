@@ -42,6 +42,21 @@ function class:getContent()
     return TableService.values(self.content)
 end
 
+-- Gets player pets by its state.
+-- @param _state Player pet state.
+-- @return Player pets.
+function class:getContentByState(_state : boolean)
+    local _content = {}
+
+    for _, value in pairs(self.content) do
+        if value:isActive() == _state then
+            table.insert(_content, value)
+        end
+    end
+
+    return _content
+end
+
 -- Finds player pet by its unique id. (SAFE)
 -- @param _uid Player pet unique id.
 -- @return Player pet. (NULLABLE)
@@ -66,6 +81,7 @@ function class:add(_id : number)
     -- Object nil checks.
     assert(_id ~= nil, "Pet id cannot be null")
     if PetProvider.find(_id) == nil then error("pet(" .. _id .. ") does not exist!") end
+    if TableService.size(self.content) >= 27 then error("Player(" .. self.player:getId() .. ") inventory size must be equals or lower than 27") end
 
     local player_pet = PlayerPet.new(self.player, HTTPService.randomUUID(), _id, false)
 

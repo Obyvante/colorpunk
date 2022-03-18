@@ -184,6 +184,48 @@ function class.values(_table : table)
 	return result
 end
 
+-- Sorts table with given order.
+-- By "Michal Kottman" (Stackoverflow)
+-- @param _table Target table.
+-- @param order Order function.
+-- @return Sorted function.
+function class.spairs(_table : table, order)
+    -- collect the keys
+    local keys = {}
+    for k in pairs(_table) do keys[#keys+1] = k end
+
+    -- if order function given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys
+    if order then
+        table.sort(keys, function(a,b) return order(_table, a, b) end)
+    else
+        table.sort(keys)
+    end
+
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], _table[keys[i]]
+        end
+    end
+end
+
+-- Shuffles table.
+-- @param _table Target table.
+function class.shuffle(_table : table)
+    local shuffled_table = {}
+    for i = 1, #_table do
+        shuffled_table[i] = _table[i]
+    end
+    for i = #shuffled_table, 2, -1 do
+      local j = math.random(i)
+      shuffled_table[i], shuffled_table[j] = shuffled_table[j], shuffled_table[i]
+    end
+    return shuffled_table
+  end
+
 
 -- ENDS
 return class

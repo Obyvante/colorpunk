@@ -42,6 +42,21 @@ function class:getContent()
     return TableService.values(self.content)
 end
 
+-- Gets player trails by its state.
+-- @param _state Player trail state.
+-- @return Player trails.
+function class:getContentByState(_state : boolean)
+    local _content = {}
+
+    for _, value in pairs(self.content) do
+        if value:isActive() == _state then
+            table.insert(_content, value)
+        end
+    end
+
+    return _content
+end
+
 -- Finds player trail by its unique id. (SAFE)
 -- @param _uid Player trail unique id.
 -- @return Player trail. (NULLABLE)
@@ -66,6 +81,7 @@ function class:add(_id : number)
     -- Object nil checks.
     assert(_id ~= nil, "Trail id cannot be null")
     if TrailProvider.find(_id) == nil then error("trail(" .. _id .. ") does not exist!") end
+    if TableService.size(self.content) >= 27 then error("Player(" .. self.player:getId() .. ") inventory size must be equals or lower than 27") end
 
     local player_trail = PlayerTrail.new(self.player, HTTPService.randomUUID(), _id, false)
 

@@ -3,6 +3,8 @@ local class = {}
 local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local PlayerProvider = Library.getService("PlayerProvider")
+local CoolDownService = Library.getService("CoolDownService")
+local SpamService = Library.getService("SpamService")
 -- EVENTS
 local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
 local ProximityPromptService = game:GetService("ProximityPromptService")
@@ -21,16 +23,16 @@ ProximityPromptService.PromptTriggered:Connect(function(prompt, _player)
     local _jump = _products:has(1248410451)
 
     -- Handles prompt name
-    if _name == "SPEED_AND_JUMP_BOOSTER" then
+    if _name == "Speed and Jump Booster" then
         if _speed and not _jump then
-            _name = "JUMP_BOOSTER"
+            _name = "Jump Booster"
         elseif not _speed and _jump then
-            _name = "SPEED_BOOSTER"
+            _name = "Speed Booster"
         end
     end
 
     -- Handles prompts.
-    if _name == "MONEY_BOOSTER" then
+    if _name == "Money Booster" then
         InterfaceOpenEvent:FireClient(_player, "agreement", {
             ActionId = "PRODUCT_" .. _name,
             Title = [[SHOP]],
@@ -42,7 +44,7 @@ the game will be doubled.
 Would you like to buy?
 ]]
         })
-    elseif _name == "FORESEEING_GOGGLES" then
+    elseif _name == "Foreseeing Goggles" then
         InterfaceOpenEvent:FireClient(_player, "agreement", {
             ActionId = "PRODUCT_" .. _name,
             Title = [[SHOP]],
@@ -54,7 +56,7 @@ will be more visible.
 Would you like to buy?
 ]]
         })
-    elseif _name == "SPEED_AND_JUMP_BOOSTER" then
+    elseif _name == "Speed and Jump Booster" then
         InterfaceOpenEvent:FireClient(_player, "agreement", {
             ActionId = "PRODUCT_" .. _name,
             Title = [[SHOP]],
@@ -66,7 +68,7 @@ be increased by 50%.
 Would you like to buy?
 ]]
         })
-    elseif _name == "JUMP_BOOSTER" then
+    elseif _name == "Jump Booster" then
         InterfaceOpenEvent:FireClient(_player, "agreement", {
             ActionId = "PRODUCT_" .. _name,
             Title = [[SHOP]],
@@ -78,7 +80,7 @@ Your jump height will be increased by
 Would you like to buy?
 ]]
         })
-    elseif _name == "SPEED_BOOSTER" then
+    elseif _name == "Speed Booster" then
         InterfaceOpenEvent:FireClient(_player, "agreement", {
             ActionId = "PRODUCT_" .. _name,
             Title = [[SHOP]],
