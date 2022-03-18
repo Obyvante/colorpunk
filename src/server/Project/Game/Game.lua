@@ -44,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 3
+    MINIMUM_PLAYER = 2
 }
 
 ------------------------
@@ -113,7 +113,7 @@ function class.reset()
     }
     class.Starting = {
         Timer = {
-            Duration = 60,
+            Duration = 90,
             Current = 0
         }
     }

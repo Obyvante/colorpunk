@@ -102,7 +102,7 @@ function class.startEggAnimation(_type : string, _name : string, _id : string)
     case_model:Destroy()
 
     -- Creates pet model.
-    local model_pet = AssetLocation.Models.Pets[tostring(_id)]:Clone()
+    local model_pet = AssetLocation.Models.Pets[_id]:Clone()
     model_pet.Position = Vector3.new(0, 0, -50)
     model_pet.Parent = viewport
 

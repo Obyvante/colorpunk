@@ -48,6 +48,10 @@ you cannot have more!
 [[
 Your inventory is full!
 ]],
+    CurrencyError =
+[[
+You don't have enough money!
+]],
     UnknownpProduct =
 [[
 Product is not exist! Please
@@ -161,6 +165,27 @@ function class.handlePurchase(_player : Player, _id : string)
     -- If server is not active, no need to continue.
     if not _G.server_active then
         class.error(_player, class.Messages.UnknownError)
+        return
+    end
+
+    -- Handles product types.
+    if _id == "Basic Egg" then
+        -- Checks player inventory size.
+        local _inventory_size = TableService.size(player:getInventory():getPet():getContent())
+        if _inventory_size >= 27 then
+            class.error(_player, class.Messages.InventoryError)
+            return
+        end
+
+        -- Handles palyer currency.
+        if player:getCurrencies():get("GOLD") < 300 then
+            class.error(_player, class.Messages.CurrencyError)
+            return
+        end
+
+        -- Removes currency from player.
+        player:getCurrencies():remove("GOLD", 300)
+        Library.getService("CosmeticProvider").openCase(_player, "Basic Egg")
         return
     end
 
@@ -349,7 +374,6 @@ function MarketplaceService.ProcessReceipt(_data)
                 player:getStats():updateCharacterAttributes()
             end
         else
-            print(_product)
             -- Handles pets.
             if _product:getType() == "PET" then
                 -- Adds pet to the players pet inventory.

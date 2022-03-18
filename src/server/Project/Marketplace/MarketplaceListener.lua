@@ -92,6 +92,18 @@ Your movement speed will be increased by
 Would you like to buy?
 ]]
         })
+    elseif _name == "Basic Egg" then
+        -- Handles cool down.
+        if CoolDownService.has(_player.UserId .. ":case") then return end
+
+        InterfaceOpenEvent:FireClient(_player, "agreement", {
+            ActionId = "PRODUCT_" .. _name,
+            Title = [[SHOP]],
+            Message =
+[[
+Buy and open a Basic Egg for 300 Money?
+]]
+        })
     end
 end)
 

@@ -3,6 +3,7 @@ class.__index = class
 -- IMPORTS
 local Library = require(game.ReplicatedStorage.Library.Library)
 local PetProvider = Library.getService("PetProvider")
+local PlayerPetEntity = require(script.Parent.PlayerPetEntity)
 -- STARTS
 
 
@@ -19,12 +20,16 @@ function class.new(_player : ModuleScript, _uid : string, _id : number, _active 
     assert(_id ~= nil, "Player pet id cannot be null")
     assert(_active ~= nil, "Player pet active status cannot be null")
 
-    return setmetatable({
+    local self = setmetatable({
         player = _player,
         uid = _uid,
         id = _id,
         active = _active,
     }, class)
+
+    if _active then self:spawnEntity() end
+
+    return self
 end
 
 -- Gets pet.
@@ -65,8 +70,38 @@ function class:setActive(_active : boolean)
     assert(_active ~= nil, "Active status cannot be null")
     if self.active == _active then return end
 
+    -- Handles player pet entity spawning.
+    if self.active then
+        self:despawnEntity()
+    else
+        self:spawnEntity()
+    end
+
     self.active = _active
     return self
+end
+
+-- Gets player pet entity.
+function class:getEntity()
+    return self.entity
+end
+
+-- Spawns entity.
+function class:spawnEntity()
+    -- Destroys previous pet entity.
+    if self.entity then self.entity:Destroy() end
+
+    -- Spawns player pet entity.
+    self.entity = PlayerPetEntity.new(self)
+end
+
+-- Spawns entity.
+function class:despawnEntity()
+    -- Destroys previous pet entity.
+    if self.entity then
+        self.entity:Destroy()
+        self.entity = nil
+    end
 end
 
 -- Converts player pet to a table.

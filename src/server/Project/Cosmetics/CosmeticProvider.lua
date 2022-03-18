@@ -43,8 +43,6 @@ function class.openCase(_player : Player, _id : string)
     -- Sends inventory update event to handle not updated player pets.
     InventoryUpdateEvent:FireClient(_player)
 
-    task.wait(2)
-
     -- Sends pet open request.
     CosmeticCaseOpenEvent:FireClient(_player, {
         Product = "PET",

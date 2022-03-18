@@ -4,6 +4,8 @@
 local time = os.time()
 
 local PATHS = {
+    game.ReplicatedStorage.Project.Locations.AssetLocation,
+    
     game.ServerScriptService.Project.Product.ProductProvider,
     game.ServerScriptService.Project.Cosmetics.Pet.PetProvider,
     game.ServerScriptService.Project.Cosmetics.Trail.TrailProvider,

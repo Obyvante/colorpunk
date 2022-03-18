@@ -96,6 +96,16 @@ end
 function class:remove(_uid : string, _packet : boolean)
     -- Object nil checks.
     assert(_uid ~= nil, "Player pet unique id cannot be null")
+
+    -- Gets player pet.
+    local _pet = self:find(_uid)
+    -- If player pet is not exist, no need to continue.
+    if not _pet then return end
+
+    -- Despawn player pet entity.
+    _pet:despawnEntity()
+
+    -- Removes it from the cache.
     self.content[_uid] = nil
 
     -- Sends update packet.

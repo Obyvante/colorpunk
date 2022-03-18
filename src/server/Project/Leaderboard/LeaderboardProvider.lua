@@ -3,8 +3,8 @@ local class = {}
 local Leaderboard = require(script.Parent.Leaderboard)
 local Library = require(game.ReplicatedStorage.Library.Library)
 local TaskService = Library.getService("TaskService")
+local TableService = Library.getService("TableService")
 -- STARTS
-
 
 
 ------------------------
@@ -26,6 +26,12 @@ class.Locations = {
     },
     Money = {
         Self = game.Workspace.World.Lobby["Top Lists"]["3"].Leaderboard.SurfaceGui.screen.body
+    },
+
+    Stand = {
+        [1] = game.Workspace.World.Lobby["Rank Stands"]["Rig"]["1"],
+        [2] = game.Workspace.World.Lobby["Rank Stands"]["Rig"]["2"],
+        [3] = game.Workspace.World.Lobby["Rank Stands"]["Rig"]["3"]
     }
 }
 
@@ -33,9 +39,24 @@ class.Locations = {
 -- VARIABLES (ENDS)
 ------------------------
 
+
 ------------------------
 -- METHODS (STARTS)
 ------------------------
+
+-- Updates rank stands.
+function class.updateRankStands()
+    task.spawn(function()
+        -- Gets winner content.
+        local content = TableService.values(class.content.Win:getContent())
+
+        -- Updates leaderboard stands.
+        for i = 1, 3, 1 do
+            local appearance = game.Players:GetHumanoidDescriptionFromUserId(tonumber(content[i].id))
+            class.Locations.Stand[i].Humanoid:ApplyDescription(appearance)
+        end
+    end)
+end
 
 -- Resets leaderboard building.
 function class.reset()
@@ -93,6 +114,9 @@ TaskService.createRepeating(90, function(_task)
         -- Updates leaderboard buildings.
         for position, data in pairs(value:getContent()) do class.write(key, tonumber(position), data) end
     end
+
+    -- Updates rank stands.
+    class.updateRankStands()
 end):run()
 
 ------------------------
