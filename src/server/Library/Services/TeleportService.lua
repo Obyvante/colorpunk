@@ -53,8 +53,11 @@ function class.teleport(_player : Player, _location : Vector3, _orientation : Ve
 		task.wait(0.2)
 		if _player == nil then return end
 
+		-- Declares required fields.
 		character = _player.Character
+		if not character then return end
 		humanoid = _player.Character.Humanoid
+		if not humanoid then return end
 
 		-- Unfreezes character
 		if walk_speed > 0 and humanoid.WalkSpeed == 0 then humanoid.WalkSpeed = walk_speed end

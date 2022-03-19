@@ -13,79 +13,47 @@ class.content = {
     },
     [2] = {
         Duration = 7,
-        Money = 2
+        Money = 10
     },
     [3] = {
         Duration = 6,
-        Money = 4
+        Money = 20
     },
     [4] = {
         Duration = 5,
-        Money = 6
+        Money = 30
     },
     [5] = {
         Duration = 5,
-        Money = 8
+        Money = 40
     },
     [6] = {
         Duration = 5,
-        Money = 10
-    },
-    [7] = {
-        Duration = 5,
-        Money = 14
-    },
-    [8] = {
-        Duration = 5,
-        Money = 18
-    },
-    [9] = {
-        Duration = 5,
-        Money = 22
-    },
-    [10] = {
-        Duration = 5,
-        Money = 26
-    },
-    [11] = {
-        Duration = 4,
-        Money = 35
-    },
-    [12] = {
-        Duration = 4,
-        Money = 40
-    },
-    [13] = {
-        Duration = 4,
-        Money = 45
-    },
-    [14] = {
-        Duration = 4,
         Money = 50
     },
-    [15] = {
+    [7] = {
         Duration = 4,
-        Money = 56
+        Money = 60
     },
-    [16] = {
-        Duration = 3,
-        Money = 72
+    [8] = {
+        Duration = 4,
+        Money = 80
     },
-    [17] = {
-        Duration = 3,
-        Money = 79
-    },
-    [18] = {
-        Duration = 3,
-        Money = 90
-    },
-    [19] = {
-        Duration = 2,
+    [9] = {
+        Duration = 4,
         Money = 100
     },
-    [20] = {
-        Duration = 2,
+    [10] = {
+        Duration = 3,
         Money = 125
+    },
+    [11] = {
+        Duration = 3,
+        Money = 150
+    },
+    [12] = {
+        Duration = 2,
+        Money = 200
     }
 }
 
@@ -106,7 +74,7 @@ end
 -- @return Total earned money.
 function class.totalEarnedMoney(_round : number, _multiple : number)
     local summary = 0
-    for i = 1, math.min(_round, 20), 1 do
+    for i = 1, math.min(_round, 12), 1 do
         summary += class.content[i].Money * (_multiple or 1)
     end
     return summary

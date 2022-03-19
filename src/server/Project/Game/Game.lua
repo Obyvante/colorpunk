@@ -44,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 4
+    MINIMUM_PLAYER = 2
 }
 
 ------------------------
@@ -141,7 +141,7 @@ function class.reset()
     }
     class.Starting = {
         Timer = {
-            Duration = 45,
+            Duration = 20,
             Current = 0
         }
     }
@@ -183,7 +183,6 @@ function class.removeFromParticipants(_player : Player)
     -- Declares required fields.
     local _productMoneyBooster = Library.getService("ProductProvider").findByName("Money Booster")
     local _roundIndex = if GameRound.get(class.Round.Current) then class.Round.Current else class.Round.Current - 1
-    local _round = GameRound.get(class.Round.Current) or GameRound.get(class.Round.Current - 1)
 
     for index, _participant in pairs(class.Participants) do
         if _player == _participant then
@@ -194,7 +193,7 @@ function class.removeFromParticipants(_player : Player)
             if player == nil then break end
                 
             -- Declares required fields.
-            local _products = _player:getInventory():getProduct()
+            local _products = player:getInventory():getProduct()
             local _multiple = _products:has(_productMoneyBooster:getId())
             local _totalEarnedGold = GameRound.totalEarnedMoney(class.Round.Current - 1, if _multiple then 2 else 1)
 

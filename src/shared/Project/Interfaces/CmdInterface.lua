@@ -54,7 +54,7 @@ local commandLine = panel:addElement({
 })
 
 -- Line.
-local command_line = commandLine:addElement({
+commandLine:addElement({
     Name = "line",
     Type = "TextBox",
     Properties = {
@@ -69,7 +69,7 @@ local command_line = commandLine:addElement({
         TextColor3 = Color3.fromRGB(255, 255, 255),
         Font = "Code",
         TextScaled = true,
-        Text = "/give dberketurkmen Foreseeing Goggles"
+        Text = ""
     },
     Events = {
         {

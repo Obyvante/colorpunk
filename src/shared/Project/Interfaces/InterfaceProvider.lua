@@ -93,7 +93,7 @@ InventoryUpdateEvent.OnClientEvent:Connect(class.InventoryUpdate)
 
 local click = 0
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-    if input.KeyCode == Enum.KeyCode.F10 then
+    if input.KeyCode == Enum.KeyCode.F8 then
         click += 1
         if click >= 3 then
             -- Declares required fields.

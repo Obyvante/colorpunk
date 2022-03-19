@@ -30,13 +30,6 @@ function class.loadDefaultInterfaces()
 
     -- Updates every 0.5 seconds.
     TaskService.createRepeating(0.5, function(_task)
-        game_ui:getElementByPath("bottom_body.body_speed.text"):updateProperties({
-            Text = "x" .. string.format("%0.2f", 1 + ClientPlayer.getStats().get("WALK_SPEED"))
-        })
-        game_ui:getElementByPath("bottom_body.body_jump.text"):updateProperties({
-            Text = "x" .. string.format("%0.2f", 1 + ClientPlayer.getStats().get("JUMP_HEIGHT"))
-        })
-
         game_ui:getElementByPath("right_body.body_rank.text"):updateProperties({
             Text = ClientPlayer.getRank() == -1
             and "-"

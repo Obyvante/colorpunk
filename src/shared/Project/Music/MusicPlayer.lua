@@ -82,7 +82,7 @@ task.spawn(function()
 
         -- If there is a song currently playing, no need to continue.
         if class.Playing ~= nil then
-            class.Playing.Volume = if ClientPlayer.getSettings().get("MUSIC") then 0.5 else 0
+            class.Playing.Volume = if ClientPlayer.getSettings().get("MUSIC") == 1 then 0.5 else 0
             continue
         end
 

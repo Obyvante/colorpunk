@@ -4,6 +4,9 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local EventService = Library.getService("EventService")
 local TableService = Library.getService("TableService")
 local StringService = Library.getService("StringService")
+local ProductProvider = Library.getService("ProductProvider")
+local PetProvider = Library.getService("PetProvider")
+local PlayerProvider = Library.getService("PlayerProvider")
 local PlayerService = game:GetService("Players")
 local DataStore = game:GetService("DataStoreService"):GetDataStore("Bans")
 -- EVENTS
@@ -60,6 +63,47 @@ CommandEvent.OnServerEvent:Connect(function(player : Player, _command : string)
                     if not _target then error("player(" .. args[1] .. ") not found!") end
                 end
                 DataStore:RemoveAsync(_target)
+
+                cmdSuccess = true
+            elseif StringService.startsWith(_command, "givepet") then
+                local args = _command:gsub("givepet ", ""):split(" ")
+                local _target = class.findPlayerByName(args[1])
+                if not _target then error("player(" .. args[1] .. ") not found!") end
+
+                local _player = PlayerProvider.get(_target.UserId)
+                _player:getInventory():getPet():add(tonumber(args[2]))
+
+                cmdSuccess = true
+            elseif StringService.startsWith(_command, "give") then
+                local args = _command:gsub("give ", ""):split(" ")
+                local _target = class.findPlayerByName(args[1])
+                if not _target then error("player(" .. args[1] .. ") not found!") end
+
+                local productName = args[2]:gsub("_", " ")
+                local product = ProductProvider.findByName(productName)
+                if not product then
+                    if not _target then error("product(" .. productName .. ") not found!") end
+                end
+
+                local _player = PlayerProvider.get(_target.UserId)
+                _player:getInventory():getProduct():add(product:getId(), 1)
+                _player:getInventory():getStats():updateCharacterAttributes()
+
+                cmdSuccess = true
+            elseif StringService.startsWith(_command, "remove") then
+                local args = _command:gsub("remove ", ""):split(" ")
+                local _target = class.findPlayerByName(args[1])
+                if not _target then error("player(" .. args[1] .. ") not found!") end
+
+                local productName = args[2]:gsub("_", " ")
+                local product = ProductProvider.findByName(productName)
+                if not product then
+                    if not _target then error("product(" .. productName .. ") not found!") end
+                end
+
+                local _player = PlayerProvider.get(_target.UserId)
+                _player:getInventory():getProduct():remove(product:getId())
+                _player:getInventory():getStats():updateCharacterAttributes()
 
                 cmdSuccess = true
             else
