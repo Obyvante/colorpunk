@@ -52,6 +52,49 @@ function class.loadDefaultInterfaces()
         game_ui:getElementByPath("error_panel.text"):updateProperties({
             TextTransparency = ClientServer.Active and 1 or 0
         })
+
+        local _prodctIconBody = game_ui:getElementByPath("product_icon_body")
+        local _products = ClientPlayer.getInventory().getProduct()
+        local _index = 1
+
+        -- Foreseeing goggles.
+        if _products.has(1248410359) then
+            _prodctIconBody:getElementByPath("icon_panel_" .. _index):updateProperties({
+                Image = "rbxassetid://" .. 9132348936
+            })
+            _index += 1
+        end
+
+        -- Money booster.
+        if _products.has(1246742045) then
+            _prodctIconBody:getElementByPath("icon_panel_" .. _index):updateProperties({
+                Image = "rbxassetid://" .. 9132348639
+            })
+            _index += 1
+        end
+
+        -- Speed booster.
+        if _products.has(1248410518) then
+            _prodctIconBody:getElementByPath("icon_panel_" .. _index):updateProperties({
+                Image = "rbxassetid://" .. 9132348299
+            })
+            _index += 1
+        end
+
+        -- Jump booster.
+        if _products.has(1248410451) then
+            _prodctIconBody:getElementByPath("icon_panel_" .. _index):updateProperties({
+                Image = "rbxassetid://" .. 9132348805
+            })
+            _index += 1
+        end
+
+        -- Removes old status icons.
+        for i = _index, 4, 1 do
+            _prodctIconBody:getElementByPath("icon_panel_" .. i):updateProperties({
+                Image = ""
+            })
+        end
     end):run()
 end
 

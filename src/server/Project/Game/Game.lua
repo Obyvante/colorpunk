@@ -76,7 +76,7 @@ end
 -- Handles winners.
 function class.winners()
     -- Declares required fields.
-    local _productMoneyBooster = Library.getService("ProductProvider"):findByName("Money Booster")
+    local _productMoneyBooster = Library.getService("ProductProvider").findByName("Money Booster")
     local _roundIndex = if GameRound.get(class.Round.Current) then class.Round.Current else class.Round.Current - 1
     local _round = GameRound.get(class.Round.Current) or GameRound.get(class.Round.Current - 1)
 
@@ -141,7 +141,7 @@ function class.reset()
     }
     class.Starting = {
         Timer = {
-            Duration = 90,
+            Duration = 45,
             Current = 0
         }
     }
@@ -192,10 +192,10 @@ function class.removeFromParticipants(_player : Player)
             if player == nil then break end
 
             -- Statistics.
-            _player:getStatistics():add("LOSE", 1)
-            _player:getStatistics():add("GAME_PLAYED", 1)
-            _player:getStatistics():add("ROUND_PLAYED", _roundIndex)
-            _player:getStatistics():add("GAME_PLAYTIME", os.time() - class.StartTime)
+            player:getStatistics():add("LOSE", 1)
+            player:getStatistics():add("GAME_PLAYED", 1)
+            player:getStatistics():add("ROUND_PLAYED", _roundIndex)
+            player:getStatistics():add("GAME_PLAYTIME", os.time() - class.StartTime)
             -- Statistics. [GLOBAL]
             StatisticsProvider.addGame("GAME_PLAYTIME", os.time() - class.StartTime)
 
@@ -385,7 +385,7 @@ local game_loop_func = function()
         if class.Falling.Timer < class.Falling.Duration then return end
 
         -- Declares required fields.
-        local _productMoneyBooster = Library.getService("ProductProvider"):findByName("Money Booster")
+        local _productMoneyBooster = Library.getService("ProductProvider").findByName("Money Booster")
 
         for _, player in pairs(class.Participants) do
             local _player = PlayerProvider.find(player.UserId)

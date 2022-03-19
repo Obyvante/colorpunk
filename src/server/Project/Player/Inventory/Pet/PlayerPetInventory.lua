@@ -14,22 +14,22 @@ local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
 
 class.EntityPositions = {
     [4] = {
-        [1] = Vector3.new(0, 2, 8), -- MIDDLE
-        [2] = Vector3.new(-4, 2, 12), -- LEFT
-        [3] = Vector3.new(4, 2, 12), -- RIGHT
-        [4] = Vector3.new(0, 2, 15) -- BACK
+        [1] = Vector3.new(0, 2, 4), -- MIDDLE
+        [2] = Vector3.new(-2, 2, 6), -- LEFT
+        [3] = Vector3.new(2, 2, 6), -- RIGHT
+        [4] = Vector3.new(0, 2, 8) -- BACK
     },
     [3] = {
-        [1] = Vector3.new(0, 2, 8), -- MIDDLE
-        [2] = Vector3.new(-4, 2, 12), -- LEFT
-        [3] = Vector3.new(4, 2, 12), -- RIGHT
+        [1] = Vector3.new(0, 2, 4), -- MIDDLE
+        [2] = Vector3.new(-2, 2, 6), -- LEFT
+        [3] = Vector3.new(2, 2, 6), -- RIGHT
     },
     [2] = {
-        [1] = Vector3.new(3, 2, 8), -- MIDDLE
-        [2] = Vector3.new(-3, 2, 8), -- LEFT
+        [1] = Vector3.new(1, 2, 4), -- MIDDLE
+        [2] = Vector3.new(-1, 2, 4), -- LEFT
     },
     [1] = {
-        [1] = Vector3.new(0, 2, 8), -- MIDDLE
+        [1] = Vector3.new(0, 2, 4), -- MIDDLE
     }
 }
 

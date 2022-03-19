@@ -115,7 +115,7 @@ function class.load(pist_id, target_color)
 				if (target_color == brick_color) then continue end
 
 				-- Sets transparency.
-				target_block.Transparency = 0.7
+				target_block.Transparency = 0.85
 			end
 		end
 	end

@@ -588,5 +588,52 @@ createBottomPanel(bottom_body, "jump", Vector2.new(656, 0), {
 ------------------------
 
 
+------------------------
+-- PRODUCT ICONS PANEL (STARTS)
+------------------------
+
+-- Bottom base body.
+local product_icon_body = interface:addElement({
+    Name = "product_icon_body",
+    Type = "Frame",
+    Properties = {
+        Custom = {
+            Position = Vector2.new(50, 1960),
+            Size = Vector2.new(720, 150)
+        },
+
+        AnchorPoint = Vector2.new(1, 1),
+        BorderSizePixel = 0,
+        BackgroundTransparency = 1
+    },
+
+    BuildWith = {
+        "AspectRatio"
+    }
+})
+
+-- Adds icons to the panel.
+for i = 1, 4, 1 do
+    product_icon_body:addElement({
+        Name = "icon_panel_" .. i,
+        Type = "ImageLabel",
+        Properties = {
+            Custom = {
+                Position = Vector2.new((i - 1) * 190, 0),
+                Size = Vector2.new(150, 150)
+            },
+            AnchorPoint = Vector2.new(0.5, 0.5),
+            BorderSizePixel = 0,
+            BackgroundTransparency = 1,
+            ImageTransparency = 0
+        }
+    })
+end
+
+------------------------
+-- PRODUCT ICONS PANEL (ENDS)
+------------------------
+
+
 -- ENDS
 return class
