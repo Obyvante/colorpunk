@@ -151,46 +151,55 @@ local signal_player_leave = SignalService.create("PlayerLeave")
 
 -- Connects actual event.
 signal_player_join:connect(function(player)
-    -- Handles exception.
-    local success, message = pcall(function()
-        -- Safety check.
-        local _player = class.find(player.UserId)
-        if _player then return end
+    task.spawn(function()
+        local _retries = 0
+        while _retries < 5 do
+            -- Handles exception.
+            local success, message = pcall(function()
+                -- Safety check.
+                local _player = class.find(player.UserId)
+                if _player then return end
 
-        -- Restoration.
-        local _table = DataStore:GetAsync("player:" .. player.UserId)
-        local _restored = _table ~= nil
+                -- Restoration.
+                local _table = DataStore:GetAsync("player:" .. player.UserId)
+                local _restored = _table ~= nil
 
-        -- Content process.
-        _table = _table == nil and PlayerHTTP.handle(player.UserId, player.Name) or _table
-        _player = Player.new(_table)
-        content[_table.id] = _player
+                -- Content process.
+                _table = _table == nil and PlayerHTTP.handle(player.UserId, player.Name) or _table
+                _player = Player.new(_table)
+                content[_table.id] = _player
 
-        -- Handles restoration.
-        if _restored then
-            -- Informs.
-            warn("Player(" .. player.UserId .. ") restored!")
-            -- Removes player backup from the data store.
-            DataStore:RemoveAsync("player:" .. player.UserId)
+                -- Handles restoration.
+                if _restored then
+                    -- Informs.
+                    warn("Player(" .. player.UserId .. ") restored!")
+                    -- Removes player backup from the data store.
+                    DataStore:RemoveAsync("player:" .. player.UserId)
+                end
+
+                -- Statistics.
+                StatisticsProvider.addGame("PLAYER_JOINED", 1)
+                if _table.new then StatisticsProvider.addGame("UNIQUE_PLAYER_JOINED", 1) end
+            end)
+
+            -- Informs server about player.
+            if not success then
+                warn("Player(" .. player.UserId .. ") couldn't loaded from the backend! (signal) -> " .. message)
+
+                -- Statistics.
+                StatisticsProvider.addGame("FAILED_PLAYER_JOIN_REQUEST", 1)
+            else
+                break
+            end
+            _retries += 1
+            task.wait(0.2)
         end
-
-        -- Statistics.
-        StatisticsProvider.addGame("PLAYER_JOINED", 1)
-        if _table.new then StatisticsProvider.addGame("UNIQUE_PLAYER_JOINED", 1) end
     end)
-
-    -- Informs server about player.
-    if not success then
-        warn("Player(" .. player.UserId .. ") couldn't loaded from the backend! (signal) -> " .. message)
-
-        -- Statistics.
-        StatisticsProvider.addGame("FAILED_PLAYER_JOIN_REQUEST", 1)
-    end
 end)
 
 -- Fires player join signal when player join.
 PlayersService.PlayerAdded:Connect(function(player)
-    task.spawn(function() signal_player_join:fire(player) end)
+    signal_player_join:fire(player)
 end)
 
 -- Handles player leave.

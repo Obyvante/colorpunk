@@ -179,13 +179,13 @@ function class.handlePurchase(_player : Player, _id : string)
         end
 
         -- Handles palyer currency.
-        if player:getCurrencies():get("GOLD") < 300 then
+        if player:getCurrencies():get("GOLD") < 3000 then
             class.error(_player, class.Messages.CurrencyError)
             return
         end
 
         -- Removes currency from player.
-        player:getCurrencies():remove("GOLD", 300)
+        player:getCurrencies():remove("GOLD", 3000)
         Library.getService("CosmeticProvider").openCase(_player, "Basic Egg")
         return
     end

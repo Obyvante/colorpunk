@@ -20,6 +20,9 @@ if not game.Loaded then game.Loaded:Wait() end
 -- Loads character.
 require(script.Parent.Load.CharacterLoad)
 
+-- Loads assets.
+require(script.Parent.Load.AssetsLoad)
+
 -- Loads player.
 require(script.Parent.Load.PlayerLoad)
 local ClientPlayer = require(game.ReplicatedStorage.Project.Player.ClientPlayer)

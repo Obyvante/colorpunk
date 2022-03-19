@@ -118,7 +118,8 @@ TaskService.createRepeating(90, function(_task)
     end
 
     -- Updates rank stands.
-    class.updateRankStands()
+    -- TODO: will open when it's done.
+    --class.updateRankStands()
 end):run()
 
 ------------------------

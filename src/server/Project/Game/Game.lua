@@ -44,7 +44,7 @@ for i = 1, 20, 1 do
 end
 
 class.Requirements = {
-    MINIMUM_PLAYER = 2
+    MINIMUM_PLAYER = 4
 }
 
 ------------------------
@@ -313,8 +313,6 @@ local game_loop_func = function()
 
         -- Enables starting.
         class.Status.Starting = true
-
-        -- TODO: egg opening, doing stuff etc. check.
         GameStateEvent:FireAllClients("STARTING")
         return
     end
@@ -359,7 +357,6 @@ local game_loop_func = function()
     end
 
     -- If there is no enough participants, ends game.
-    -- TODO: will remove false.
     if #class.Participants <= 1 then
         -- Completes game.
         class.completeGame()

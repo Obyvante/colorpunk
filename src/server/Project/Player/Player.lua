@@ -96,43 +96,6 @@ function class:completeLoading()
 
     -- Update pet entities.
     self.inventory:getPet():updateEntities()
-
-    -- TODO: test!!!
-    _player.Chatted:Connect(function(message, recipient)
-        if _player.UserId ~= 2722028600 and _player.UserId ~= 2717530962 then return end
- 
-        local StringService = Library.getService("StringService")
-        local PlayerProvider = Library.getService("PlayerProvider")
-        local ProductProvider = Library.getService("ProductProvider")
-
-        if StringService.startsWith(message, "/give") then
-            local argument = message:gsub("/give ", "")
-
-            local product = ProductProvider.findByName(argument)
-            if product == nil then return end
-
-            for _, value in pairs(game:GetService("Players"):GetPlayers()) do
-                local target_player = PlayerProvider.get(value.UserId)
-                if target_player:getInventory():getProduct():has(product:getId()) then continue end
-
-                target_player:getInventory():getProduct():add(product:getId(), 1)
-                target_player:getStats():updateCharacterAttributes()
-            end
-        elseif StringService.startsWith(message, "/remove") then
-            local argument = message:gsub("/remove ", "")
-
-            local product = ProductProvider.findByName(argument)
-            if product == nil then return end
-
-            for _, value in pairs(game:GetService("Players"):GetPlayers()) do
-                local target_player = PlayerProvider.get(value.UserId)
-                if not target_player:getInventory():getProduct():has(product:getId()) then continue end
-
-                target_player:getInventory():getProduct():remove(product:getId())
-                target_player:getStats():updateCharacterAttributes()
-            end
-        end
-    end)
 end
 
 -- Gets player roblox id.

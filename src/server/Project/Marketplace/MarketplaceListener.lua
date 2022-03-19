@@ -101,7 +101,7 @@ Would you like to buy?
             Title = [[SHOP]],
             Message =
 [[
-Buy and open a Basic Egg for 300 Money?
+Buy and open a Basic Egg for 3,000 Money?
 ]]
         })
     end

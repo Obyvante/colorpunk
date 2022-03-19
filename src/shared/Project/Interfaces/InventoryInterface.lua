@@ -31,7 +31,9 @@ local asset_ids = {
         PET = 9115355344,
 
         UNEQUIP = 9115354880,
-        TRASH = 9115355041
+        TRASH = 9115355041,
+
+        ACCEPT = 9132658393,
     },
     BUTTON = {
         EXIT = 9115356106
@@ -448,7 +450,7 @@ local delete_footer_icon = delete_footer_panel:addElement({
         BackgroundTransparency = 1,
         ImageTransparency = 1,
 
-        Image = "rbxassetid://" .. asset_ids.BUTTON.EXIT
+        Image = "rbxassetid://" .. asset_ids.ICON.ACCEPT
     }
 })
 -- Button.
