@@ -107,7 +107,7 @@ function class.winners()
 
         -- Shows summary screen for player.
         InterfaceOpenEvent:FireClient(player, "summary", {
-            ROUND_PLAYED = class.Round.Current,
+            ROUND_PLAYED = _roundIndex,
             GOLD_EARNED = _totalEarnedGold,
             RANK = 1
         })
@@ -181,7 +181,9 @@ end
 -- @param _player Roblox player.
 function class.removeFromParticipants(_player : Player)
     -- Declares required fields.
+    local _productMoneyBooster = Library.getService("ProductProvider").findByName("Money Booster")
     local _roundIndex = if GameRound.get(class.Round.Current) then class.Round.Current else class.Round.Current - 1
+    local _round = GameRound.get(class.Round.Current) or GameRound.get(class.Round.Current - 1)
 
     for index, _participant in pairs(class.Participants) do
         if _player == _participant then
@@ -190,6 +192,11 @@ function class.removeFromParticipants(_player : Player)
             -- Gets player.
             local player = PlayerProvider.find(_player.UserId)
             if player == nil then break end
+                
+            -- Declares required fields.
+            local _products = _player:getInventory():getProduct()
+            local _multiple = _products:has(_productMoneyBooster:getId())
+            local _totalEarnedGold = GameRound.totalEarnedMoney(class.Round.Current - 1, if _multiple then 2 else 1)
 
             -- Statistics.
             player:getStatistics():add("LOSE", 1)
@@ -201,8 +208,8 @@ function class.removeFromParticipants(_player : Player)
 
             -- Shows summary screen for player..
             InterfaceOpenEvent:FireClient(_player, "summary", {
-                ROUND_PLAYED = class.Round.Current - 1,
-                GOLD_EARNED = GameRound.totalEarnedMoney(class.Round.Current - 1),
+                ROUND_PLAYED = _roundIndex - 1,
+                GOLD_EARNED = _totalEarnedGold,
                 RANK = #class.Participants + 1
             })
             break

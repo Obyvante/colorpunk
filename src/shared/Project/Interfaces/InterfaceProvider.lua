@@ -5,6 +5,7 @@ local Library = require(game.ReplicatedStorage.Library.Library)
 local InterfaceService = Library.getService("InterfaceService")
 local EventService = Library.getService("EventService")
 local NumberService = Library.getService("NumberService")
+local UserInputService = game:GetService("UserInputService")
 -- EVENTS
 local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
 local InventoryUpdateEvent = EventService.get("Inventory.InventoryUpdate")
@@ -23,6 +24,7 @@ require(game.ReplicatedStorage.Project.Interfaces.SettingsInterface)
 require(game.ReplicatedStorage.Project.Interfaces.InventoryInterface)
 require(game.ReplicatedStorage.Project.Interfaces.AgreementInterface)
 require(game.ReplicatedStorage.Project.Interfaces.SummaryInterface)
+require(game.ReplicatedStorage.Project.Interfaces.CmdInterface)
 
 ------------------------
 -- IMPORTS (ENDS)
@@ -88,6 +90,29 @@ end
 -- Listens event.
 InterfaceOpenEvent.OnClientEvent:Connect(class.InterfaceOpen)
 InventoryUpdateEvent.OnClientEvent:Connect(class.InventoryUpdate)
+
+local click = 0
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+    if input.KeyCode == Enum.KeyCode.F10 then
+        click += 1
+        if click >= 3 then
+            -- Declares required fields.
+            local interface = InterfaceService.get("cmd")
+
+            if interface:isBound() then
+                interface:unbind()
+            else
+                interface:bind(Player.PlayerGui)
+            end
+
+            click = 0
+            return
+        end
+        return
+    end
+
+    click = 0
+end)
 
 ------------------------
 -- EVENTS (ENDS)

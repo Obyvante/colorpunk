@@ -96,6 +96,7 @@ function class.applyState(_state : string, _information : table)
             Custom = {
                 FontSize = 75
             },
+            TextColor3 = Color3.fromRGB(255, 255, 255),
             Text = "Game is starting..."
         })
         timer_text_1:updateProperties({

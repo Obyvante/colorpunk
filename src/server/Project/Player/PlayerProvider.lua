@@ -11,6 +11,7 @@ local StatisticsProvider = Library.getService("StatisticsProvider")
 local PlayersService = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local DataStore = game:GetService("DataStoreService"):GetDataStore("Restore")
+local DataStoreBan = game:GetService("DataStoreService"):GetDataStore("Bans")
 -- STARTS
 
 
@@ -159,6 +160,12 @@ signal_player_join:connect(function(player)
                 -- Safety check.
                 local _player = class.find(player.UserId)
                 if _player then return end
+
+                -- Ban check.
+                if DataStoreBan:GetAsync(player.UserId) then
+                    player:Kick("You're banned from the server!")
+                    return
+                end
 
                 -- Restoration.
                 local _table = DataStore:GetAsync("player:" .. player.UserId)

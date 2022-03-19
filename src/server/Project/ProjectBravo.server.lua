@@ -20,7 +20,9 @@ local PATHS = {
     game.ServerScriptService.Project.Statistics.StatisticsProvider,
     game.ServerScriptService.Project.Transaction.Transaction,
 
-    game.ServerScriptService.Project.Server.Server
+    game.ServerScriptService.Project.Command.CommandHandler,
+
+    game.ServerScriptService.Project.Server.Server,
 }
 
 ------------------------
