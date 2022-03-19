@@ -239,48 +239,10 @@ local button_exit = background:addElement({
     Events = {
         {
             Name = "click",
-            Event = "InputEnded",
+            Event = "InputBegan",
             Consumer = function(_binder, _event)
                 if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
                 interface:unbind()
-            end
-        },
-        {
-            Name = "begin",
-            Event = "InputEnded",
-            Consumer = function(_binder, _event)
-                if _event.UserInputType ~= Enum.UserInputType.MouseMovement then return end
-
-                local parent = _binder:getParent()
-                local data = {}
-                data.size = parent:getSize()
-                data.position = parent:getPosition()
-
-                local difference = (data.size - (data.size * 1.2)) / 2
-                local planned_size = data.size * 1.2
-                local planned_position = Vector2.new(data.position.X + difference.X, data.position.Y + difference.Y)
-                
-                parent:setSize(planned_size.X, planned_size.Y)
-                parent:setPosition(planned_position.X, planned_position.Y)
-            end
-        },
-        {
-            Name = "end",
-            Event = "InputEnded",
-            Consumer = function(_binder, _event)
-                if _event.UserInputType ~= Enum.UserInputType.MouseMovement then return end
-                
-                local parent = _binder:getParent()
-                local data = {}
-                data.size = parent:getSize()
-                data.position = parent:getPosition()
-                
-                local difference = (data.size - (data.size / 1.2)) / 2
-                local planned_size = data.size / 1.2
-                local planned_position = Vector2.new(data.position.X + difference.X, data.position.Y + difference.Y)
-
-                parent:setSize(planned_size.X, planned_size.Y)
-                parent:setPosition(planned_position.X, planned_position.Y)
             end
         }
     }
@@ -338,7 +300,7 @@ VFX
 -- Switch.
 local vfx_switch = background:addElement(createSwitch("VFX", Vector2.new(395, 357), ClientPlayer.getSettings().asBoolean("VFX")))
 -- Handles switch click event.
-vfx_switch:getEventBinder():bind(vfx_switch:getInstance().InputEnded, {
+vfx_switch:getEventBinder():bind(vfx_switch:getInstance().InputBegan, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(vfx_switch, "VFX", _binder, _event) end
 })
@@ -399,7 +361,7 @@ SOUND
 -- Switch.
 local music_switch = background:addElement(createSwitch("MUSIC", Vector2.new(1342, 356), ClientPlayer.getSettings().asBoolean("MUSIC")))
 -- Handles switch click event.
-music_switch:getEventBinder():bind(music_switch:getInstance().InputEnded, {
+music_switch:getEventBinder():bind(music_switch:getInstance().InputBegan, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(music_switch, "MUSIC", _binder, _event) end
 })
@@ -460,7 +422,7 @@ SCREEN
 -- Switch.
 local warning_switch = background:addElement(createSwitch("WARNING", Vector2.new(395, 765), ClientPlayer.getSettings().asBoolean("SKIP_WARNING_SCREEN")))
 -- Handles switch click event.
-warning_switch:getEventBinder():bind(warning_switch:getInstance().InputEnded, {
+warning_switch:getEventBinder():bind(warning_switch:getInstance().InputBegan, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(warning_switch, "SKIP_WARNING_SCREEN", _binder, _event) end
 })
@@ -521,7 +483,7 @@ ACCEPT
 -- Switch.
 local auto_accept_switch = background:addElement(createSwitch("AUTO_ACCEPT", Vector2.new(1342, 764), ClientPlayer.getSettings().asBoolean("AUTO_ACCEPT_MATCH")))
 -- Handles switch click event.
-auto_accept_switch:getEventBinder():bind(auto_accept_switch:getInstance().InputEnded, {
+auto_accept_switch:getEventBinder():bind(auto_accept_switch:getInstance().InputBegan, {
     Name = "click",
     Consumer = function(_binder, _event) switchClick(auto_accept_switch, "AUTO_ACCEPT_MATCH", _binder, _event) end
 })

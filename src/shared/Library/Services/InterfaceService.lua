@@ -1,5 +1,6 @@
 local class = {}
 -- IMPORTS
+local UserInputService = game:GetService("UserInputService")
 local Interface = require(game:GetService("ReplicatedStorage"):WaitForChild("Library"):WaitForChild("Interface"):WaitForChild("Interface"))
 -- STARTS
 
@@ -138,8 +139,8 @@ end
 -- @param _state Input state
 -- @return If it is clicked or not.
 function class.isClicked(_type : Enum, _state : Enum)
-    if _state ~= Enum.UserInputState.Begin and _state ~= Enum.UserInputState.End then return false end
-    return _type == Enum.UserInputType.MouseButton1 or _type == Enum.UserInputType.Touch
+    return (_type == Enum.UserInputType.MouseButton1 or _type == Enum.UserInputType.Touch)
+    and _state == Enum.UserInputState.Begin
 end
 
 

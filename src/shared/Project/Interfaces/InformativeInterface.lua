@@ -47,7 +47,7 @@ function createButton(_parent, _name : string, _position : Vector2)
         Events = {
             {
                 Name = "exit",
-                Event = "InputEnded",
+                Event = "InputBegan",
                 Consumer = function(_binder, _event)
                     if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
                     InterfaceService.get("informative"):unbind()

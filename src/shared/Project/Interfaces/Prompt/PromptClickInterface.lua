@@ -62,7 +62,7 @@ function class.create(_parent : Instance, _prompt : ProximityPrompt, _input : En
             },
             {
                 Name = "click_ended",
-                Event = "InputEnded",
+                Event = "InputBegan",
                 Consumer = function(_binder, _event)
                     if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
                     _prompt:InputHoldEnd()

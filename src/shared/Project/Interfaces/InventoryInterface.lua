@@ -89,7 +89,7 @@ function createBodyPanel(_parent, _name : string, _position : Vector2, _status :
         Events = {
             {
                 Name = "click",
-                Event = "InputEnded",
+                Event = "InputBegan",
                 Consumer = function(_binder, _event)
                     if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
                     
@@ -225,7 +225,7 @@ panel:addElement({
     Events = {
         {
             Name = "click",
-            Event = "InputEnded",
+            Event = "InputBegan",
             Consumer = function(_binder, _event)
                 if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
                 interface:unbind()
@@ -363,7 +363,7 @@ interface:addFunction("updateInventory", function(_interface)
                 _panel:updateEvents({
                     {
                         Name = "click",
-                        Event = "InputEnded",
+                        Event = "InputBegan",
                         Consumer = function(_binder, _event)
                             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 
@@ -457,7 +457,7 @@ local delete_footer_icon = delete_footer_panel:addElement({
 delete_footer_panel:updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
             if delete_footer_panel:getInstance().ImageTransparency == 1 then return end
@@ -505,7 +505,7 @@ trail_footer_panel:addElement({
 trail_footer_panel:updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
             interface:runFunction("updateCategory", "TRAIL")
@@ -537,7 +537,7 @@ feet_footer_panel:addElement({
 feet_footer_panel:updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
             interface:runFunction("updateCategory", "FEET")
@@ -569,7 +569,7 @@ pet_footer_panel:addElement({
 pet_footer_panel:updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
             interface:runFunction("updateCategory", "PET")
@@ -601,7 +601,7 @@ unequip_footer_panel:addElement({
 unequip_footer_panel:updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 
@@ -673,7 +673,7 @@ trash_footer_panel:addElement({
 trash_footer_panel:updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 

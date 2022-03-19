@@ -310,7 +310,6 @@ local top_background = interface:addElement({
         BorderSizePixel = 0,
         BackgroundTransparency = 1,
         ImageTransparency = 0,
-        Active = true,
 
         Image = "rbxassetid://" .. asset_ids.TOP.BACKGROUND
     },
@@ -446,8 +445,7 @@ local left_body = interface:addElement({
 
         AnchorPoint = Vector2.new(0, 0.5),
         BorderSizePixel = 0,
-        BackgroundTransparency = 1,
-        Active = true
+        BackgroundTransparency = 1
     },
 
     BuildWith = {
@@ -462,7 +460,7 @@ createLeftPanel(left_body, "backpack", Vector2.new(-6, -6), asset_ids.LEFT.BACKP
 left_body:getElement("body_backpack"):updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
             -- If it is not clicked, no need to continue.
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
@@ -484,13 +482,17 @@ createLeftPanel(left_body, "settings", Vector2.new(-6, 255), asset_ids.LEFT.SETT
 left_body:getElement("body_settings"):updateEvents({
     {
         Name = "click",
-        Event = "InputEnded",
+        Event = "InputBegan",
         Consumer = function(_binder, _event)
-            -- If it is not clicked, no need to continue.
             if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
 
-            local ui = InterfaceService.get("settings")
-            if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
+            if (_event.UserInputType == Enum.UserInputType.MouseButton1
+            or _event.UserInputType == Enum.UserInputType.Touch)
+            and _event.UserInputState == Enum.UserInputState.Begin then
+                local ui = InterfaceService.get("settings")
+                if ui:isBound() then ui:unbind() else ui:bind(game.Players.LocalPlayer.PlayerGui) end
+            end
+            if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
         end
     }
 })

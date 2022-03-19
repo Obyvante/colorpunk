@@ -52,7 +52,7 @@ function createButton(_parent, _name : string, _position : Vector2, _status : bo
         Events = {
             {
                 Name = "click",
-                Event = "InputEnded",
+                Event = "InputBegan",
                 Consumer = function(_binder, _event)
                     -- Listen click.
                     if not InterfaceService.isClicked(_event.UserInputType, _event.UserInputState) then return end
