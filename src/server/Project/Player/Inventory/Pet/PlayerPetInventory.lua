@@ -12,6 +12,28 @@ local PlayerUpdateEvent = EventService.get("Player.PlayerUpdate")
 -- STARTS
 
 
+class.EntityPositions = {
+    [4] = {
+        [1] = Vector3.new(0, 2, 8), -- MIDDLE
+        [2] = Vector3.new(-4, 2, 12), -- LEFT
+        [3] = Vector3.new(4, 2, 12), -- RIGHT
+        [4] = Vector3.new(0, 2, 15) -- BACK
+    },
+    [3] = {
+        [1] = Vector3.new(0, 2, 8), -- MIDDLE
+        [2] = Vector3.new(-4, 2, 12), -- LEFT
+        [3] = Vector3.new(4, 2, 12), -- RIGHT
+    },
+    [2] = {
+        [1] = Vector3.new(3, 2, 8), -- MIDDLE
+        [2] = Vector3.new(-3, 2, 8), -- LEFT
+    },
+    [1] = {
+        [1] = Vector3.new(0, 2, 8), -- MIDDLE
+    }
+}
+
+
 -- Creates a player pet inventory.
 -- @param _player Player.
 -- @param _content Player pet inventory table.
@@ -127,12 +149,24 @@ end
 
 -- Updates entities.
 function class:updateEntities()
+    -- Handles pet entity spawning and despawning.
+    for _, value in pairs(self.content) do
+        if value:isActive() and not value:getEntity() then
+            value:spawnEntity(Vector3.new(0, 0, 0))
+        elseif not value:isActive() and value:getEntity() then
+            value:despawnEntity()
+        end
+    end
+
+    -- Gets actives pets.
     local _actives = self:getContentByState(true)
-    for key, value in pairs(_actives) do
+
+    -- Handles active pet positions.
+    for index, value in pairs(_actives) do
         if not value:getEntity() then continue end
 
         -- Updates position.
-        value:getEntity():updatePosition(key, #_actives)
+        value:getEntity():updatePosition(class.EntityPositions[#_actives][index])
     end
 end
 

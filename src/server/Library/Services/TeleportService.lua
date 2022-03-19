@@ -19,7 +19,11 @@ function class.teleport(_player : Player, _location : Vector3, _orientation : Ve
 
 		-- Declares required fields.
 		local character = _player.Character
+		if not character then return end
+
 		local humanoid = _player.Character.Humanoid
+		if not humanoid then return end
+
 		local walk_speed = humanoid.WalkSpeed
 		local jump_power = humanoid.JumpPower
 

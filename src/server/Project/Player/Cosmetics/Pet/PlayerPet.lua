@@ -66,16 +66,7 @@ function class:setActive(_active : boolean)
     -- Object nil checks.
     assert(_active ~= nil, "Active status cannot be null")
     if self.active == _active then return end
-
-    -- Handles player pet entity spawning.
-    if self.active then
-        self:despawnEntity()
-    else
-        self:spawnEntity()
-    end
     self.active = _active
-
-    self.player:getInventory():getPet():updateEntities()
     return self
 end
 
@@ -85,12 +76,12 @@ function class:getEntity()
 end
 
 -- Spawns entity.
-function class:spawnEntity()
+function class:spawnEntity(_offset : Vector3)
     -- Destroys previous pet entity.
     if self.entity then self.entity:Destroy() end
 
     -- Spawns player pet entity.
-    self.entity = PlayerPetEntity.new(self)
+    self.entity = PlayerPetEntity.new(self, _offset)
 end
 
 -- Spawns entity.

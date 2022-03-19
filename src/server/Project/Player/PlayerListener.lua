@@ -159,6 +159,9 @@ PlayerRequestEvent.OnServerEvent:Connect(function(_player, _type, _packet)
                 _pet:setActive(value.STATE)
             end
 
+            -- Updates entity positions.
+            player:getInventory():getPet():updateEntities()
+
             -- Sends update about pet states.
             player:getInventory():getPet():_sendUpdatePacket()
             -- Updates client player inventory.

@@ -121,7 +121,7 @@ player_load.OnServerEvent:Connect(function(player)
 
         -- If player is left the experience, no need to continue.
         if player == nil then return end
-        
+
         -- Gets player again to make sure it is online.
         _player = class.find(player.UserId)
         if _player == nil then return end
@@ -195,9 +195,6 @@ end)
 
 -- Handles player leave.
 PlayersService.PlayerRemoving:Connect(function(player)
-    -- Statistics.
-    StatisticsProvider.addGame("PLAYER_LEFT", 1)
-
     -- First player leave signal.
     signal_player_leave:fire(player)
 
@@ -206,6 +203,12 @@ PlayersService.PlayerRemoving:Connect(function(player)
     -- Finds player.
     local _player = class.find(player.UserId)
     if _player == nil then return end
+
+    -- Statistics.
+    _player:getStatistics():add("PLAYTIME", os.time() - _player:getJoinTime())
+    -- Statistics. [GLOBAL]
+    StatisticsProvider.addGame("PLAYER_LEFT", 1)
+    StatisticsProvider.addGame("PLAYTIME", os.time() - _player:getJoinTime())
 
     -- Handles not active server.
     if not _G.server_active then

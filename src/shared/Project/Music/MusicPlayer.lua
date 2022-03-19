@@ -58,7 +58,6 @@ end
 -- Waits song to be ended.
 function class.waitNextTrack()
     class.Event = class.Playing.Ended:Connect(function()
-        task.wait(5)
         class.Event:Disconnect()
         class.Event = nil
 
@@ -79,6 +78,7 @@ end
 task.spawn(function()
     while true do
         task.wait(0.5)
+        if class.Wait then return end
 
         -- If there is a song currently playing, no need to continue.
         if class.Playing ~= nil then
@@ -90,12 +90,32 @@ task.spawn(function()
         if class.Order >= #class.Sounds then class.shuffle() end
         class.Order += 1
 
-        -- Sets playing music.
-        class.Playing = Instance.new("Sound")
-        class.Playing.SoundId = "rbxassetid://" .. class.Sounds[class.Order]
-        class.Playing.Parent = game.Workspace
-        class.Playing.Volume = 1
-        class.Playing:Play()
+        class.Wait = true
+        while true do
+            -- Sets playing music.
+            local success, message = pcall(function()
+                class.Playing = Instance.new("Sound")
+                class.Playing.SoundId = "rbxassetid://" .. class.Sounds[class.Order]
+                class.Playing.Parent = game.Workspace
+                class.Playing.Volume = 1
+                class.Playing:Play()
+            end)
+
+            -- Handles not succeed musics.
+            if not success then
+                -- Handles broken playing music.
+                if class.Playing then
+                    class.Playing:Destroy()
+                    class.Playing = nil
+                end
+
+                -- Informs user about it.
+                warn("Couldn't load music!" .. message)
+            else
+                class.Wait = nil
+                break
+            end
+        end
 
         -- Waits song to be ended.
         class.waitNextTrack()

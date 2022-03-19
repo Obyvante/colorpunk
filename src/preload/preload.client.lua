@@ -5,6 +5,7 @@ local ReplicatedFirst = game:GetService("ReplicatedFirst")
 -- Disables default red screen.
 local StarterGui = game:GetService("StarterGui")
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
+StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.PlayerList, true)
 StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 
 -- Player and its gui folder.

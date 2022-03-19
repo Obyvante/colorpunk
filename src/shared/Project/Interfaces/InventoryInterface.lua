@@ -273,7 +273,9 @@ interface:addFunction("updateInventory", function(_interface)
     end
 
     -- Sort by active.
-    table.sort(_content, function(A, B) return A:isActive() and not B:isActive() end)
+    table.sort(_content, function(A, B)
+        return A:isActive() and not B:isActive()
+    end)
 
     -- Handles category footer icon.
     local trail_footer_panel = _interface:getElementByPath("panel.panel_TRAIL")

@@ -56,32 +56,59 @@ class.Requirements = {
 -- METHODS (STARTED)
 ------------------------
 
+-- Completes game.
+function class.completeGame()
+    -- Gets round.
+    local _roundIndex = if GameRound.get(class.Round.Current) then class.Round.Current else class.Round.Current - 1
+
+    -- Statistics.
+    StatisticsProvider.addGame("GAME_PLAYED", 1)
+    StatisticsProvider.addGame("GAME_COMPLETE_TIME", os.time() - class.StartTime)
+    StatisticsProvider.addGame("ROUND_PLAYED", _roundIndex)
+
+    -- Chooses winners.
+    class.winners()
+
+    -- Resets game.
+    class.reset()
+end
+
 -- Handles winners.
 function class.winners()
+    -- Declares required fields.
+    local _productMoneyBooster = Library.getService("ProductProvider"):findByName("Money Booster")
+    local _roundIndex = if GameRound.get(class.Round.Current) then class.Round.Current else class.Round.Current - 1
+    local _round = GameRound.get(class.Round.Current) or GameRound.get(class.Round.Current - 1)
+
+    -- Loops throughs all winners.
     for _, player in pairs(class.Participants) do
         -- Gets player.
         local _player = PlayerProvider.find(player.UserId)
         if _player == nil then continue end
 
-        -- Statistics.
-        _player:getStatistics():add("WIN", 1)
-
-        -- Declares required fields.
-        local round = GameRound.get(class.Round.Current) or GameRound.get(class.Round.Current - 1)
         -- Declares required fields.
         local _products = _player:getInventory():getProduct()
-        local _multiple = _products:has(1248410518)
-        
+        local _multiple = _products:has(_productMoneyBooster:getId())
+        local _earnedGold = _round.Money * (_multiple and 2 or 1)
+        local _totalEarnedGold = GameRound.totalEarnedMoney(class.Round.Current, if _multiple then 2 else 1)
+
         -- Currencies.
-        _player:getCurrencies():add("GOLD", round.Money * (_multiple and 2 or 1))
+        _player:getCurrencies():add("GOLD", _earnedGold)
+
         -- Statistics.
-        _player:getStatistics():add("GOLD_EARNED", round.Money)
-        StatisticsProvider.addGame("GOLD_EARNED", round.Money)
+        _player:getStatistics():add("WIN", 1)
+        _player:getStatistics():add("GOLD_EARNED", _earnedGold)
+        _player:getStatistics():add("GAME_PLAYED", 1)
+        _player:getStatistics():add("ROUND_PLAYED", _roundIndex)
+        _player:getStatistics():add("GAME_PLAYTIME", os.time() - class.StartTime)
+        -- Statistics. [GLOBAL]
+        StatisticsProvider.addGame("GAME_PLAYTIME", os.time() - class.StartTime)
+        StatisticsProvider.addGame("GOLD_EARNED", _earnedGold)
 
         -- Shows summary screen for player.
         InterfaceOpenEvent:FireClient(player, "summary", {
             ROUND_PLAYED = class.Round.Current,
-            GOLD_EARNED = GameRound.totalEarnedMoney(class.Round.Current),
+            GOLD_EARNED = _totalEarnedGold,
             RANK = 1
         })
     end
@@ -97,6 +124,7 @@ function class.reset()
         end
     end
 
+    class.StartTime = os.time()
     class.Round = {
         Current = 1,
         Timer = 0,
@@ -147,13 +175,14 @@ function class.randomPist()
     -- Sets color field.
     local Colors = TableService.keys(PistModule.WHITELIST)
     class.Round.Color = PistPartColor.content[Colors[math.random(1, #Colors)]]
-
-    print("[DEBUG] Pist information -> ", class.Round.Pist, class.Round.Color.name)
 end
 
 -- Removes target player from the participants
 -- @param _player Roblox player.
 function class.removeFromParticipants(_player : Player)
+    -- Declares required fields.
+    local _roundIndex = if GameRound.get(class.Round.Current) then class.Round.Current else class.Round.Current - 1
+
     for index, _participant in pairs(class.Participants) do
         if _player == _participant then
             table.remove(class.Participants, index)
@@ -163,7 +192,12 @@ function class.removeFromParticipants(_player : Player)
             if player == nil then break end
 
             -- Statistics.
-            player:getStatistics():add("LOSE", 1)
+            _player:getStatistics():add("LOSE", 1)
+            _player:getStatistics():add("GAME_PLAYED", 1)
+            _player:getStatistics():add("ROUND_PLAYED", _roundIndex)
+            _player:getStatistics():add("GAME_PLAYTIME", os.time() - class.StartTime)
+            -- Statistics. [GLOBAL]
+            StatisticsProvider.addGame("GAME_PLAYTIME", os.time() - class.StartTime)
 
             -- Shows summary screen for player..
             InterfaceOpenEvent:FireClient(_player, "summary", {
@@ -287,8 +321,7 @@ local game_loop_func = function()
 
     -- If it is not started yet.
     if not class.Status.Started then
-        -- Game statistics.
-        StatisticsProvider.addGame("GAME_PLAYED", 1)
+        -- Statistics.
         StatisticsProvider.addGame("GAME_START_TIME", class.LastStarted - class.Starting.Timer.Duration)
 
         -- Enables starting.
@@ -297,6 +330,7 @@ local game_loop_func = function()
         class.Starting.Timer.Current = 0
         class.Participants = players
         class.LastStarted = 0
+        class.StartTime = os.time()
 
         -- Configures pist.
         class.randomPist()
@@ -305,9 +339,6 @@ local game_loop_func = function()
         for index, player in pairs(PlayerService:GetPlayers()) do
             local _player = PlayerProvider.find(player.UserId)
             if _player == nil then continue end
-     
-            -- Statistics.
-            _player:getStatistics():add("GAME_PLAYED", 1)
 
             TeleportService.teleport(player, class.Locations.Spawns.Pist[index].Position, Vector3.new(0, 90, 0))
             player:SetAttribute("falling", nil)
@@ -330,10 +361,9 @@ local game_loop_func = function()
     -- If there is no enough participants, ends game.
     -- TODO: will remove false.
     if #class.Participants <= 1 then
-        -- Handles winners.
-        class.winners()
-        -- Resets class.
-        class.reset()
+        -- Completes game.
+        class.completeGame()
+
         -- Sends cancelled packet.
         GameStateEvent:FireAllClients("ENDED")
         return
@@ -354,25 +384,26 @@ local game_loop_func = function()
         class.Falling.Timer += 0.1
         if class.Falling.Timer < class.Falling.Duration then return end
 
+        -- Declares required fields.
+        local _productMoneyBooster = Library.getService("ProductProvider"):findByName("Money Booster")
+
         for _, player in pairs(class.Participants) do
             local _player = PlayerProvider.find(player.UserId)
             if _player == nil then continue end
 
             -- Declares required fields.
             local _products = _player:getInventory():getProduct()
-            local _multiple = _products:has(1248410518)
+            local _multiple = _products:has(_productMoneyBooster:getId())
+            local _earnedGold = round.Money * (_multiple and 2 or 1)
 
             -- Currencies.
-            _player:getCurrencies():add("GOLD", round.Money * (_multiple and 2 or 1))
+            _player:getCurrencies():add("GOLD", _earnedGold)
 
             -- Statistics.
-            StatisticsProvider.addGame("GOLD_EARNED", round.Money)
-            _player:getStatistics():add("GOLD_EARNED", round.Money)
-            _player:getStatistics():add("ROUND_PLAYED", 1)
+            _player:getStatistics():add("GOLD_EARNED", _earnedGold)
+            -- Statistics. [GLOBAL]
+            StatisticsProvider.addGame("GOLD_EARNED", _earnedGold)
         end
-
-        -- Games statistics.
-        StatisticsProvider.addGame("ROUND_PLAYED", 1)
 
         -- Resets base fields.
         class.Falling.Timer = 0
@@ -382,10 +413,9 @@ local game_loop_func = function()
 
         -- If it was a last round!
         if not round then
-            -- Handles winners.
-            class.winners()
-            -- Resets class.
-            class.reset()
+            -- Completes game.
+            class.completeGame()
+
             -- Sends cancelled packet.
             GameStateEvent:FireAllClients("ENDED")
             return

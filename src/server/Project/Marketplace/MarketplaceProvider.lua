@@ -7,6 +7,7 @@ local ProductProvider = Library.getService("ProductProvider")
 local Transaction = Library.getService("Transaction")
 local StringService = Library.getService("StringService")
 local TableService = Library.getService("TableService")
+local StatisticsProvider = Library.getService("StatisticsProvider")
 local MarketplaceService = game:GetService("MarketplaceService")
 -- EVENTS
 local InterfaceOpenEvent = EventService.get("Interface.InterfaceOpen")
@@ -402,6 +403,11 @@ function MarketplaceService.ProcessReceipt(_data)
     ------------------------
     -- TRANSFER/PURCHASE HISTORY (ENDS)
     ------------------------
+
+    -- Statistics.
+    player:getStatistics():add("ROBUX_SPENT", _data.CurrencySpent)
+    -- Statistics. [GLOBAL]
+    StatisticsProvider.addGame("ROBUX_SPENT", _data.CurrencySpent)
 
     class.handleSucceedPurchase(_data)
     return Enum.ProductPurchaseDecision.PurchaseGranted

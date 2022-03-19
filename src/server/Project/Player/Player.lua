@@ -33,6 +33,7 @@ function class.new(_table : table)
     _player.stats = PlayerStats.new(_player, _table.stats)
     _player.statistics = PlayerStatistics.new(_player, _table.statistics)
     _player.rank = _table.rank
+    _player.joinTime = os.time()
 
     return _player
 end
@@ -93,8 +94,7 @@ function class:completeLoading()
     -- Updates player stats.
     self:getStats():updateCharacterAttributes()
 
-    -- Loads all active pets.
-    for _, value in pairs(self.inventory:getPet():getContentByState(true)) do value:spawnEntity() end
+    -- Update pet entities.
     self.inventory:getPet():updateEntities()
 
     -- TODO: test!!!
@@ -194,6 +194,12 @@ function class:setRank(_rank : number)
 
     PlayerUpdateEvent:FireClient(_player, "rank", _rank)
     return self
+end
+
+-- Gets join time.
+-- @return Join time.
+function class:getJoinTime()
+    return self.joinTime
 end
 
 -- Marks that player is currently deleting.

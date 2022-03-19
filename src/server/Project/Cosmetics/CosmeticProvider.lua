@@ -7,6 +7,7 @@ local CaseProvider = Library.getService("CaseProvider")
 local ProductProvider = Library.getService("ProductProvider")
 local MarketplaceProvider = Library.getService("MarketplaceProvider")
 local CoolDownService = Library.getService("CoolDownService")
+local StatisticsProvider = Library.getService("StatisticsProvider")
 -- EVENTS
 local CosmeticCaseOpenEvent = EventService.get("Cosmetics.CosmeticCaseOpen")
 local ProximityPromptService = game:GetService("ProximityPromptService")
@@ -26,6 +27,7 @@ function class.openCase(_player : Player, _id : string)
     local player = PlayerProvider.find(_player.UserId)
     if player == nil then return end
 
+    -- Handles cool down.
     CoolDownService.handle(_player.UserId .. ":case", 8)
 
     -- Declares required fields.
@@ -50,6 +52,14 @@ function class.openCase(_player : Player, _id : string)
         Name = _result:getName(),
         Id = _result:getId()
     })
+
+    -- Declares statistic query.
+    local _statisticQuery = _id == "Premium Egg" and "PREMIUM_EGG_OPENED" or "BASIC_EGG_OPENED"
+
+    -- Statistics.
+    player:getStatistics():add(_statisticQuery, 1)
+    -- Statistics. [GLOBAL]
+    StatisticsProvider.addGame(_statisticQuery, 1)
 end
 
 ------------------------
