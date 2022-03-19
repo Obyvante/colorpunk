@@ -82,7 +82,7 @@ task.spawn(function()
 
         -- If there is a song currently playing, no need to continue.
         if class.Playing ~= nil then
-            class.Playing.Volume = ClientPlayer.getSettings().get("MUSIC")
+            class.Playing.Volume = if ClientPlayer.getSettings().get("MUSIC") then 0.5 else 0
             continue
         end
 
@@ -97,7 +97,7 @@ task.spawn(function()
                 class.Playing = Instance.new("Sound")
                 class.Playing.SoundId = "rbxassetid://" .. class.Sounds[class.Order]
                 class.Playing.Parent = game.Workspace
-                class.Playing.Volume = 1
+                class.Playing.Volume = 0.5
                 class.Playing:Play()
             end)
 

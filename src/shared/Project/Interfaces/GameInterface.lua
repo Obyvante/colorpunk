@@ -602,7 +602,7 @@ local product_icon_body = interface:addElement({
             Size = Vector2.new(720, 150)
         },
 
-        AnchorPoint = Vector2.new(1, 1),
+        AnchorPoint = Vector2.new(0, 1),
         BorderSizePixel = 0,
         BackgroundTransparency = 1
     },
