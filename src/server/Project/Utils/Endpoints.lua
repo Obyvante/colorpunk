@@ -1,8 +1,8 @@
 local class = {}
 
 -- Keys
-class.ENDPOINT = "65.108.166.161:8080"
-class.API_KEY = "BARDEN_SECRET_KEY"
+class.ENDPOINT = ""
+class.API_KEY = "MY_SUPER_SECRET_KEY"
 
 -- ENDPOINTS
 class.HEALTH_ENDPOINT = "http://" .. class.ENDPOINT .. "/api/v1/health/"
